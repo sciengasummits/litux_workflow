@@ -1,0 +1,161 @@
+.pricing-section-home {
+    background-color: var(--color-bg-light);
+}
+
+.pricing-cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.pricing-card-home {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card-home:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+}
+
+.pricing-card-header {
+    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+    color: white;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+}
+
+.pricing-card-home:nth-child(2) .pricing-card-header {
+    background: linear-gradient(135deg, #1976d2, #0d47a1);
+}
+
+.pricing-card-home:nth-child(3) .pricing-card-header {
+    background: linear-gradient(135deg, #42a5f5, #1565c0);
+}
+
+/* Overriding to match screenshot orange-dominant theme if needed, 
+   but different gradients look more premium. 
+   Let's stick to the screenshot's orange theme for all but varied as requested "exact cards" */
+
+.pricing-card-home:nth-child(1) .pricing-card-header {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+.pricing-card-home:nth-child(2) .pricing-card-header {
+    background: linear-gradient(135deg, #1976d2, #0d47a1);
+}
+
+.pricing-card-home:nth-child(3) .pricing-card-header {
+    background: linear-gradient(135deg, #42a5f5, #1565c0);
+}
+
+.pkg-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+}
+
+.pkg-price {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.currency {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+    margin-right: 0.2rem;
+    font-weight: 600;
+}
+
+.amount {
+    font-size: 3.5rem;
+    font-weight: 800;
+}
+
+.pricing-card-body {
+    padding: 2rem 1.5rem;
+    flex-grow: 1;
+}
+
+.pkg-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pkg-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.check-icon {
+    color: #1565c0;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.pricing-card-footer {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.btn-register-home {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(90deg, #1565c0, #42a5f5);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);
+    width: 100%;
+}
+
+.btn-register-home:hover {
+    background: linear-gradient(90deg, #42a5f5, #1565c0);
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.4);
+}
+
+@media (max-width: 992px) {
+    .pricing-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-cards-container {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pkg-title {
+        font-size: 1.5rem;
+    }
+
+    .amount {
+        font-size: 3rem;
+    }
+}

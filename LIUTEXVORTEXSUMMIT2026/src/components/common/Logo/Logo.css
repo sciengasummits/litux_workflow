@@ -1,0 +1,101 @@
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-text-dark);
+    transition: transform 0.3s ease;
+}
+
+.app-logo:hover {
+    transform: scale(1.02);
+}
+
+.logo-icon-container {
+    position: relative;
+    color: var(--color-primary-end);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon-primary {
+    color: var(--color-primary-end);
+}
+
+.logo-icon-accent {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    color: var(--color-primary-start);
+    /* Orange accent */
+    animation: heartPulse 1.5s infinite;
+}
+
+@keyframes heartPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.logo-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+}
+
+.logo-text-top {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--color-text-body);
+    margin-bottom: 2px;
+}
+
+.logo-text-main {
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--color-text-dark);
+}
+
+.logo-text-sub {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-primary-end);
+    text-transform: uppercase;
+    margin-top: 1px;
+}
+
+/* Footer variant styles */
+.footer__coll-logo .app-logo {
+    color: white;
+}
+
+.footer__coll-logo .logo-icon-primary {
+    color: white;
+}
+
+.footer__coll-logo .logo-text-main {
+    color: white;
+}
+
+.footer__coll-logo .logo-text-top {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer__coll-logo .logo-text-sub {
+    color: #fdba74;
+    /* Light orange for dark background */
+}

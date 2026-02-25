@@ -1,0 +1,243 @@
+.online-reg-page {
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+.reg-top-banner {
+    background-color: #001219;
+    /* Deep blue/black as per screenshot */
+    padding: 60px 0 0;
+    margin-top: 0px;
+}
+
+.reg-banner-content {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.reg-breadcrumb {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.reg-tab {
+    background: var(--color-primary-gradient);
+    color: #fff;
+    padding: 10px 40px;
+    border-radius: 4px 4px 0 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.online-reg-container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding-top: 2rem;
+}
+
+.online-reg-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #001219;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    font-family: inherit;
+}
+
+/* Stripe Badge */
+.stripe-badge-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.stripe-badge {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stripe-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stripe-logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #6772e5;
+    letter-spacing: -0.5px;
+}
+
+.stripe-text {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #333;
+    line-height: 1.1;
+}
+
+.stripe-cards {
+    display: flex;
+    gap: 5px;
+}
+
+.stripe-cards img {
+    height: 18px;
+    opacity: 0.8;
+}
+
+/* Form Styling */
+.online-reg-form {
+    background: #fff;
+    margin-top: 2rem;
+}
+
+.reg-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.reg-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s;
+}
+
+.reg-control:focus {
+    outline: none;
+    border-color: #001219;
+}
+
+.reg-control::placeholder {
+    color: #999;
+}
+
+select.reg-control {
+    color: #666;
+}
+
+/* Captcha Section */
+.captcha-section {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.captcha-display {
+    background: #fff;
+    padding: 10px 20px;
+    border: 1px dashed #bbb;
+    margin-bottom: 1.5rem;
+    user-select: none;
+}
+
+.captcha-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: #333;
+    font-style: italic;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.captcha-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.captcha-input-wrapper label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.captcha-input {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.captcha-refresh {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.refresh-link {
+    color: #e63946;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.refresh-link:hover {
+    text-decoration: underline;
+}
+
+/* Submit Wrapper */
+.reg-submit-wrapper {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-online-register {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 20px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-online-register:hover {
+    background-color: #f8f9fa;
+    border-color: #999;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .reg-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stripe-badge-wrapper {
+        position: static;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: center;
+    }
+}
