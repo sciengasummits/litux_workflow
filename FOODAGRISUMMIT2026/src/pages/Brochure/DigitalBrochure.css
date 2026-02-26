@@ -1,0 +1,256 @@
+.digital-brochure-container {
+    background-color: #333;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.brochure-nav {
+    width: 100%;
+    max-width: 1000px;
+    background: #1a1a1a;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.back-btn,
+.nav-download-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover,
+.nav-download-btn:hover {
+    background: #14532d;
+    border-color: #4ade80;
+    transform: translateY(-2px);
+}
+
+.page-indicator {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.digital-brochure-page {
+    width: 100%;
+    max-width: 1000px;
+    background-color: white;
+    background: linear-gradient(rgba(20, 83, 45, 0.92), rgba(20, 83, 45, 0.92)),
+        url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    min-height: 1400px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    padding: 80px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brochure-badge {
+    display: inline-block;
+    background: #4ade80;
+    color: #14532d;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+}
+
+.brochure-title {
+    font-family: 'Barlow', sans-serif;
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.brochure-title .highlight-text {
+    display: block;
+    color: #ffffff;
+    font-size: 2.2rem;
+    margin-top: 15px;
+}
+
+.brochure-title .subtitle {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #4ade80;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+.brochure-body {
+    flex: 1;
+    margin-top: 60px;
+}
+
+.brochure-intro {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    margin-bottom: 60px;
+    opacity: 0.95;
+    max-width: 850px;
+    font-weight: 400;
+}
+
+.info-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 70px;
+}
+
+.info-box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.box-title {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #4ade80;
+    border-bottom: 2px solid #4ade80;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.box-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+}
+
+.theme-footer-note {
+    max-width: 850px;
+    position: relative;
+    padding-left: 30px;
+    margin-top: 40px;
+}
+
+.note-accent {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 5px;
+    width: 4px;
+    background: #4ade80;
+    border-radius: 2px;
+}
+
+.theme-footer-note p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.theme-footer-note strong {
+    color: #4ade80;
+}
+
+.brochure-page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 80px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+.footer-event {
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.print-hint {
+    margin-top: 30px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .digital-brochure-container {
+        padding: 0;
+        background: white;
+    }
+
+    .brochure-nav,
+    .print-hint {
+        display: none;
+    }
+
+    .digital-brochure-page {
+        box-shadow: none;
+        max-width: 100%;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        border: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+@media (max-width: 850px) {
+    .info-boxes {
+        grid-template-columns: 1fr;
+    }
+
+    .brochure-title {
+        font-size: 2.2rem;
+    }
+
+    .brochure-title .highlight-text {
+        font-size: 1.6rem;
+    }
+
+    .digital-brochure-page {
+        padding: 40px;
+    }
+}

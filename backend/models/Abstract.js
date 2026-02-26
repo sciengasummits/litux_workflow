@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const AbstractSchema = new mongoose.Schema({
+    conference: { type: String, default: 'liutex', index: true }, // 'liutex' | 'foodagri'
     title: { type: String, default: '' },
     name: { type: String, required: true },
     email: { type: String, required: true },
@@ -17,3 +18,4 @@ const AbstractSchema = new mongoose.Schema({
 });
 
 export default mongoose.model('Abstract', AbstractSchema);
+

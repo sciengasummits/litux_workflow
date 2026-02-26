@@ -1,22 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Search, ChevronsUpDown, Filter, Download, RefreshCw, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
-
-const BASE_URL = 'http://localhost:5000/api';
-
-async function fetchAbstracts() {
-    const res = await fetch(`${BASE_URL}/abstracts`);
-    if (!res.ok) throw new Error('Failed to fetch abstracts');
-    return res.json();
-}
-async function patchAbstract(id, data) {
-    const res = await fetch(`${BASE_URL}/abstracts/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error('Update failed');
-    return res.json();
-}
+import { getAbstracts, updateAbstractStatus } from '../api.js';
 
 function formatDate(dateStr) {
     if (!dateStr) return '—';
@@ -64,7 +48,7 @@ export default function ViewAbstracts() {
         setLoading(true);
         setError(null);
         try {
-            const data = await fetchAbstracts();
+            const data = await getAbstracts(); // uses conference from login session
             setRows(data);
         } catch (e) { setError(e.message); }
         finally { setLoading(false); }
@@ -99,7 +83,7 @@ export default function ViewAbstracts() {
     /* ─── Status update ─── */
     const handleStatusChange = async (id, newStatus) => {
         try {
-            const updated = await patchAbstract(id, { status: newStatus });
+            const updated = await updateAbstractStatus(id, { status: newStatus });
             setRows(prev => prev.map(r => (r._id || r.id) === id ? updated : r));
         } catch { /* silent */ }
     };

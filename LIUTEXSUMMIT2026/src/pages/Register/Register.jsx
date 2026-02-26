@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Register.css';
 import { countries } from '../../assets/constants/countries';
-import Button from '../../components/common/Button/Button';
+import { submitRegistration } from '../../api/siteApi';
 
 const Register = ({ isDiscounted = false }) => {
     // State for form fields
@@ -16,15 +16,18 @@ const Register = ({ isDiscounted = false }) => {
     });
 
     const [selectedAcademicCategory, setSelectedAcademicCategory] = useState(null);
-    const [selectedVirtualCategory, setSelectedVirtualCategory] = useState(null);
 
     // State for Terms
     const [termsAccepted, setTermsAccepted] = useState(false);
 
-    // New State for Accommodation
+    // State for Accommodation
     const [includeAccompanying, setIncludeAccompanying] = useState(false);
     const [selectedAccommodation, setSelectedAccommodation] = useState(null);
     const [selectedSponsorship, setSelectedSponsorship] = useState(null);
+
+    // Submission state
+    const [submitting, setSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error'
 
     // Discount multiplier (20% off if discounted)
     const discountMultiplier = isDiscounted ? 0.8 : 1;
@@ -32,17 +35,10 @@ const Register = ({ isDiscounted = false }) => {
 
     // Date Logic to determine active phase
     const currentDate = new Date();
-    // const earlyBirdEnd = new Date('2025-10-25');
-    // const standardEnd = new Date('2026-02-16');
-
-    // For demo/screenshot purpose, let's assume specific dates or just logic
-    // But since the user wants it to look like the screenshot where OnSpot is active:
-    // Today is Feb 17, 2026. Standard ended Feb 16, 2026. So OnSpot is active.
-
-    let activePhase = 'early';
     const earlyBirdEnd = new Date('2026-09-25');
     const standardEnd = new Date('2026-10-30');
 
+    let activePhase = 'early';
     if (currentDate <= earlyBirdEnd) {
         activePhase = 'early';
     } else if (currentDate <= standardEnd) {
@@ -51,12 +47,12 @@ const Register = ({ isDiscounted = false }) => {
         activePhase = 'onspot';
     }
 
-    // Pricing Data
+    // Pricing Data (Liutex-specific)
     const pricingData = [
         { id: 'speaker', label: 'Speaker Registration', early: applyDiscount(749), standard: applyDiscount(849), onspot: applyDiscount(949) },
         { id: 'delegate', label: 'Delegate Registration', early: applyDiscount(899), standard: applyDiscount(999), onspot: applyDiscount(1099) },
         { id: 'poster', label: 'Poster Registration', early: applyDiscount(449), standard: applyDiscount(549), onspot: applyDiscount(649) },
-        { id: 'student', label: 'Student ', early: applyDiscount(299), standard: applyDiscount(399), onspot: applyDiscount(499) },
+        { id: 'student', label: 'Student', early: applyDiscount(299), standard: applyDiscount(399), onspot: applyDiscount(499) },
         { id: 'virtual', label: 'Virtual(Online)', early: applyDiscount(199), standard: applyDiscount(249), onspot: applyDiscount(299) },
     ];
 
@@ -78,34 +74,19 @@ const Register = ({ isDiscounted = false }) => {
     const calculateTotal = () => {
         let total = 0;
 
-        // Add Registration
         if (selectedAcademicCategory) {
             const item = pricingData.find(p => p.id === selectedAcademicCategory);
-            if (item) {
-                total += item[activePhase];
-            }
+            if (item) total += item[activePhase];
         }
-
-        // Add Sponsorship
         if (selectedSponsorship) {
             const item = sponsorshipPricing.find(p => p.id === selectedSponsorship);
-            if (item) {
-                total += item.price;
-            }
+            if (item) total += item.price;
         }
-
-        // Add Accompanying Person
-        if (includeAccompanying) {
-            total += 249;
-        }
-
-        // Add Accommodation
+        if (includeAccompanying) total += 249;
         if (selectedAccommodation) {
             const [nights, type] = selectedAccommodation.split('-');
             const option = accommodationOptions.find(o => o.nights === parseInt(nights));
-            if (option) {
-                total += option[type];
-            }
+            if (option) total += option[type];
         }
 
         return total;
@@ -116,33 +97,67 @@ const Register = ({ isDiscounted = false }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const total = calculateTotal();
-        const summary = `
-Registration Summary:
-- Name: ${formData.fullName}
-- Designation: ${formData.designation}
-- Email: ${formData.email}
-- Total Amount: $${total}
-- Accompanying Person: ${includeAccompanying ? 'Yes' : 'No'}
-- Accommodation: ${selectedAccommodation ? selectedAccommodation : 'None'}
-- Sponsorship: ${selectedSponsorship ? sponsorshipPricing.find(s => s.id === selectedSponsorship)?.label : 'None'}
+        if (!formData.fullName || !formData.email) {
+            alert('Please fill in your Full Name and Email before submitting.');
+            return;
+        }
 
-(This is a demo submission)
-        `;
-        alert(summary);
+        const total = calculateTotal();
+
+        // Build description string
+        const descParts = [];
+        if (selectedAcademicCategory) {
+            const cat = pricingData.find(p => p.id === selectedAcademicCategory);
+            if (cat) descParts.push(`${cat.label} : $${cat[activePhase]}`);
+        }
+        if (selectedSponsorship) {
+            const sp = sponsorshipPricing.find(p => p.id === selectedSponsorship);
+            if (sp) descParts.push(`${sp.label} : $${sp.price}`);
+        }
+        if (includeAccompanying) descParts.push('Accompanying Person : $249');
+        if (selectedAccommodation) descParts.push(`Accommodation : ${selectedAccommodation}`);
+
+        const payload = {
+            title: formData.designation,
+            name: formData.fullName,
+            email: formData.email,
+            phone: formData.telephone,
+            country: formData.country,
+            company: formData.company,
+            address: formData.address,
+            registrationCategory: selectedAcademicCategory
+                ? pricingData.find(p => p.id === selectedAcademicCategory)?.label || ''
+                : '',
+            accommodation: selectedAccommodation || '',
+            sponsorship: selectedSponsorship
+                ? sponsorshipPricing.find(p => p.id === selectedSponsorship)?.label || ''
+                : '',
+            accompanyingPerson: includeAccompanying,
+            totalAmount: total,
+            description: descParts.join('\n'),
+            status: 'Pending',
+        };
+
+        setSubmitting(true);
+        setSubmitStatus(null);
+        try {
+            // submitRegistration() from siteApi automatically adds conference: 'liutex'
+            await submitRegistration(payload);
+            setSubmitStatus('success');
+            handleReset();
+        } catch {
+            setSubmitStatus('error');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const handleReset = () => {
         setFormData({
-            designation: '',
-            fullName: '',
-            email: '',
-            telephone: '',
-            country: '',
-            company: '',
-            address: ''
+            designation: '', fullName: '', email: '', telephone: '',
+            country: '', company: '', address: ''
         });
         setSelectedAcademicCategory(null);
         setTermsAccepted(false);
@@ -163,7 +178,6 @@ Registration Summary:
             <div className="container section-padding">
 
                 <div className="registration-form-container">
-                    {/* Left Side: Form */}
                     <div className="form-section full-width-form">
                         <div className="form-row">
                             <select
@@ -216,9 +230,7 @@ Registration Summary:
                             >
                                 <option value="" disabled>Select Country</option>
                                 {countries.map((country) => (
-                                    <option key={country} value={country}>
-                                        {country}
-                                    </option>
+                                    <option key={country} value={country}>{country}</option>
                                 ))}
                             </select>
                             <input
@@ -238,7 +250,7 @@ Registration Summary:
                                 rows="3"
                                 value={formData.address}
                                 onChange={handleInputChange}
-                            ></textarea>
+                            />
                         </div>
                     </div>
                 </div>
@@ -281,13 +293,13 @@ Registration Summary:
                                             {item.label}
                                         </label>
                                     </td>
-                                    <td className={`${activePhase === 'early' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}`}>
+                                    <td className={activePhase === 'early' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}>
                                         <span className={activePhase === 'early' ? 'price-active' : ''}>$ {item.early}</span>
                                     </td>
-                                    <td className={`${activePhase === 'standard' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}`}>
+                                    <td className={activePhase === 'standard' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}>
                                         <span className={activePhase === 'standard' ? 'price-active' : ''}>$ {item.standard}</span>
                                     </td>
-                                    <td className={`${activePhase === 'onspot' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}`}>
+                                    <td className={activePhase === 'onspot' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}>
                                         <span className={activePhase === 'onspot' ? 'price-active' : ''}>$ {item.onspot}</span>
                                     </td>
                                 </tr>
@@ -402,15 +414,33 @@ Registration Summary:
                                 checked={termsAccepted}
                                 onChange={(e) => setTermsAccepted(e.target.checked)}
                             />
-                            I've read and accept the <span className="terms-link">terms & conditions</span>.
+                            I've read and accept the <span className="terms-link">terms &amp; conditions</span>.
                         </label>
                     </div>
 
                     <p className="processing-fee">Note: 5% of processing charges will be applicable.</p>
 
+                    {submitStatus === 'success' && (
+                        <div style={{ padding: '14px 20px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '10px', color: '#15803d', fontWeight: 600, marginBottom: '16px', textAlign: 'center' }}>
+                            ✅ Registration submitted successfully! We will contact you shortly.
+                        </div>
+                    )}
+                    {submitStatus === 'error' && (
+                        <div style={{ padding: '14px 20px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '10px', color: '#dc2626', fontWeight: 600, marginBottom: '16px', textAlign: 'center' }}>
+                            ❌ Submission failed. Please check your connection and try again.
+                        </div>
+                    )}
+
                     <div className="action-buttons">
-                        <Button className="btn-register" onClick={handleSubmit}>REGISTER NOW</Button>
-                        <Button variant="secondary" className="btn-reset" onClick={handleReset}>RESET</Button>
+                        <button
+                            className="btn-register"
+                            onClick={handleSubmit}
+                            disabled={submitting}
+                            style={{ opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}
+                        >
+                            {submitting ? 'Submitting…' : 'REGISTER NOW'}
+                        </button>
+                        <button className="btn-reset" onClick={handleReset}>RESET</button>
                     </div>
                 </div>
             </div>

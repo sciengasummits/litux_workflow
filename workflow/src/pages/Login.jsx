@@ -96,7 +96,7 @@ export default function Login({ onLogin }) {
       const data = await res.json();
       if (data.success) {
         setSuccess(true);
-        setTimeout(() => onLogin(), 800);
+        setTimeout(() => onLogin({ username: data.username, conferenceId: data.conferenceId, displayName: data.displayName }), 800);
       } else {
         setLoading(false);
         setError(data.message || 'Invalid OTP. Please try again.');
@@ -131,8 +131,8 @@ export default function Login({ onLogin }) {
           <div className="login-logo-ring">
             <Shield size={32} className="login-logo-icon" />
           </div>
-          <h1 className="login-brand-title" style={{ fontSize: '1.15rem', letterSpacing: '1px' }}>LIUTEX VORTEX SUMMIT 2026</h1>
-          <p className="login-brand-subtitle">Conference Management System</p>
+          <h1 className="login-brand-title" style={{ fontSize: '1.15rem', letterSpacing: '1px' }}>CONFERENCE MANAGEMENT</h1>
+          <p className="login-brand-subtitle">LUITEX &amp; FOOD AGRI SUMMIT 2026</p>
         </div>
 
         {/* Card */}

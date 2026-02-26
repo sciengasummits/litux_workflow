@@ -121,7 +121,7 @@ const NAV_ITEMS = [
   { id: 'website-sections', label: 'Website Sections', icon: <Globe size={iconSize} /> },
 ];
 
-export default function Sidebar({ collapsed, activeNav, onNavClick }) {
+export default function Sidebar({ collapsed, activeNav, onNavClick, conf }) {
   const [openMenus, setOpenMenus] = useState({});
 
   const toggleMenu = (id) => {
@@ -132,12 +132,13 @@ export default function Sidebar({ collapsed, activeNav, onNavClick }) {
     <aside className={`sidebar${collapsed ? ' collapsed' : ''}`}>
       {/* Logo */}
       <div className="sidebar-logo">
-        <div className="logo-icon">LV<br />Summit</div>
+        <div className="logo-icon">{conf ? conf.logoText : 'LV'}<br />{conf ? conf.logoSub : 'Summit'}</div>
         <div className="logo-text">
-          <span className="brand" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>LIUTEX</span>
-          <span className="sub">VORTEX SUMMIT</span>
+          <span className="brand" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>{conf ? conf.brandTop : 'LIUTEX'}</span>
+          <span className="sub">{conf ? conf.brandSub : 'VORTEX SUMMIT'}</span>
         </div>
       </div>
+
 
       {/* Navigation */}
       <nav className="sidebar-nav">

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const SpeakerSchema = new mongoose.Schema({
+    conference: { type: String, default: 'liutex', index: true }, // 'liutex' | 'foodagri'
     name: { type: String, required: true },
     title: String,
     affiliation: String,
@@ -13,3 +14,4 @@ const SpeakerSchema = new mongoose.Schema({
 });
 
 export default mongoose.model('Speaker', SpeakerSchema);
+

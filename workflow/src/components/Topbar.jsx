@@ -1,8 +1,10 @@
 import { Menu, LogOut, User } from 'lucide-react';
 import { useState } from 'react';
 
-export default function Topbar({ onToggleSidebar, eventName, username, onLogout }) {
+export default function Topbar({ onToggleSidebar, eventName, username, onLogout, conf }) {
     const [showMenu, setShowMenu] = useState(false);
+    const accent = conf?.accentColor || '#6366f1';
+    const accentGlow = conf?.accentGlow || 'rgba(99,102,241,0.35)';
 
     return (
         <header className="topbar" style={{ position: 'relative' }}>
@@ -24,11 +26,11 @@ export default function Topbar({ onToggleSidebar, eventName, username, onLogout 
                         title="User Menu"
                         style={{
                             display: 'flex', alignItems: 'center', gap: '8px',
-                            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                            background: `linear-gradient(135deg, ${accent}, ${accent}cc)`,
                             color: '#fff', border: 'none', borderRadius: '10px',
                             padding: '8px 16px', cursor: 'pointer', fontWeight: 700,
                             fontSize: '12px', letterSpacing: '0.5px',
-                            boxShadow: '0 3px 12px rgba(99,102,241,0.35)',
+                            boxShadow: `0 3px 12px ${accentGlow}`,
                             transition: 'all 0.2s',
                         }}
                     >

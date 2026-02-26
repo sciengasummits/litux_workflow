@@ -1,0 +1,372 @@
+.about__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: flex-start;
+}
+
+.section-subtitle {
+    display: block;
+    color: var(--color-primary-start);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-dark);
+}
+
+.section-title-sm {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+    color: var(--color-primary-end);
+}
+
+.about__text {
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    color: var(--color-text-body);
+}
+
+.about__list {
+    margin-bottom: 2rem;
+}
+
+.about__list li {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 0.8rem;
+    font-size: 1.05rem;
+}
+
+.about__list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #22ba5a;
+    font-weight: bold;
+}
+
+/* Dates Side Panel */
+.about__dates-wrapper {
+    position: sticky;
+    top: 100px;
+}
+
+
+.premium-header {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.premium-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--color-text-dark);
+    margin: 0;
+}
+
+.header-decoration {
+    width: 60px;
+    height: 4px;
+    background: var(--color-primary-gradient);
+    margin-top: 10px;
+    border-radius: 2px;
+}
+
+
+.highlight-card:hover {
+    background: var(--color-primary-start);
+}
+
+.pd-date-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 65px;
+    height: 65px;
+    background: white;
+    border-radius: 12px;
+    color: var(--color-primary-start);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pd-month {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.pd-day {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.pd-content {
+    flex: 1;
+}
+
+.pd-year {
+    font-size: 0.85rem;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.pd-event {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 2px 0;
+}
+
+.pd-sub {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.highlight-card .pd-content {
+    color: white;
+}
+
+.pd-icon-bg {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.05;
+    color: var(--color-primary-start);
+}
+
+.highlight-card .pd-icon-bg {
+    color: white;
+    opacity: 0.1;
+}
+
+@media (max-width: 992px) {
+    .about__container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+/* Premium Floating Card Design */
+.about__dates-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.premium-dates-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.premium-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.premium-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text-header);
+    margin: 0;
+}
+
+.header-decoration {
+    flex-grow: 1;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-primary-start), rgba(255, 255, 255, 0));
+    opacity: 0.5;
+}
+
+/* List Container */
+.premium-dates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Card Style */
+.premium-date-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.premium-date-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Date Box */
+.pd-date-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8faff;
+    border-radius: 8px;
+    padding: 0.5rem;
+    min-width: 60px;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+.premium-date-card:hover .pd-date-box {
+    background: var(--color-primary-start);
+}
+
+.pd-month {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    letter-spacing: 0.5px;
+}
+
+.premium-date-card:hover .pd-month {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pd-day {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-primary-start);
+    line-height: 1;
+}
+
+.premium-date-card:hover .pd-day {
+    color: #fff;
+}
+
+/* Content */
+.pd-content {
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+    flex-grow: 1;
+}
+
+.pd-year {
+    font-size: 0.75rem;
+    color: var(--color-primary-start);
+    font-weight: 600;
+}
+
+.pd-event {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-header);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.pd-sub {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-body);
+    margin-top: 2px;
+}
+
+/* Icon Background */
+.pd-icon-bg {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    opacity: 0.05;
+    color: var(--color-primary-start);
+    transform: rotate(-15deg);
+    transition: all 0.3s ease;
+}
+
+.premium-date-card:hover .pd-icon-bg {
+    opacity: 0.15;
+    transform: rotate(0deg) scale(1.1);
+}
+
+/* Highlight Card */
+.premium-date-card.highlight-card {
+    background: linear-gradient(135deg, var(--color-primary-start), #1b5e20);
+    box-shadow: 0 10px 25px rgba(var(--color-primary-rgb), 0.25);
+}
+
+.premium-date-card.highlight-card .pd-date-box {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.premium-date-card.highlight-card .pd-month,
+.premium-date-card.highlight-card .pd-day,
+.premium-date-card.highlight-card .pd-year,
+.premium-date-card.highlight-card .pd-event,
+.premium-date-card.highlight-card .pd-sub {
+    color: #fff;
+}
+
+.premium-date-card.highlight-card .pd-icon-bg {
+    color: #fff;
+    opacity: 0.1;
+}
+
+.premium-date-card.highlight-card:hover .pd-icon-bg {
+    opacity: 0.2;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .about__container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .about__content {
+        padding-right: 0;
+    }
+
+    .about__dates-wrapper {
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .premium-dates-container {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .premium-date-card {
+        padding: 0.75rem;
+    }
+
+    .pd-date-box {
+        min-width: 50px;
+        margin-right: 0.75rem;
+    }
+
+    .pd-day {
+        font-size: 1.25rem;
+    }
+
+    .pd-event {
+        font-size: 0.9rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}

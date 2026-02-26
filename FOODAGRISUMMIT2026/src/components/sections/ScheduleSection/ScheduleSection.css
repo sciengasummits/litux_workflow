@@ -1,0 +1,294 @@
+.schedule {
+    background-color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.section-header {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    color: var(--color-text-header);
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.section-line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary-start), var(--color-primary-end));
+    margin: 0 auto;
+    border-radius: 2px;
+}
+
+/* Tabs */
+.schedule__tabs-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+}
+
+.schedule__tabs {
+    display: flex;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 0.5rem;
+    border-radius: 50px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.schedule__tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 40px;
+    transition: all 0.3s ease;
+    color: var(--color-text-muted);
+}
+
+.tab-day {
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.tab-date {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.schedule__tab.active {
+    background: var(--color-white);
+    color: var(--color-primary-start);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.schedule__tab:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--color-primary-start);
+}
+
+/* Table */
+/* Table */
+.schedule__table-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.schedule__table-container::-webkit-scrollbar {
+    display: none;
+}
+
+.schedule__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.schedule__table th {
+    background: var(--color-primary-start);
+    color: #fff;
+    padding: 1.25rem 1.5rem;
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-align: left;
+    border: none;
+    text-shadow: none;
+}
+
+.schedule__table th:first-child {
+    width: 25%;
+    text-align: center;
+    border-top-left-radius: 16px;
+}
+
+.schedule__table th:last-child {
+    border-top-right-radius: 16px;
+}
+
+.schedule__table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    vertical-align: middle;
+}
+
+.schedule__table tr:last-child td {
+    border-bottom: none;
+}
+
+.schedule__table tr {
+    transition: background-color 0.3s ease;
+}
+
+.schedule__table tr:nth-child(even) {
+    background-color: var(--color-bg-light);
+}
+
+/* Simple hover effect without bg change */
+/* Simple hover effect without bg change */
+.schedule__table tbody tr:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    z-index: 1;
+    position: relative;
+    /* Ensure background stays consistent with stripe */
+}
+
+
+/* Time Column */
+.time-col {
+    text-align: center;
+}
+
+.time-badge {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: #fff;
+    color: var(--color-primary-start);
+    font-weight: 800;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    border: 2px solid rgba(var(--color-primary-rgb), 0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Program Column */
+.program-col {
+    border-left: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.program-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-header);
+    display: block;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+
+/* 
+.schedule__table tr:hover .program-title {
+    color: var(--color-primary-end);
+} 
+*/
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Limit height and add fade for demo */
+.demo-container {
+    position: relative;
+    padding-bottom: 2rem;
+    overflow: hidden !important;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.demo-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.schedule-fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 60%, rgba(255, 255, 255, 1) 100%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.btn-view-schedule {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: var(--color-primary-gradient);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-view-schedule:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+}
+
+@media (max-width: 768px) {
+    .schedule__tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+        border-radius: 16px;
+    }
+
+    .schedule__tab {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem;
+    }
+
+    .schedule__table th,
+    .schedule__table td {
+        padding: 1rem;
+    }
+
+    .schedule__table th:first-child {
+        width: auto;
+    }
+
+    .time-badge {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.75rem;
+    }
+
+    .program-title {
+        font-size: 0.95rem;
+    }
+}

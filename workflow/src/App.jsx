@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Login from './pages/Login';
 import { Info } from 'lucide-react';
+import { setConference } from './api.js';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import StatsGrid from './components/StatsGrid';
@@ -31,8 +32,33 @@ import WebsiteSections from './pages/WebsiteSections';
 import Sessions from './pages/Sessions';
 import ConferenceSchedule from './pages/ConferenceSchedule';
 
-const VALID_USERNAME = 'LIUTEXSUMMIT2026';
-const VALID_OTP = '1234';
+/* ── Conference config map ── */
+const CONFERENCE_CONFIG = {
+  liutex: {
+    conferenceId: 'liutex',
+    displayName: 'LIUTEX VORTEX SUMMIT 2026',
+    shortName: 'LIUTEX SUMMIT',
+    logoText: 'LV',
+    logoSub: 'Summit',
+    brandTop: 'LIUTEX',
+    brandSub: 'VORTEX SUMMIT',
+    footerText: '© Copyright 2026 LIUTEX SUMMIT.',
+    accentColor: '#6366f1',   // indigo
+    accentGlow: 'rgba(99,102,241,0.35)',
+  },
+  foodagri: {
+    conferenceId: 'foodagri',
+    displayName: 'FOOD AGRI SUMMIT 2026',
+    shortName: 'FOOD AGRI SUMMIT',
+    logoText: 'FA',
+    logoSub: 'Summit',
+    brandTop: 'FOOD AGRI',
+    brandSub: 'SUMMIT 2026',
+    footerText: '© Copyright 2026 FOOD AGRI SUMMIT.',
+    accentColor: '#16a34a',   // green
+    accentGlow: 'rgba(22,163,74,0.35)',
+  },
+};
 
 /* ── Simple page router ── */
 function PageContent({ activeNav, setActiveNav }) {
@@ -91,7 +117,9 @@ function PageContent({ activeNav, setActiveNav }) {
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [activeNav, setActiveNav] = useState('dashboard');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [session, setSession] = useState(null); // null = not logged in
+
+  const conf = session ? (CONFERENCE_CONFIG[session.conferenceId] || CONFERENCE_CONFIG.liutex) : null;
 
   // Listen for programmatic nav events fired from within pages
   useEffect(() => {
@@ -100,8 +128,24 @@ export default function App() {
     return () => window.removeEventListener('nav-to', handler);
   }, []);
 
-  if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} validUsername={VALID_USERNAME} validOtp={VALID_OTP} />;
+  // Apply accent colour as CSS variable when conference changes
+  useEffect(() => {
+    if (conf) {
+      document.documentElement.style.setProperty('--accent', conf.accentColor);
+      document.documentElement.style.setProperty('--accent-glow', conf.accentGlow);
+    }
+  }, [conf]);
+
+  if (!session) {
+    return (
+      <Login
+        onLogin={(info) => {
+          setConference(info.conferenceId); // ← tells api.js which conference to query
+          setSession(info);
+          setActiveNav('dashboard');
+        }}
+      />
+    );
   }
 
   return (
@@ -111,6 +155,7 @@ export default function App() {
         collapsed={collapsed}
         activeNav={activeNav}
         onNavClick={setActiveNav}
+        conf={conf}
       />
 
       {/* Main */}
@@ -118,9 +163,10 @@ export default function App() {
         {/* Topbar */}
         <Topbar
           onToggleSidebar={() => setCollapsed(c => !c)}
-          eventName="LIUTEXSUMMIT2026"
-          username={VALID_USERNAME}
-          onLogout={() => setIsAuthenticated(false)}
+          eventName={conf.displayName}
+          username={session.username}
+          onLogout={() => { setSession(null); setActiveNav('dashboard'); }}
+          conf={conf}
         />
 
         {/* Page content */}
@@ -130,7 +176,7 @@ export default function App() {
 
         {/* Footer */}
         <footer className="page-footer">
-          <span>© Copyright 2026 <a href="#">LIUTEX SUMMIT.</a></span>
+          <span>{conf.footerText}</span>
         </footer>
       </div>
     </div>

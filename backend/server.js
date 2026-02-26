@@ -416,15 +416,9 @@ async function seedDefaultData() {
     for (const item of defaults) {
         if (mergeDefaults.includes(item.key)) {
             // Build a $set that only fills in missing fields using dot-notation
-            const setOnMissing = {};
-            for (const [field, value] of Object.entries(item.data)) {
-                setOnMissing[`data.${field}`] = value;
-            }
-            // Use findOneAndUpdate with $set but only if field doesn't exist yet
-            // Strategy: upsert inserts full doc, existing doc gets missing fields via aggregation pipeline
-            const existing = await SiteContent.findOne({ key: item.key });
+            const existing = await SiteContent.findOne({ conference: 'liutex', key: item.key });
             if (!existing) {
-                await SiteContent.create({ key: item.key, data: item.data });
+                await SiteContent.create({ conference: 'liutex', key: item.key, data: item.data });
             } else {
                 // Only fill in fields that are undefined/null/missing in the stored data
                 const patch = {};
@@ -434,20 +428,20 @@ async function seedDefaultData() {
                     }
                 }
                 if (Object.keys(patch).length > 0) {
-                    await SiteContent.updateOne({ key: item.key }, { $set: patch });
+                    await SiteContent.updateOne({ conference: 'liutex', key: item.key }, { $set: patch });
                     console.log(`🔧 Patched missing fields for '${item.key}':`, Object.keys(patch));
                 }
             }
         } else {
             // Insert-only: don't overwrite user edits for other sections
             await SiteContent.findOneAndUpdate(
-                { key: item.key },
-                { $setOnInsert: { key: item.key, data: item.data } },
+                { conference: 'liutex', key: item.key },
+                { $setOnInsert: { conference: 'liutex', key: item.key, data: item.data } },
                 { upsert: true, new: true }
             );
         }
     }
-    console.log('✅ Default data seeded');
+    console.log('✅ Default data seeded (liutex)');
 }
 
 // ─── ROUTES ──────────────────────────────────────────────────
@@ -458,21 +452,46 @@ app.get('/api/health', (req, res) => {
 });
 
 // ── Authentication
+// Supported conference accounts
+const CONFERENCE_ACCOUNTS = [
+    {
+        username: process.env.AUTH_USERNAME,        // LIUTEXVORTEXSUMMIT2026
+        otp: process.env.AUTH_OTP,
+        conferenceId: 'liutex',
+        displayName: 'LIUTEX VORTEX SUMMIT 2026',
+    },
+    {
+        username: process.env.AUTH_USERNAME_FOOD,   // FOODAGRISUMMIT2026
+        otp: process.env.AUTH_OTP_FOOD,
+        conferenceId: 'foodagri',
+        displayName: 'FOOD AGRI SUMMIT 2026',
+    },
+];
+
 app.post('/api/auth/login', (req, res) => {
     const { username, otp } = req.body;
-    const validUsername = process.env.AUTH_USERNAME;
-    const validOtp = process.env.AUTH_OTP;
 
     if (!username || !otp) {
         return res.status(400).json({ success: false, message: 'Username and OTP are required.' });
     }
-    if (username !== validUsername) {
+
+    const account = CONFERENCE_ACCOUNTS.find(
+        a => a.username && a.username.toLowerCase() === username.trim().toLowerCase()
+    );
+
+    if (!account) {
         return res.status(401).json({ success: false, message: 'Username not found. Please check and try again.' });
     }
-    if (otp !== validOtp) {
+    if (otp !== account.otp) {
         return res.status(401).json({ success: false, message: 'Invalid OTP. Please try again.' });
     }
-    return res.json({ success: true, message: 'Login successful.' });
+    return res.json({
+        success: true,
+        message: 'Login successful.',
+        conferenceId: account.conferenceId,
+        displayName: account.displayName,
+        username: account.username,
+    });
 });
 
 // Upload image (images only)
@@ -499,9 +518,11 @@ app.post('/api/upload-file', uploadFile.single('file'), (req, res) => {
 });
 
 // ── Site Content (Hero, About, Stats, Pricing, Sessions, Venue, etc.)
+// ?conference=liutex|foodagri  (defaults to 'liutex' if omitted)
 app.get('/api/content', async (req, res) => {
     try {
-        const all = await SiteContent.find({});
+        const conf = req.query.conference || 'liutex';
+        const all = await SiteContent.find({ conference: conf });
         const result = {};
         all.forEach(item => { result[item.key] = item.data; });
         res.json(result);
@@ -512,7 +533,8 @@ app.get('/api/content', async (req, res) => {
 
 app.get('/api/content/:key', async (req, res) => {
     try {
-        const item = await SiteContent.findOne({ key: req.params.key });
+        const conf = req.query.conference || 'liutex';
+        const item = await SiteContent.findOne({ conference: conf, key: req.params.key });
         if (!item) return res.status(404).json({ error: 'Content not found' });
         res.json(item.data);
     } catch (err) {
@@ -522,15 +544,16 @@ app.get('/api/content/:key', async (req, res) => {
 
 app.put('/api/content/:key', async (req, res) => {
     try {
+        const { conference: conf = 'liutex', ...bodyData } = req.body;
         // Build a dot-notation patch so partial saves from the dashboard
         // never wipe fields that weren't included in this request
         const patch = {};
-        for (const [field, value] of Object.entries(req.body)) {
+        for (const [field, value] of Object.entries(bodyData)) {
             patch[`data.${field}`] = value;
         }
         const result = await SiteContent.findOneAndUpdate(
-            { key: req.params.key },
-            { $set: patch },
+            { conference: conf, key: req.params.key },
+            { $set: { ...patch, conference: conf } },
             { upsert: true, new: true }
         );
         res.json({ success: true, data: result.data });
@@ -540,10 +563,11 @@ app.put('/api/content/:key', async (req, res) => {
 });
 
 // ── Speakers
+// ?conference=liutex|foodagri  (defaults to 'liutex')
 app.get('/api/speakers', async (req, res) => {
     try {
-        const { category } = req.query;
-        const filter = { visible: true };
+        const { category, conference: conf = 'liutex' } = req.query;
+        const filter = { visible: true, conference: conf };
         if (category) filter.category = category;
         const speakers = await Speaker.find(filter).sort({ order: 1, createdAt: 1 });
         res.json(speakers);
@@ -554,7 +578,8 @@ app.get('/api/speakers', async (req, res) => {
 
 app.get('/api/speakers/all', async (req, res) => {
     try {
-        const speakers = await Speaker.find({}).sort({ order: 1, createdAt: 1 });
+        const conf = req.query.conference || 'liutex';
+        const speakers = await Speaker.find({ conference: conf }).sort({ order: 1, createdAt: 1 });
         res.json(speakers);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -563,7 +588,7 @@ app.get('/api/speakers/all', async (req, res) => {
 
 app.post('/api/speakers', async (req, res) => {
     try {
-        const speaker = new Speaker(req.body);
+        const speaker = new Speaker(req.body); // conference comes from body
         await speaker.save();
         res.status(201).json(speaker);
     } catch (err) {
@@ -591,10 +616,11 @@ app.delete('/api/speakers/:id', async (req, res) => {
 });
 
 // ── Sponsors / Media Partners
+// ?conference=liutex|foodagri  (defaults to 'liutex')
 app.get('/api/sponsors', async (req, res) => {
     try {
-        const { type } = req.query;
-        const filter = { visible: true };
+        const { type, conference: conf = 'liutex' } = req.query;
+        const filter = { visible: true, conference: conf };
         if (type) filter.type = type;
         const sponsors = await Sponsor.find(filter).sort({ order: 1 });
         res.json(sponsors);
@@ -605,7 +631,8 @@ app.get('/api/sponsors', async (req, res) => {
 
 app.get('/api/sponsors/all', async (req, res) => {
     try {
-        const sponsors = await Sponsor.find({}).sort({ order: 1 });
+        const conf = req.query.conference || 'liutex';
+        const sponsors = await Sponsor.find({ conference: conf }).sort({ order: 1 });
         res.json(sponsors);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -614,7 +641,7 @@ app.get('/api/sponsors/all', async (req, res) => {
 
 app.post('/api/sponsors', async (req, res) => {
     try {
-        const sponsor = new Sponsor(req.body);
+        const sponsor = new Sponsor(req.body); // conference comes from body
         await sponsor.save();
         res.status(201).json(sponsor);
     } catch (err) {
@@ -643,10 +670,10 @@ app.delete('/api/sponsors/:id', async (req, res) => {
 
 
 // ─── Abstracts ────────────────────────────────────────────────
-// PUBLIC — website abstract form submits here
+// PUBLIC — website abstract form submits here (conference in body)
 app.post('/api/abstracts', async (req, res) => {
     try {
-        const abs = new Abstract(req.body);
+        const abs = new Abstract(req.body); // conference comes from body
         await abs.save();
         res.status(201).json(abs);
     } catch (err) {
@@ -654,10 +681,12 @@ app.post('/api/abstracts', async (req, res) => {
     }
 });
 
-// ADMIN — dashboard reads all abstracts
+// ADMIN — dashboard reads all abstracts for a conference
+// ?conference=liutex|foodagri  (defaults to 'liutex')
 app.get('/api/abstracts', async (req, res) => {
     try {
-        const abstracts = await Abstract.find().sort({ createdAt: -1 });
+        const conf = req.query.conference || 'liutex';
+        const abstracts = await Abstract.find({ conference: conf }).sort({ createdAt: -1 });
         res.json(abstracts);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -676,10 +705,10 @@ app.patch('/api/abstracts/:id', async (req, res) => {
 });
 
 // ─── Registrations ────────────────────────────────────────────
-// PUBLIC — website form submits here (no auth required)
+// PUBLIC — website form submits here (conference in body)
 app.post('/api/registrations', async (req, res) => {
     try {
-        const reg = new Registration(req.body);
+        const reg = new Registration(req.body); // conference comes from body
         await reg.save();
         res.status(201).json(reg);
     } catch (err) {
@@ -687,10 +716,12 @@ app.post('/api/registrations', async (req, res) => {
     }
 });
 
-// ADMIN — dashboard reads all registrations
+// ADMIN — dashboard reads registrations for a conference
+// ?conference=liutex|foodagri  (defaults to 'liutex')
 app.get('/api/registrations', async (req, res) => {
     try {
-        const regs = await Registration.find().sort({ createdAt: -1 });
+        const conf = req.query.conference || 'liutex';
+        const regs = await Registration.find({ conference: conf }).sort({ createdAt: -1 });
         res.json(regs);
     } catch (err) {
         res.status(500).json({ error: err.message });

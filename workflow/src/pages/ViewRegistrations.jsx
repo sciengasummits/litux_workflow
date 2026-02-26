@@ -1,23 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ClipboardList, Search, ChevronsUpDown, Filter, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
-
-const BASE_URL = 'http://localhost:5000/api';
-
-async function fetchRegistrations() {
-    const res = await fetch(`${BASE_URL}/registrations`);
-    if (!res.ok) throw new Error('Failed to fetch registrations');
-    return res.json();
-}
-
-async function patchRegistration(id, data) {
-    const res = await fetch(`${BASE_URL}/registrations/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error('Failed to update');
-    return res.json();
-}
+import { getRegistrations, updateRegistrationStatus } from '../api.js';
 
 function formatDate(dateStr) {
     if (!dateStr) return '—';
@@ -50,7 +33,7 @@ export default function ViewRegistrations() {
         setLoading(true);
         setError(null);
         try {
-            const data = await fetchRegistrations();
+            const data = await getRegistrations(); // uses conference from login session
             setRows(data);
         } catch (e) {
             setError(e.message);
@@ -95,7 +78,7 @@ export default function ViewRegistrations() {
     /* ─── Inline status update ─── */
     const handleStatusChange = async (id, newStatus) => {
         try {
-            const updated = await patchRegistration(id, { status: newStatus });
+            const updated = await updateRegistrationStatus(id, { status: newStatus });
             setRows(prev => prev.map(r => (r._id || r.id) === id ? updated : r));
         } catch { /* silent */ }
         setEditId(null);
