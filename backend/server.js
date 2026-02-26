@@ -6,6 +6,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs';
+import dns from 'dns';
+
+// ─── Critical Fix: Node.js c-ares DNS fails for mongodb.net on Windows ──────
+// c-ares (used by dns.resolve/resolveSrv) cannot reach DNS servers in this network.
+// dns.lookup uses the Windows OS resolver which works correctly.
+// By passing lookup: dns.lookup in mongoOptions, Mongoose uses the OS resolver.
+dns.setDefaultResultOrder('ipv4first');
+
+import { promises as dnsPromises } from 'dns';
 
 import SiteContent from './models/SiteContent.js';
 import Speaker from './models/Speaker.js';
@@ -14,6 +23,7 @@ import Registration from './models/Registration.js';
 import Abstract from './models/Abstract.js';
 
 dotenv.config();
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,42 +87,72 @@ const uploadFile = multer({
 
 // ─── MongoDB Connect (Atlas M0 resilient) ─────────────────────
 const mongoOptions = {
-    serverSelectionTimeoutMS: 15000,
+    serverSelectionTimeoutMS: 45000,
     socketTimeoutMS: 60000,
-    connectTimeoutMS: 15000,
-    heartbeatFrequencyMS: 5000,
+    connectTimeoutMS: 45000,
+    heartbeatFrequencyMS: 10000,
     maxPoolSize: 5,
     minPoolSize: 1,
-    bufferCommands: false,
+    family: 4,       // Force IPv4
+    lookup: dns.lookup, // Use OS DNS resolver (fixes c-ares failures on Windows)
+    // bufferCommands: true (Mongoose default) — safely queues ops while Atlas is waking up
 };
 
+let isConnected = false;
 let retryDelay = 3000;
+let connectingNow = false;
 
 async function connectDB() {
+    if (connectingNow || mongoose.connection.readyState === 1) return;
+    connectingNow = true;
     try {
-        if (mongoose.connection.readyState === 1) return;
+        console.log('🔌 Connecting to MongoDB Atlas...');
         await mongoose.connect(process.env.MONGODB_URI, mongoOptions);
+        isConnected = true;
         retryDelay = 3000;
         console.log('✅ MongoDB Atlas connected');
         seedDefaultData();
     } catch (err) {
+        isConnected = false;
         console.error(`❌ MongoDB connect failed: ${err.message}`);
+        if (err.message.includes('querySrv') || err.message.includes('ETIMEOUT'))
+            console.error('⚠️  DNS/network timeout — Atlas M0 may be waking up, will retry...');
+        if (err.message.includes('Authentication'))
+            console.error('⚠️  Check MONGODB_URI credentials in .env');
         console.log(`🔄 Retrying in ${retryDelay / 1000}s...`);
         setTimeout(connectDB, retryDelay);
         retryDelay = Math.min(retryDelay * 2, 30000);
+    } finally {
+        connectingNow = false;
     }
 }
 
 connectDB();
 
+// Prevent server crash on buffering timeouts (Atlas M0 slow cold-start)
+process.on('uncaughtException', (err) => {
+    if (err && err.message && err.message.includes('buffering timed out')) {
+        console.warn('⚠️  DB query buffering timed out (Atlas still connecting) — safe to ignore, retrying...');
+        return; // Don't exit — Atlas M0 will connect soon
+    }
+    console.error('💥 Uncaught exception:', err);
+    process.exit(1);
+});
+
+mongoose.connection.on('connected', () => {
+    isConnected = true;
+    console.log('🔗 Mongoose connected event');
+});
+
 mongoose.connection.on('disconnected', () => {
-    console.warn('⚠️  MongoDB disconnected — reconnecting...');
-    connectDB();
+    isConnected = false;
+    console.warn('⚠️  MongoDB disconnected — will reconnect in 5s...');
+    setTimeout(connectDB, 5000);
 });
 
 mongoose.connection.on('error', (err) => {
     console.error('❌ MongoDB connection error:', err.message);
-    mongoose.connection.close();
+    // Don't call .close() — it triggers a disconnect → reconnect loop
 });
 
 // Keep-alive ping every 30s to prevent Atlas dropping idle connections

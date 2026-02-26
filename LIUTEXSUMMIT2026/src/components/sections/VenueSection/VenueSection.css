@@ -1,0 +1,156 @@
+.venue {
+    position: relative;
+    color: var(--color-white);
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.venue__slides {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.venue__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+}
+
+.venue__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.35));
+    z-index: 1;
+}
+
+.venue__slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 1;
+}
+
+.venue__slide.active.next {
+    animation: slideInFromRight 0.8s ease-in-out;
+}
+
+.venue__slide.active.prev {
+    animation: slideInFromLeft 0.8s ease-in-out;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Bottom Controls */
+.venue__controls-bottom {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    z-index: 3;
+}
+
+.venue__arrow {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+}
+
+.venue__arrow:hover {
+    background: var(--color-primary-gradient);
+    border-color: transparent;
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(52, 120, 223, 0.6);
+}
+
+.venue__indicators {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.venue__indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+
+
+.venue__indicator.active {
+    background: white;
+    width: 40px;
+    border-radius: 6px;
+}
+
+.venue__indicator:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .venue {
+        min-height: 400px;
+    }
+
+    .venue__arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 1.5rem;
+    }
+
+    .venue__controls-bottom {
+        bottom: 1.5rem;
+        gap: 1.5rem;
+    }
+}

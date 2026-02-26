@@ -1,0 +1,278 @@
+@import './variables.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--color-text-body);
+    line-height: 1.6;
+    background-color: var(--color-white);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    color: var(--color-text-dark);
+    font-weight: 700;
+    margin-bottom: 0.5em;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-default);
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.section-padding {
+    padding: 80px 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gradient-text {
+    background: var(--color-primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Page Header Generic Styles */
+.page-header {
+    background: linear-gradient(135deg, rgba(52, 120, 223, 0.9) 0%, rgba(52, 120, 223, 0.8) 100%), url('../images/litex.avif');
+    background-size: cover;
+    background-position: center;
+    color: var(--color-white);
+    padding: 170px 0 70px;
+    text-align: center;
+    margin-top: 0;
+    position: relative;
+    border-bottom: 2px solid var(--color-primary-start);
+}
+
+.page-title {
+    font-size: 3.5rem;
+    /* Larger title */
+    margin-bottom: 0.5rem;
+    color: var(--color-white);
+    font-weight: 800;
+    text-transform: capitalize;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-breadcrumb {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Global Responsive Adjustments */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+    .section-padding {
+        padding: 50px 0;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 2rem;
+        padding: 0 1rem;
+    }
+
+    .page-header {
+        padding: 120px 0 50px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+}
+
+/* Utility Classes */
+.w-100 {
+    width: 100% !important;
+}
+
+.mt-1 {
+    margin-top: 0.5rem !important;
+}
+
+.mt-2 {
+    margin-top: 1rem !important;
+}
+
+.mt-3 {
+    margin-top: 1.5rem !important;
+}
+
+.mt-4 {
+    margin-top: 2rem !important;
+}
+
+.mt-5 {
+    margin-top: 3rem !important;
+}
+
+.mb-1 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mb-2 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.flex-column {
+    flex-direction: column !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.justify-content-center {
+    justify-content: center !important;
+}
+
+.gap-1 {
+    gap: 0.5rem !important;
+}
+
+.gap-2 {
+    gap: 1rem !important;
+}
+
+.gap-3 {
+    gap: 1.5rem !important;
+}
+
+/* Floating CPD Global Badge Styles */
+.cpd-floating-badge {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    width: 250px;
+    pointer-events: auto;
+    filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s ease;
+}
+
+.cpd-floating-badge:hover {
+    transform: scale(1.05);
+}
+
+.cpd-floating-badge img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+}
+
+/* Premium Blinking Animation */
+.blinking-image {
+    animation: fast-blink 0.8s ease-in-out infinite;
+}
+
+@keyframes fast-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.2));
+    }
+
+    50% {
+        opacity: 0.3;
+        transform: scale(0.94);
+        filter: drop-shadow(0 0 35px rgba(52, 120, 223, 0.8));
+    }
+}
+
+/* Hide on very small screens or adjust size */
+@media (max-width: 576px) {
+    .cpd-floating-badge {
+        width: 180px;
+        bottom: 20px;
+        right: 20px;
+    }
+}

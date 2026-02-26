@@ -14,7 +14,7 @@ export default function Topbar({ onToggleSidebar, eventName, username, onLogout 
             </div>
             <div className="topbar-right">
                 <div className="event-badge">
-                    {eventName || 'LIUTEXVORTEXSUMMIT2026'}
+                    {eventName || 'LIUTEXSUMMIT2026'}
                 </div>
 
                 {/* User menu */}
@@ -33,7 +33,7 @@ export default function Topbar({ onToggleSidebar, eventName, username, onLogout 
                         }}
                     >
                         <User size={14} />
-                        {username || 'LIUTEXVORTEXSUMMIT2026'}
+                        {username || 'LIUTEXSUMMIT2026'}
                     </button>
 
                     {showMenu && (

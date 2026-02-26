@@ -6,7 +6,7 @@ const ICON_OPTIONS = ['CalendarDays', 'CheckCircle', 'Clock', 'Star', 'Calendar'
 
 export default function ImportantDates() {
     const [form, setForm] = useState({
-        shortName: 'LIUTEXVORTEXSUMMIT2026',
+        shortName: 'LIUTEXSUMMIT2026',
         completeUrl: 'https://liutexvortexsummit.com/',
         title: 'Annual International Conference on Liutex and Vortex Identification',
         subject: 'Liutex and Vortex Identification',
@@ -112,7 +112,7 @@ export default function ImportantDates() {
             <div className="id-page-header">
                 <div>
                     <h1 className="id-title">Conference Info & Important Dates</h1>
-                    <p className="id-subtitle">All changes sync live to the LIUTEXVORTEXSUMMIT2026 website via backend API.</p>
+                    <p className="id-subtitle">All changes sync live to the LIUTEXSUMMIT2026 website via backend API.</p>
                 </div>
                 {status === 'saved' && (
                     <div className="id-save-badge"><CheckCircle size={15} /> Saved to database</div>
@@ -133,7 +133,7 @@ export default function ImportantDates() {
                     </div>
 
                     {[
-                        { key: 'shortName', label: 'Conference Short Name', type: 'text', placeholder: 'LIUTEXVORTEXSUMMIT2026' },
+                        { key: 'shortName', label: 'Conference Short Name', type: 'text', placeholder: 'LIUTEXSUMMIT2026' },
                         { key: 'completeUrl', label: 'Conference URL', type: 'url', placeholder: 'https://liutexvortexsummit.com/' },
                         { key: 'title', label: 'Full Conference Title', type: 'text', placeholder: 'Annual International Conference on...' },
                         { key: 'subject', label: 'Conference Subject', type: 'text', placeholder: 'Subject area' },

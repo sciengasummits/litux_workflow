@@ -1,6 +1,6 @@
 @echo off
 echo =====================================================
-echo  LIUTEX VORTEX SUMMIT 2026 - Full Stack Startup
+echo  LIUTEX SUMMIT 2026 - Full Stack Startup
 echo =====================================================
 
 echo.
@@ -19,7 +19,7 @@ start "Dashboard" cmd /k "cd /d "%~dp0workflow" && npm run dev"
 timeout /t 2 >nul
 
 echo [3/3] Starting Conference Website on port 5174...
-start "Conference Site" cmd /k "cd /d "%~dp0LIUTEXVORTEXSUMMIT2026" && npm run dev"
+start "Conference Site" cmd /k "cd /d "%~dp0LIUTEXSUMMIT2026" && npm run dev"
 
 echo.
 echo =====================================================
@@ -29,7 +29,7 @@ echo  - Dashboard:    http://localhost:5173
 echo  - Website:      http://localhost:5174  
 echo  - Backend API:  http://localhost:5000
 echo.
-echo  LOGIN: username = LIUTEXVORTEXSUMMIT2026
+echo  LOGIN: username = LIUTEXSUMMIT2026
 echo         OTP      = 1234
 echo =====================================================
 pause

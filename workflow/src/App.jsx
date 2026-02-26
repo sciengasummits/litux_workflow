@@ -31,7 +31,7 @@ import WebsiteSections from './pages/WebsiteSections';
 import Sessions from './pages/Sessions';
 import ConferenceSchedule from './pages/ConferenceSchedule';
 
-const VALID_USERNAME = 'LIUTEXVORTEXSUMMIT2026';
+const VALID_USERNAME = 'LIUTEXSUMMIT2026';
 const VALID_OTP = '1234';
 
 /* ── Simple page router ── */
@@ -118,7 +118,7 @@ export default function App() {
         {/* Topbar */}
         <Topbar
           onToggleSidebar={() => setCollapsed(c => !c)}
-          eventName="LIUTEXVORTEXSUMMIT2026"
+          eventName="LIUTEXSUMMIT2026"
           username={VALID_USERNAME}
           onLogout={() => setIsAuthenticated(false)}
         />
@@ -130,7 +130,7 @@ export default function App() {
 
         {/* Footer */}
         <footer className="page-footer">
-          <span>© Copyright 2026 <a href="#">LIUTEX VORTEX SUMMIT.</a></span>
+          <span>© Copyright 2026 <a href="#">LIUTEX SUMMIT.</a></span>
         </footer>
       </div>
     </div>

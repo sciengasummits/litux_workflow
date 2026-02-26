@@ -193,7 +193,7 @@ export default function WebsiteSections({ section }) {
             <div className="id-page-header">
                 <div>
                     <h1 className="id-title">Website Sections Manager</h1>
-                    <p className="id-subtitle">Edit all sections of the LIUTEXVORTEXSUMMIT2026 website. Changes save directly to MongoDB and reflect live on the site.</p>
+                    <p className="id-subtitle">Edit all sections of the LIUTEXSUMMIT2026 website. Changes save directly to MongoDB and reflect live on the site.</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {status === 'saved' && <div className="id-save-badge"><CheckCircle size={15} /> Saved!</div>}

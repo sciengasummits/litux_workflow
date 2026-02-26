@@ -1,0 +1,36 @@
+:root {
+  /* Unified Dark Blue Palette */
+  --color-primary-start: #3478DF;
+  /* Unified Deep Navy */
+  --color-primary-rgb: 52, 120, 223;
+  --color-primary-end: #3478DF;
+  --color-secondary-blue: #3478DF;
+
+  --color-accent-blue: #caf0f8;
+  --color-dark-void: #3478DF;
+
+  --color-primary-gradient: linear-gradient(135deg, #3478DF 0%, #3478DF 100%);
+  --color-vortex-gradient: radial-gradient(circle at center, #ffffff 0%, #3478DF 30%, #3478DF 100%);
+  --color-deep-blue-gradient: linear-gradient(180deg, #3478DF 0%, #3478DF 100%);
+
+  --color-text-dark: #000814;
+  /* Drenched Blue-Black */
+  --color-text-body: #1d3557;
+  /* Navy Slate */
+  --color-bg-light: #f0faff;
+  /* Pale Blue-White */
+  --color-white: #ffffff;
+
+  --font-primary: 'Open Sans', sans-serif;
+  --font-heading: 'Barlow', sans-serif;
+
+  --shadow-card: 0 10px 25px rgba(52, 120, 223, 0.15);
+  --shadow-glow: 0 0 20px rgba(52, 120, 223, 0.4);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --transition-default: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
