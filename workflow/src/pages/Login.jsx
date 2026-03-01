@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { User, Lock, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5000';
+// const API_BASE = 'http://localhost:5000';
+const API_BASE = 'https://litux-backend.onrender.com';
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState('');
