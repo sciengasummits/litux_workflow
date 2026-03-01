@@ -14,7 +14,7 @@ const ICON_LIST = [
 
 const DEFAULT_ITEMS = [
     { number: '15+', label: 'Years Experience' },
-    { number: '100+', label: 'Annual Events' },
+    { number: '100+', label: 'Events' },
     { number: '200+', label: 'Onsite Approach' },
     { number: '2000+', label: 'Speakers' },
     { number: '5000+', label: 'Attendees' },

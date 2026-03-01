@@ -1,0 +1,540 @@
+/* ────────────────────────────────────────────────────────────── */
+/* Discount Registration Page                                     */
+/* ────────────────────────────────────────────────────────────── */
+
+.discount-registration {
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+.discount-registration__content {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    padding: 2rem 1rem;
+}
+
+/* ── Stripe Badge ── */
+.stripe-badge-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .stripe-badge-wrapper {
+        position: static;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+}
+
+.stripe-badge {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stripe-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stripe-logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #6772e5;
+    letter-spacing: -0.5px;
+}
+
+.stripe-text {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #333;
+    line-height: 1.1;
+}
+
+.stripe-cards {
+    display: flex;
+    gap: 5px;
+}
+
+.stripe-cards img {
+    height: 18px;
+    opacity: 0.8;
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/* Discount Code Section                                          */
+/* ────────────────────────────────────────────────────────────── */
+.discount-code-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #fdf4ff 100%);
+    border: 1.5px dashed #4ade80;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
+}
+
+.discount-code-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.discount-icon {
+    color: var(--color-primary-start, #16a34a);
+}
+
+.discount-code-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.discount-code-desc {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0 0 1rem 0;
+}
+
+.discount-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.discount-code-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.discount-code-input:focus {
+    outline: none;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.discount-input--valid {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4;
+}
+
+.discount-input--invalid {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+.discount-apply-btn, .discount-remove-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.discount-apply-btn {
+    background: var(--color-primary-start);
+    color: white;
+}
+
+.discount-apply-btn:hover:not(:disabled) {
+    background: var(--color-primary-end);
+    transform: translateY(-1px);
+}
+
+.discount-apply-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.discount-remove-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.discount-remove-btn:hover {
+    background: #dc2626;
+}
+
+.spin-icon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.discount-msg {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.discount-msg--valid {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.discount-msg--invalid {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/* Form Sections                                                  */
+/* ────────────────────────────────────────────────────────────── */
+.section-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.discount-badge {
+    background: #22c55e;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/* Pricing Tables                                                 */
+/* ────────────────────────────────────────────────────────────── */
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.pricing-table th {
+    background: linear-gradient(135deg, var(--color-primary-start) 0%, var(--color-primary-end) 100%);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.pricing-table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.pricing-table tr:hover {
+    background-color: #f8fafc;
+}
+
+.selected-row {
+    background-color: #f0fdf4 !important;
+}
+
+.active-col {
+    position: relative;
+}
+
+.active-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #22c55e;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.6rem;
+    font-weight: 600;
+}
+
+.date {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.price-active {
+    font-weight: 700;
+    color: var(--color-primary-start);
+}
+
+.selected-price {
+    background-color: #dcfce7;
+}
+
+.original-price {
+    display: block;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+    margin-top: 2px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.radio-label input[type="radio"] {
+    margin: 0;
+}
+
+.sponsorship-table th {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/* Accommodation Section                                          */
+/* ────────────────────────────────────────────────────────────── */
+.accompanying-check {
+    margin-bottom: 1rem;
+}
+
+.check-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.check-label input[type="checkbox"] {
+    margin: 0;
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/* Summary Section                                                */
+/* ────────────────────────────────────────────────────────────── */
+.summary-section {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.total-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid var(--color-primary-start);
+}
+
+.total-label {
+    color: #64748b;
+}
+
+.total-amount {
+    color: var(--color-primary-start);
+    font-size: 1.4rem;
+}
+
+.savings-note {
+    background: #dcfce7;
+    color: #166534;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.terms-checkbox {
+    margin-bottom: 1rem;
+}
+
+.terms-link {
+    color: var(--color-primary-start);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.processing-fee {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.status {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status--success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.status--error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.submit-btn, .reset-btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--color-primary-start) 0%, var(--color-primary-end) 100%);
+    color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+}
+
+.reset-btn {
+    background: #64748b;
+    color: white;
+}
+
+.reset-btn:hover {
+    background: #475569;
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/* Responsive Design                                              */
+/* ────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .discount-registration__content {
+        padding: 1rem;
+    }
+    
+    .stripe-badge-wrapper {
+        position: static;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .discount-code-section {
+        padding: 1rem;
+    }
+    
+    .discount-input-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .discount-apply-btn, .discount-remove-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-table {
+        font-size: 0.8rem;
+    }
+    
+    .pricing-table th,
+    .pricing-table td {
+        padding: 0.5rem;
+    }
+    
+    .total-display {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}

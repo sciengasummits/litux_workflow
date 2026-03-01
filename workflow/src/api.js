@@ -82,3 +82,12 @@ export async function uploadImage(file) {
     if (!res.ok) throw new Error('Upload failed');
     return res.json(); // { url, filename }
 }
+
+// ── Discounts ─────────────────────────────────────────────────
+export const getDiscounts = () => request('GET', withConf('/discounts'));
+export const createDiscount = (data) =>
+    request('POST', '/discounts', { ...data, conference: _conference });
+export const deleteDiscount = (id) => request('DELETE', `/discounts/${id}`);
+
+// ── Dashboard Statistics ──────────────────────────────────────
+export const getDashboardStats = () => request('GET', withConf('/stats'));

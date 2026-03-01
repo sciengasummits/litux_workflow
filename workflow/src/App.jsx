@@ -12,6 +12,10 @@ import Speakers from './pages/Speakers';
 import PostersSpeakers from './pages/PostersSpeakers';
 import StudentsSpeakers from './pages/StudentsSpeakers';
 import DelegatesSpeakers from './pages/DelegatesSpeakers';
+import PlenarySpeakers from './pages/PlenarySpeakers';
+import KeynoteSpeakers from './pages/KeynoteSpeakers';
+import FeaturedSpeakers from './pages/FeaturedSpeakers';
+import InvitedSpeakers from './pages/InvitedSpeakers';
 import MetaTags from './pages/MetaTags';
 import UploadPdfs from './pages/UploadPdfs';
 import DailyUpdate from './pages/DailyUpdate';
@@ -58,11 +62,24 @@ const CONFERENCE_CONFIG = {
     accentColor: '#16a34a',   // green
     accentGlow: 'rgba(22,163,74,0.35)',
   },
+  fluid: {
+    conferenceId: 'fluid',
+    displayName: 'FLUID MECHANICS & TURBOMACHINERY 2026',
+    shortName: 'FLUID SUMMIT',
+    logoText: 'FM',
+    logoSub: 'Summit',
+    brandTop: 'FLUID MECHANICS',
+    brandSub: '& TURBOMACHINERY',
+    footerText: '© Copyright 2026 FLUID MECHANICS & TURBOMACHINERY SUMMIT.',
+    accentColor: '#0891b2',   // cyan-600
+    accentGlow: 'rgba(8,145,178,0.35)',
+  },
 };
 
 /* ── Simple page router ── */
 function PageContent({ activeNav, setActiveNav }) {
   switch (activeNav) {
+    // Existing mappings
     case 'committee': return <OrganizingCommittee />;
     case 'committee-speakers': return <CommitteeSpeakers />;
     case 'speakers-list': return <Speakers />;
@@ -94,6 +111,21 @@ function PageContent({ activeNav, setActiveNav }) {
     case 'ws-marquee': return <WebsiteSections section="marquee" />;
     case 'ws-pricing': return <WebsiteSections section="pricing" />;
     case 'ws-partners': return <WebsiteSections section="partners" />;
+    
+    // Dashboard card navigation mappings
+    case 'abstracts': return <ViewAbstracts />;
+    case 'registrations': return <ViewRegistrations />;
+    case 'scientific': return <Sessions />;
+    case 'committee': return <CommitteeSpeakers />;
+    case 'speakers-list': return <Speakers />;
+    case 'plenary': return <PlenarySpeakers />;
+    case 'keynote': return <KeynoteSpeakers />;
+    case 'featured': return <FeaturedSpeakers />;
+    case 'invited': return <InvitedSpeakers />;
+    case 'poster': return <PostersSpeakers />;
+    case 'student': return <StudentsSpeakers />;
+    case 'delegate': return <DelegatesSpeakers />;
+    case 'tracks': return <Sessions />;
 
     // Dashboard (default)
     default:

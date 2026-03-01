@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     Percent,
     List,
@@ -13,9 +13,14 @@ import {
     Star,
     CheckCircle,
     Copy,
+    RefreshCw,
+    AlertCircle,
 } from 'lucide-react';
+import { getConference } from '../api.js';
 
-const PERCENTAGES = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+const BASE_URL = 'http://localhost:5000/api';
+
+const PERCENTAGES = [5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100];
 
 const CATEGORIES = [
     {
@@ -44,35 +49,84 @@ export default function Discount() {
     const [category, setCategory] = useState('registration');
     const [percentage, setPercentage] = useState(10);
     const [discounts, setDiscounts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState(null);
     const [copied, setCopied] = useState(null);
 
+    const conference = getConference();
+
     const showToast = (msg, type = 'success') => {
         setToast({ msg, type });
-        setTimeout(() => setToast(null), 3000);
+        setTimeout(() => setToast(null), 3500);
     };
 
-    const handleCreate = () => {
+    // ── Fetch discounts from backend ──────────────────────────────
+    const fetchDiscounts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`${BASE_URL}/discounts?conference=${conference}`);
+            if (!res.ok) throw new Error('Failed to fetch');
+            const data = await res.json();
+            setDiscounts(data);
+        } catch (err) {
+            showToast('Failed to load discount codes. Is the backend running?', 'error');
+        } finally {
+            setLoading(false);
+        }
+    }, [conference]);
+
+    useEffect(() => {
+        fetchDiscounts();
+    }, [fetchDiscounts]);
+
+    // ── Create discount ───────────────────────────────────────────
+    const handleCreate = async () => {
         if (!coupon.trim()) {
             showToast('Please enter a discount coupon code.', 'error');
             return;
         }
-        const newDiscount = {
-            id: Date.now(),
-            coupon: coupon.trim().toUpperCase(),
-            category,
-            percentage,
-        };
-        setDiscounts(prev => [newDiscount, ...prev]);
-        setCoupon('');
-        setCategory('registration');
-        setPercentage(10);
-        showToast(`Discount code "${newDiscount.coupon}" created successfully!`);
+        setSaving(true);
+        try {
+            const res = await fetch(`${BASE_URL}/discounts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    conference,
+                    coupon: coupon.trim().toUpperCase(),
+                    category,
+                    percentage,
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                showToast(data.error || 'Failed to create code.', 'error');
+                return;
+            }
+            setCoupon('');
+            setCategory('registration');
+            setPercentage(10);
+            showToast(`Discount code "${data.coupon}" created successfully!`);
+            fetchDiscounts();
+            setActiveTab('view');
+        } catch (err) {
+            showToast('Network error. Is the backend running?', 'error');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handleDelete = (id) => {
-        setDiscounts(prev => prev.filter(d => d.id !== id));
-        showToast('Discount deleted.', 'error');
+    // ── Delete discount ───────────────────────────────────────────
+    const handleDelete = async (id, code) => {
+        if (!window.confirm(`Delete discount code "${code}"?`)) return;
+        try {
+            const res = await fetch(`${BASE_URL}/discounts/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Delete failed');
+            showToast(`Discount "${code}" deleted.`, 'error');
+            setDiscounts(prev => prev.filter(d => d._id !== id));
+        } catch (err) {
+            showToast('Failed to delete. Try again.', 'error');
+        }
     };
 
     const handleCopy = (code) => {
@@ -93,7 +147,7 @@ export default function Discount() {
             {/* Toast */}
             {toast && (
                 <div className={`disc-toast disc-toast--${toast.type}`}>
-                    <CheckCircle size={16} />
+                    {toast.type === 'error' ? <AlertCircle size={16} /> : <CheckCircle size={16} />}
                     <span>{toast.msg}</span>
                 </div>
             )}
@@ -104,13 +158,24 @@ export default function Discount() {
                     <Percent size={26} className="disc-header-icon" />
                     <h1 className="disc-title">Discount</h1>
                 </div>
-                <button
-                    className="disc-view-all-btn"
-                    onClick={() => setActiveTab('view')}
-                    id="disc-view-all-btn"
-                >
-                    <List size={16} /> View All Discounts
-                </button>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button
+                        className="disc-view-all-btn"
+                        onClick={fetchDiscounts}
+                        id="disc-refresh-btn"
+                        title="Refresh"
+                        style={{ padding: '8px 12px' }}
+                    >
+                        <RefreshCw size={16} />
+                    </button>
+                    <button
+                        className="disc-view-all-btn"
+                        onClick={() => setActiveTab('view')}
+                        id="disc-view-all-btn"
+                    >
+                        <List size={16} /> View All Discounts
+                    </button>
+                </div>
             </div>
 
             {/* ── Tabs ── */}
@@ -127,7 +192,7 @@ export default function Discount() {
                     className={`disc-tab-btn disc-tab-btn--outline${activeTab === 'view' ? ' disc-tab-btn--outline-active' : ''}`}
                     onClick={() => setActiveTab('view')}
                 >
-                    <Eye size={15} /> View Discounts
+                    <Eye size={15} /> View Discounts {discounts.length > 0 && `(${discounts.length})`}
                 </button>
             </div>
 
@@ -145,12 +210,15 @@ export default function Discount() {
                             id="disc-coupon-input"
                             className="disc-coupon-input"
                             type="text"
-                            placeholder="ENTER DISCOUNT CODE"
+                            placeholder="ENTER DISCOUNT CODE (e.g. SAVE20)"
                             value={coupon}
-                            onChange={e => setCoupon(e.target.value)}
+                            onChange={e => setCoupon(e.target.value.toUpperCase())}
                             onKeyDown={e => e.key === 'Enter' && handleCreate()}
                             maxLength={30}
                         />
+                        <p style={{ marginTop: '6px', fontSize: '0.8rem', color: '#888' }}>
+                            Share this code with the user — they'll enter it on the Discount Registration page of the website.
+                        </p>
                     </div>
 
                     {/* Category */}
@@ -201,8 +269,10 @@ export default function Discount() {
                         id="disc-create-btn"
                         className="disc-create-btn"
                         onClick={handleCreate}
+                        disabled={saving}
+                        style={{ opacity: saving ? 0.7 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
                     >
-                        <Save size={16} /> Create Discount Code
+                        <Save size={16} /> {saving ? 'Saving…' : 'Create Discount Code'}
                     </button>
                 </div>
             )}
@@ -210,7 +280,12 @@ export default function Discount() {
             {/* ── View Tab ── */}
             {activeTab === 'view' && (
                 <div className="disc-view-card">
-                    {discounts.length === 0 ? (
+                    {loading ? (
+                        <div className="disc-empty">
+                            <RefreshCw size={36} className="disc-empty-icon" style={{ animation: 'spin 1s linear infinite' }} />
+                            <p>Loading discount codes…</p>
+                        </div>
+                    ) : discounts.length === 0 ? (
                         <div className="disc-empty">
                             <Percent size={48} className="disc-empty-icon" />
                             <p>No discount codes created yet.</p>
@@ -236,12 +311,12 @@ export default function Discount() {
                                 </thead>
                                 <tbody>
                                     {discounts.map((d, idx) => (
-                                        <tr key={d.id} className={`disc-tr${idx % 2 !== 0 ? ' disc-tr-alt' : ''}`}>
+                                        <tr key={d._id} className={`disc-tr${idx % 2 !== 0 ? ' disc-tr-alt' : ''}`}>
                                             <td className="disc-td" style={{ textAlign: 'center' }}>{idx + 1}</td>
                                             <td className="disc-td">
                                                 <span className="disc-code-chip">{d.coupon}</span>
                                             </td>
-                                            <td className="disc-td">{categoryLabel[d.category]}</td>
+                                            <td className="disc-td">{categoryLabel[d.category] || d.category}</td>
                                             <td className="disc-td" style={{ textAlign: 'center' }}>
                                                 <span className="disc-pct-chip">{d.percentage}%</span>
                                             </td>
@@ -257,7 +332,7 @@ export default function Discount() {
                                             <td className="disc-td" style={{ textAlign: 'center' }}>
                                                 <button
                                                     className="disc-icon-btn disc-del-btn"
-                                                    onClick={() => handleDelete(d.id)}
+                                                    onClick={() => handleDelete(d._id, d.coupon)}
                                                     title="Delete"
                                                 >
                                                     <Trash2 size={15} />

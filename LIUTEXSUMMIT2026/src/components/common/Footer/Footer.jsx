@@ -69,7 +69,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer__bottom">
-                    <p>&copy; {new Date().getFullYear()} Annual International Conference on Liutex Theory and Applications in Vortex Identification and Vortex Dynamics. All Rights Reserved by SCIENGA SUMMITS</p>
+                    <p>&copy; {new Date().getFullYear()} International Conference on Liutex Theory and Applications in Vortex Identification and Vortex Dynamics. All Rights Reserved by SCIENGA SUMMITS</p>
                 </div>
             </div>
         </footer>

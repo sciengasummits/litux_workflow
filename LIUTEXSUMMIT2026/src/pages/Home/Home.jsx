@@ -15,7 +15,7 @@ const Home = () => {
             <HeroSection />
             <AboutSection />
             <StatsSection />
-            <SpeakersSection />
+            <SpeakersSection showViewAll={true} />
             <PricingSection />
             <KeyThemesSection showLearnMore={true} />
             <PreviousConferenceSection />

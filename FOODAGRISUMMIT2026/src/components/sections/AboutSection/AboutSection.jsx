@@ -9,7 +9,7 @@ const AboutSection = () => {
     const [about, setAbout] = useState({
         subtitle: 'Advancing Food Innovation',
         title: 'About The Conference',
-        paragraph1: 'The Annual International Conference on Food Science Technology and Agriculture is a premier international platform dedicated to advancing the understanding of food science, agricultural innovation, and sustainable food systems.',
+        paragraph1: 'The International Conference on Food Science Technology and Agriculture is a premier international platform dedicated to advancing the understanding of food science, agricultural innovation, and sustainable food systems.',
         paragraph2: 'This conference brings together leading researchers, academicians, food scientists, agricultural experts, and industry professionals to explore recent developments, innovative technologies, sustainable practices, and real-world applications in food science and agriculture.',
         objectives: [
             'Promote advancements in food science and technology',

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
     FileText,
     ClipboardList,
@@ -7,79 +8,212 @@ import {
     Megaphone,
     Star,
     UserPlus,
-    Layers
+    Layers,
+    GraduationCap,
+    Briefcase,
+    Image
 } from 'lucide-react';
-
-const STATS = [
-    {
-        id: 'abstracts',
-        label: 'Abstracts',
-        value: 12,
-        icon: <FileText size={28} strokeWidth={2} />,
-        color: 'teal',
-    },
-    {
-        id: 'registrations',
-        label: 'Registrations',
-        value: 62,
-        icon: <ClipboardList size={28} strokeWidth={2} />,
-        color: 'green',
-    },
-    {
-        id: 'scientific',
-        label: 'Scientific Programme',
-        value: 0,
-        icon: <BookOpen size={28} strokeWidth={2} />,
-        color: 'gold',
-    },
-    {
-        id: 'committee',
-        label: 'Committee',
-        value: 11,
-        icon: <Users size={28} strokeWidth={2} />,
-        color: 'teal',
-    },
-    {
-        id: 'plenary',
-        label: 'Plenary Speakers',
-        value: 4,
-        icon: <Mic size={28} strokeWidth={2} />,
-        color: 'green',
-    },
-    {
-        id: 'keynote',
-        label: 'Keynote Speakers',
-        value: 6,
-        icon: <Megaphone size={28} strokeWidth={2} />,
-        color: 'gold',
-    },
-    {
-        id: 'featured',
-        label: 'Featured Speakers',
-        value: 0,
-        icon: <Star size={28} strokeWidth={2} />,
-        color: 'teal',
-    },
-    {
-        id: 'invited',
-        label: 'Invited Speakers',
-        value: 0,
-        icon: <UserPlus size={28} strokeWidth={2} />,
-        color: 'green',
-    },
-    {
-        id: 'tracks',
-        label: 'Tracks',
-        value: 0,
-        icon: <Layers size={28} strokeWidth={2} />,
-        color: 'gold',
-    },
-];
+import { getDashboardStats, getConference } from '../api.js';
 
 export default function StatsGrid({ onCardClick }) {
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentConference, setCurrentConference] = useState('liutex');
+
+    // Fetch dashboard statistics
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                setLoading(true);
+                const data = await getDashboardStats();
+                setStats(data);
+                setCurrentConference(getConference());
+                setError(null);
+            } catch (err) {
+                console.error('Failed to fetch dashboard stats:', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+        
+        // Refresh stats every 30 seconds
+        const interval = setInterval(fetchStats, 30000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // Define stats configuration with dynamic values
+    const getStatsConfig = (data) => {
+        // Check if current conference is LIUTEX to show simplified layout
+        const isLiutex = currentConference === 'liutex';
+        
+        if (isLiutex) {
+            // Simplified layout for LIUTEX
+            return [
+                {
+                    id: 'abstracts',
+                    label: 'Abstracts',
+                    value: data?.abstracts || 0,
+                    icon: <FileText size={28} strokeWidth={2} />,
+                    color: 'teal',
+                },
+                {
+                    id: 'registrations',
+                    label: 'Registrations',
+                    value: data?.registrations || 0,
+                    icon: <ClipboardList size={28} strokeWidth={2} />,
+                    color: 'green',
+                },
+                {
+                    id: 'scientific',
+                    label: 'Scientific Programme',
+                    value: data?.scientificProgramme || 0,
+                    icon: <BookOpen size={28} strokeWidth={2} />,
+                    color: 'gold',
+                },
+                {
+                    id: 'committee',
+                    label: 'Committee Speakers',
+                    value: data?.speakers?.committee || 0,
+                    icon: <Users size={28} strokeWidth={2} />,
+                    color: 'teal',
+                },
+                {
+                    id: 'speakers-list',
+                    label: 'All Speakers',
+                    value: data?.speakers?.total || 0,
+                    icon: <Mic size={28} strokeWidth={2} />,
+                    color: 'green',
+                },
+                {
+                    id: 'poster',
+                    label: 'Poster Speakers',
+                    value: data?.speakers?.poster || 0,
+                    icon: <Image size={28} strokeWidth={2} />,
+                    color: 'gold',
+                },
+                {
+                    id: 'student',
+                    label: 'Student Speakers',
+                    value: data?.speakers?.student || 0,
+                    icon: <GraduationCap size={28} strokeWidth={2} />,
+                    color: 'teal',
+                },
+                {
+                    id: 'delegate',
+                    label: 'Delegate Speakers',
+                    value: data?.speakers?.delegate || 0,
+                    icon: <Briefcase size={28} strokeWidth={2} />,
+                    color: 'green',
+                },
+                {
+                    id: 'sessions',
+                    label: 'Sessions',
+                    value: data?.sessions || 0,
+                    icon: <Layers size={28} strokeWidth={2} />,
+                    color: 'gold',
+                },
+            ];
+        } else {
+            // Original layout for FOOD and FLUID
+            return [
+                {
+                    id: 'abstracts',
+                    label: 'Abstracts',
+                    value: data?.abstracts || 0,
+                    icon: <FileText size={28} strokeWidth={2} />,
+                    color: 'teal',
+                },
+                {
+                    id: 'registrations',
+                    label: 'Registrations',
+                    value: data?.registrations || 0,
+                    icon: <ClipboardList size={28} strokeWidth={2} />,
+                    color: 'green',
+                },
+                {
+                    id: 'scientific',
+                    label: 'Scientific Programme',
+                    value: data?.scientificProgramme || 0,
+                    icon: <BookOpen size={28} strokeWidth={2} />,
+                    color: 'gold',
+                },
+                {
+                    id: 'committee',
+                    label: 'Committee',
+                    value: data?.speakers?.committee || 0,
+                    icon: <Users size={28} strokeWidth={2} />,
+                    color: 'teal',
+                },
+                {
+                    id: 'plenary',
+                    label: 'Plenary Speakers',
+                    value: data?.speakers?.plenary || 0,
+                    icon: <Mic size={28} strokeWidth={2} />,
+                    color: 'green',
+                },
+                {
+                    id: 'keynote',
+                    label: 'Keynote Speakers',
+                    value: data?.speakers?.keynote || 0,
+                    icon: <Megaphone size={28} strokeWidth={2} />,
+                    color: 'gold',
+                },
+                {
+                    id: 'featured',
+                    label: 'Featured Speakers',
+                    value: data?.speakers?.featured || 0,
+                    icon: <Star size={28} strokeWidth={2} />,
+                    color: 'teal',
+                },
+                {
+                    id: 'invited',
+                    label: 'Invited Speakers',
+                    value: data?.speakers?.invited || 0,
+                    icon: <UserPlus size={28} strokeWidth={2} />,
+                    color: 'green',
+                },
+                {
+                    id: 'tracks',
+                    label: 'Tracks',
+                    value: data?.sessions || 0,
+                    icon: <Layers size={28} strokeWidth={2} />,
+                    color: 'gold',
+                },
+            ];
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="stats-grid">
+                <div className="stats-loading">
+                    <div className="loading-spinner"></div>
+                    <p>Loading dashboard statistics...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="stats-grid">
+                <div className="stats-error">
+                    <p>Error loading statistics: {error}</p>
+                    <button onClick={() => window.location.reload()}>Retry</button>
+                </div>
+            </div>
+        );
+    }
+
+    const statsConfig = getStatsConfig(stats);
+
     return (
         <div className="stats-grid">
-            {STATS.map((stat) => (
+            {statsConfig.map((stat) => (
                 <div
                     key={stat.id}
                     className={`stat-card ${stat.color}`}

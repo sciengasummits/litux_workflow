@@ -9,6 +9,7 @@ export default function Login({ onLogin }) {
   const [showOtpStep, setShowOtpStep] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [otpSentMessage, setOtpSentMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const otpRefs = [useRef(), useRef(), useRef(), useRef()];
@@ -29,21 +30,22 @@ export default function Login({ onLogin }) {
     }
     setLoading(true);
     try {
-      // Validate username against backend
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      // Generate and send OTP
+      const res = await fetch(`${API_BASE}/api/auth/generate-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.trim(), otp: '____' }) // dummy otp to check username first
+        body: JSON.stringify({ username: username.trim() })
       });
       const data = await res.json();
-      // If the error is about OTP, username is valid — proceed to OTP step
-      if (data.success || data.message === 'Invalid OTP. Please try again.') {
+      
+      if (data.success) {
         setLoading(false);
         setOtpSent(true);
         setShowOtpStep(true);
+        setOtpSentMessage(data.message);
       } else {
         setLoading(false);
-        setError(data.message || 'Username not found. Please check and try again.');
+        setError(data.message || 'Failed to send OTP. Please try again.');
       }
     } catch {
       setLoading(false);
@@ -114,6 +116,7 @@ export default function Login({ onLogin }) {
     setOtp(['', '', '', '']);
     setError('');
     setOtpSent(false);
+    setOtpSentMessage('');
   }
 
   return (
@@ -212,6 +215,13 @@ export default function Login({ onLogin }) {
               {/* Step 2: OTP */}
               {showOtpStep && (
                 <form onSubmit={handleSignIn} className="login-form">
+                  {otpSentMessage && (
+                    <div className="login-success-notice">
+                      <CheckCircle2 size={13} />
+                      <span>{otpSentMessage}</span>
+                    </div>
+                  )}
+                  
                   {otpSent && (
                     <div className="login-otp-notice">
                       <Lock size={13} />
@@ -262,7 +272,7 @@ export default function Login({ onLogin }) {
         </div>
 
         <p className="login-footer-text">
-          © 2026 LIUTEX VORTEX SUMMIT. All rights reserved.
+          © 2026 LIUTEX SUMMIT. All rights reserved.
         </p>
       </div>
 
@@ -596,6 +606,19 @@ export default function Login({ onLogin }) {
           border: 1px solid rgba(255,255,255,0.07);
           border-radius: 8px;
           padding: 8px 12px;
+        }
+
+        .login-success-notice {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.75rem;
+          color: #22c55e;
+          background: rgba(34,197,94,0.1);
+          border: 1px solid rgba(34,197,94,0.3);
+          border-radius: 8px;
+          padding: 8px 12px;
+          margin-bottom: 10px;
         }
 
         /* ── Buttons ── */

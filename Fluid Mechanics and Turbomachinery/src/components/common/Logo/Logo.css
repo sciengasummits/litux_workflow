@@ -1,0 +1,102 @@
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-text-dark);
+    transition: transform 0.3s ease;
+}
+
+.app-logo:hover {
+    transform: scale(1.02);
+}
+
+.logo-icon-container {
+    position: relative;
+    color: var(--color-primary-end);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon-primary {
+    color: #FFC107;
+}
+
+.logo-icon-heart {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    color: var(--color-primary-start);
+    /* Accent color for the heart */
+    animation: heartPulse 1.5s infinite;
+}
+
+@keyframes heartPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.logo-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+}
+
+.logo-text-main {
+    font-size: 1.5rem;
+    /* Adjusted to match icon height better */
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--color-text-dark);
+    line-height: 1;
+    /* Ensure line-height doesn't add extra space */
+    display: flex;
+    align-items: center;
+}
+
+/* Logo text styling removal of old classes */
+/* .logo-text-top and .logo-text-sub were removed in previous step implicitly by overwritten them or making them unused */
+
+.logo-text-sub {
+    display: none;
+    /* Safely hide any lingering elements if they exist in markup */
+}
+
+/* Footer variant styles */
+.footer__coll-logo .app-logo {
+    color: white;
+}
+
+.footer__coll-logo .logo-icon-primary {
+    color: white;
+}
+
+.footer__coll-logo .logo-text-main {
+    color: white;
+}
+
+.footer__coll-logo .logo-text-top {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer__coll-logo .logo-text-sub {
+    color: #a0d2eb;
+    /* Lighter blue for dark background */
+}
+
+/* Footer-specific logo sizing to prevent collision */
+.footer__coll-logo .logo-text-main {
+    font-size: 1.2rem;
+    white-space: nowrap;
+}

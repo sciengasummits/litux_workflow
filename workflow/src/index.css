@@ -495,7 +495,14 @@ body,
 }
 
 /* ---------- RESPONSIVE ---------- */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 900px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -572,6 +579,65 @@ body,
 
 .stat-card:nth-child(9) {
   animation-delay: 0.45s;
+}
+
+.stat-card:nth-child(10) {
+  animation-delay: 0.50s;
+}
+
+/* Stats loading and error states */
+.stats-loading, .stats-error {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.stats-loading p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.stats-error p {
+  color: var(--text-danger, #ef4444);
+  margin: 0 0 16px 0;
+}
+
+.stats-error button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.stats-error button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* ===================================================

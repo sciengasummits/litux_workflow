@@ -18,7 +18,7 @@ const Program = () => {
             {
                 time: "09:00 - 10:00",
                 title: "Opening Ceremony",
-                description: "Official opening of the Annual International Conference on Food Science Technology and Agriculture. Welcome address by the Organizing Committee.",
+                description: "Official opening of the International Conference on Food Science Technology and Agriculture. Welcome address by the Organizing Committee.",
                 location: "Main Hall",
                 icon: <Mic size={18} />,
                 type: "Ceremony"

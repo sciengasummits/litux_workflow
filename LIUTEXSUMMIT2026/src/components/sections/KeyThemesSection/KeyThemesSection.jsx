@@ -146,14 +146,14 @@ const KeyThemesSection = ({ showLearnMore = false }) => {
                                     onClick={() => setActiveDay('day2')}
                                 >
                                     <span className="tab-day">Day 02</span>
-                                    <span className="tab-date">Discussions</span>
+                                    <span className="tab-date">Conference</span>
                                 </button>
                                 <button
                                     className={`schedule__tab ${activeDay === 'day3' ? 'active' : ''}`}
                                     onClick={() => setActiveDay('day3')}
                                 >
                                     <span className="tab-day">Day 03</span>
-                                    <span className="tab-date">Workshops</span>
+                                    <span className="tab-date">Conference</span>
                                 </button>
                             </div>
                         </div>

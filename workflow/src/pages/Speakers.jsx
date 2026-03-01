@@ -47,7 +47,7 @@ const CATEGORIES = [
     { key: 'Delegate', label: 'Delegates', db: 'Delegate', color: '#ec4899' },
 ];
 
-const EMPTY_FORM = { name: '', title: '', affiliation: '', country: '', bio: '', image: null, category: 'Committee' };
+const EMPTY_FORM = { name: '', title: '', affiliation: '', country: '', bio: '', image: null, category: 'Committee', visible: true };
 const PAGE_SIZE_OPTS = [5, 10, 25, 50];
 
 export default function AllSpeakers() {
@@ -137,9 +137,26 @@ export default function AllSpeakers() {
         setModal({ mode: 'add' });
     };
     const openEdit = (s) => {
-        setForm({ name: s.name || '', title: s.title || '', affiliation: s.affiliation || '', country: s.country || '', bio: s.bio || '', image: s.image || null, category: s.category || 'Committee' });
+        setForm({ name: s.name || '', title: s.title || '', affiliation: s.affiliation || '', country: s.country || '', bio: s.bio || '', image: s.image || null, category: s.category || 'Committee', visible: s.visible !== false });
         setImagePreview(s.image || null);
         setModal({ mode: 'edit', id: s._id || s.id });
+    };
+
+    /* ─── Make all existing speakers visible (one-click fix) ─── */
+    const makeAllVisible = async () => {
+        setDbStatus('saving');
+        try {
+            const hidden = all.filter(s => s.visible === false || s.visible === undefined);
+            for (const s of hidden) {
+                if (s._id) await updateSpeaker(s._id, { ...s, visible: true });
+            }
+            await loadAll();
+            setDbStatus('saved');
+            setTimeout(() => setDbStatus(null), 3000);
+        } catch {
+            setDbStatus('error');
+            setTimeout(() => setDbStatus(null), 4000);
+        }
     };
     const closeModal = () => { setModal(null); setImagePreview(null); };
 
@@ -217,6 +234,11 @@ export default function AllSpeakers() {
                         )}
                         <button onClick={loadAll} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0', borderRadius: '9px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>
                             <RefreshCw size={14} /> Refresh
+                        </button>
+                        <button onClick={makeAllVisible} disabled={dbStatus === 'saving'}
+                            title="Set visible=true on all speakers so they appear on the website"
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', background: '#dcfce7', color: '#15803d', border: '1px solid #86efac', borderRadius: '9px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>
+                            <CheckCircle size={14} /> Make All Visible
                         </button>
                         <button onClick={saveAllToDb} disabled={dbStatus === 'saving'}
                             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 18px', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff', border: 'none', borderRadius: '9px', cursor: 'pointer', fontWeight: 700, fontSize: '13px', boxShadow: '0 4px 14px rgba(99,102,241,0.35)' }}>
@@ -446,6 +468,20 @@ export default function AllSpeakers() {
 
                             <label className="sp-label">Biography</label>
                             <textarea className="sp-textarea" rows={4} placeholder="Short biography…" value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} />
+
+                            <label className="sp-label" style={{ marginTop: '8px' }}>Visibility on Website</label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: form.visible ? '#dcfce7' : '#fef2f2', border: `1px solid ${form.visible ? '#86efac' : '#fca5a5'}`, borderRadius: '8px' }}>
+                                <input
+                                    type="checkbox"
+                                    id="speaker-visible"
+                                    checked={!!form.visible}
+                                    onChange={e => setForm(f => ({ ...f, visible: e.target.checked }))}
+                                    style={{ width: 16, height: 16, cursor: 'pointer', accentColor: '#16a34a' }}
+                                />
+                                <label htmlFor="speaker-visible" style={{ cursor: 'pointer', fontWeight: 600, fontSize: '13px', color: form.visible ? '#15803d' : '#dc2626', margin: 0 }}>
+                                    {form.visible ? '✓ Visible — will appear on the website' : '✗ Hidden — will NOT appear on the website'}
+                                </label>
+                            </div>
                         </div>
                         <div className="sp-modal-footer">
                             <button className="sp-btn-cancel" onClick={closeModal}>Cancel</button>

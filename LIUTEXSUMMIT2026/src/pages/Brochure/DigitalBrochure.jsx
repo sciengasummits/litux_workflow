@@ -11,7 +11,7 @@ const DigitalBrochure = () => {
                     <div className="vortex-background"></div>
                     <div className="brochure-content">
                         <header className="brochure-header">
-                            <h4 className="brochure-subtitle-top">Annual International Conference on</h4>
+                            <h4 className="brochure-subtitle-top">International Conference on</h4>
                             <h1 className="brochure-main-title">
                                 Liutex Theory and Applications <br />
                                 <span>in Vortex Identification and Vortex Dynamics</span>
@@ -50,7 +50,7 @@ const DigitalBrochure = () => {
                         <div className="sheet-side-accent"></div>
                         <h2 className="sheet-title">Conference Overview</h2>
                         <p className="sheet-description">
-                            The Annual International Conference on Liutex Theory and Applications is the premier gathering for experts in vortex identification. This summit bridges the gap between pure mathematics and practical engineering.
+                            The International Conference on Liutex Theory and Applications is the premier gathering for experts in vortex identification. This summit bridges the gap between pure mathematics and practical engineering.
                         </p>
 
                         <div className="sheet-grid">

@@ -6,9 +6,9 @@ import cpdImage from '../../../assets/images/Media.jpg';
 import { fetchContent } from '../../../api/siteApi';
 
 const DEFAULTS = {
-    subtitle: 'ANNUAL INTERNATIONAL CONFERENCE ON',
+    subtitle: 'INTERNATIONAL CONFERENCE ON',
     title: 'FOOD SCIENCE TECHNOLOGY AND AGRICULTURE',
-    description: 'Annual International Conference on Food Science Technology and Agriculture, where global experts unite to shape the future of food science and agricultural innovation. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming our world.',
+    description: 'International Conference on Food Science Technology and Agriculture, where global experts unite to shape the future of food science and agricultural innovation. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming our world.',
     conferenceDate: 'December 07-09, 2026',
     venue: 'Marina Bay, Singapore',
     countdownTarget: 'December 07, 2026 09:00:00 GMT+0800',

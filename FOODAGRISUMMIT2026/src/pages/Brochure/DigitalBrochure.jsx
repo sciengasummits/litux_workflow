@@ -34,7 +34,7 @@ const DigitalBrochure = () => {
                 <div className="brochure-header">
                     <div className="brochure-badge">Official Guide</div>
                     <h1 className="brochure-title">
-                        ANNUAL INTERNATIONAL CONFERENCE ON <br />
+                        INTERNATIONAL CONFERENCE ON <br />
                         <span className="highlight-text">FOOD SCIENCE TECHNOLOGY AND AGRICULTURE</span> <br />
                         <span className="subtitle">Your Official Digital Platform Guide</span>
                     </h1>
@@ -42,7 +42,7 @@ const DigitalBrochure = () => {
 
                 <div className="brochure-body">
                     <p className="brochure-intro">
-                        The Annual International Conference on Food Science Technology and Agriculture (AICFSTA) digital platform
+                        The International Conference on Food Science Technology and Agriculture (ICFSTA) digital platform
                         is the single authoritative hub for the 2026 experience. Built for researchers, agriculturists,
                         food scientists, and delegates, the platform centralizes everything from program schedules and
                         speaker profiles to abstract submission workflows and sponsor engagement tools. Designed around

@@ -22,7 +22,7 @@ const stats = [
         id: 2,
         icon: <CalendarCheck size={32} />,
         number: "100+",
-        label: "Annual Events"
+        label: "Events"
     },
     {
         id: 3,

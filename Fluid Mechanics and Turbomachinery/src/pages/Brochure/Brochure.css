@@ -1,0 +1,162 @@
+.brochure-page {
+    background-color: #f8f9fa;
+    padding-top: 100px;
+}
+
+.brochure-content {
+    background-color: white;
+}
+
+.brochure-grid {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.brochure-preview {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.preview-card {
+    background: linear-gradient(135deg, var(--color-primary-start), var(--color-primary-end));
+    color: white;
+    width: 280px;
+    min-height: 380px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-5px);
+}
+
+.preview-icon {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+}
+
+.preview-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.preview-card p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.preview-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ffc107;
+    color: black;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.brochure-details {
+    flex: 1.5;
+}
+
+.brochure-features {
+    list-style: none;
+    padding: 0;
+}
+
+.brochure-features li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: var(--color-text-body);
+}
+
+.feature-icon {
+    color: var(--color-primary-start);
+    flex-shrink: 0;
+}
+
+.brochure-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.download-btn,
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.download-btn {
+    background: var(--color-primary-gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(37, 104, 176, 0.3);
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 104, 176, 0.4);
+}
+
+.view-btn {
+    background: white;
+    border: 2px solid #e0e0e0;
+    color: var(--color-text-dark);
+}
+
+.view-btn:hover {
+    border-color: var(--color-primary-start);
+    color: var(--color-primary-start);
+}
+
+.download-note {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+@media (max-width: 768px) {
+    .brochure-grid {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .brochure-features li {
+        justify-content: center;
+    }
+
+    .brochure-actions {
+        justify-content: center;
+        flex-direction: column;
+    }
+}

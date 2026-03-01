@@ -14,7 +14,7 @@ const Footer = () => {
                             <Logo />
                         </div>
                         <p className="footer__desc">
-                            Annual International Conference on Food Science Technology and Agriculture, where global experts unite to shape the future of food science and agricultural innovation.
+                            International Conference on Food Science Technology and Agriculture, where global experts unite to shape the future of food science and agricultural innovation.
                         </p>
                         <div className="footer__socials">
                             <a href="https://www.facebook.com/profile.php?id=61588065033161" target="_blank" rel="noopener noreferrer" className="social-icon"><Facebook size={20} /></a>
@@ -69,7 +69,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer__bottom">
-                    <p>&copy; {new Date().getFullYear()} Annual International Conference on Food Science Technology and Agriculture. All Rights Reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} International Conference on Food Science Technology and Agriculture. All Rights Reserved.</p>
                 </div>
             </div>
         </footer>

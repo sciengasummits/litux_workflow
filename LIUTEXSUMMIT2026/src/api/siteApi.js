@@ -22,8 +22,9 @@ export const fetchContent = (key) => get(`/content/${key}`);
 export const fetchAllContent = () => get('/content');
 
 // Speakers — uses public endpoint (visible only, sorted by order)
+// Always pass conference=liutex so the backend filters correctly
 export const fetchSpeakers = (category) =>
-    get(`/speakers${category ? `?category=${encodeURIComponent(category)}` : ''}`);
+    get(`/speakers?conference=liutex${category ? `&category=${encodeURIComponent(category)}` : ''}`);
 
 // Sponsors/Media partners — uses public endpoint (visible only)
 export const fetchSponsors = (type) =>
@@ -58,4 +59,21 @@ export async function submitRegistration(payload) {
     });
     if (!res.ok) throw new Error('Server error');
     return res.json();
+}
+
+// Validate a discount coupon code against the backend
+// Returns: { valid: true, percentage, category, coupon } | { valid: false, message }
+export async function validateDiscountCode(coupon) {
+    try {
+        const res = await fetch(`${BASE_URL}/discounts/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ coupon, conference: 'liutex' }),
+        });
+        if (!res.ok) throw new Error('Server error');
+        return res.json();
+    } catch (e) {
+        console.warn('[SiteAPI] Discount validate failed:', e.message);
+        return { valid: false, message: 'Could not reach server. Please try again.' };
+    }
 }

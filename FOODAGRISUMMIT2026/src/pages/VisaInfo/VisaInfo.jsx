@@ -26,7 +26,7 @@ const VisaInfo = () => {
                         <h2 className="visa-main-title">VISA INFORMATION FOR INTERNATIONAL PARTICIPANTS</h2>
 
                         <p className="visa-intro-text">
-                            The <strong>ANNUAL INTERNATIONAL CONFERENCE ON FOOD SCIENCE TECHNOLOGY AND AGRICULTURE</strong> welcomes speakers & delegates from all over the world.
+                            The <strong>INTERNATIONAL CONFERENCE ON FOOD SCIENCE TECHNOLOGY AND AGRICULTURE</strong> welcomes speakers & delegates from all over the world.
                             Below is essential visa-related information to assist with your travel planning to Singapore:
                         </p>
 

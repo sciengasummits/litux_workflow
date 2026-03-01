@@ -13,7 +13,7 @@ const FAQ = () => {
             category: "Registration",
             items: [
                 {
-                    question: "How can I register for the ANNUAL INTERNATIONAL CONFERENCE ON FOOD SCIENCE TECHNOLOGY AND AGRICULTURE?",
+                    question: "How can I register for the INTERNATIONAL CONFERENCE ON FOOD SCIENCE TECHNOLOGY AND AGRICULTURE?",
                     answer: "You can register online through our website by visiting the 'Register' page. Early bird registration is available until the specified deadline."
                 },
                 {

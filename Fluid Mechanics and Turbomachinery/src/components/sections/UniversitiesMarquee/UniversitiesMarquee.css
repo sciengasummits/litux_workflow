@@ -1,0 +1,75 @@
+.universities-marquee {
+    background-color: var(--color-background-alt, #f8f9fa);
+    padding: 2rem 0;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    position: relative;
+}
+
+.marquee-track {
+    display: inline-flex;
+    animation: scroll 30s linear infinite;
+    gap: 2rem;
+    /* Spacing between items decreased */
+    padding-left: 2rem;
+    /* Initial padding decreased */
+}
+
+/* Pause animation on hover REMOVED per user request */
+
+.university-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md, 8px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    min-width: 250px;
+    height: 140px;
+    /* Increased height for larger logos */
+    transition: all 0.3s ease;
+}
+
+.university-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.university-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Keyframes for smooth infinite scrolling */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+        /* Move by half the total width (since content is duplicated) */
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .universities-marquee {
+        padding: 1.5rem 0;
+    }
+
+    .university-item {
+        padding: 0.5rem 1rem;
+        min-width: 150px;
+        height: 80px;
+    }
+
+    .marquee-track {
+        gap: 2rem;
+        animation-duration: 20s;
+    }
+}

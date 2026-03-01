@@ -1,0 +1,131 @@
+.unsubscribe-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.unsubscribe__hero {
+    background: var(--color-primary-gradient);
+    padding: 120px 0 60px;
+    text-align: center;
+    color: var(--color-white);
+}
+
+.unsubscribe__hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.breadcrumb {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+
+.unsubscribe__content {
+    padding: 80px 0;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.unsubscribe-card {
+    background: var(--color-white);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px rgba(0, 31, 63, 0.1);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+.unsubscribe-card h2 {
+    font-size: 2rem;
+    color: var(--color-text-dark);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.unsubscribe-description {
+    color: var(--color-text-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.unsubscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.unsubscribe-form input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    transition: border-color 0.3s ease;
+}
+
+.unsubscribe-form input:focus {
+    outline: none;
+    border-color: var(--color-primary-end);
+}
+
+.unsubscribe-form input::placeholder {
+    color: #999;
+}
+
+.unsubscribe-btn {
+    background: var(--color-primary-gradient);
+    color: var(--color-white);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.unsubscribe-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 31, 63, 0.3);
+}
+
+.success-message {
+    padding: 2rem;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: var(--radius-md);
+    color: #155724;
+}
+
+.success-message p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .unsubscribe__hero h1 {
+        font-size: 2rem;
+    }
+
+    .unsubscribe-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .unsubscribe-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .unsubscribe__content {
+        padding: 40px 0;
+    }
+}
