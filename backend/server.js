@@ -35,17 +35,29 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ─── Middleware ───────────────────────────────────────────────
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         // Allow any localhost origin (any port) or no origin (curl/Postman)
+//         if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error('CORS: Not allowed - ' + origin));
+//         }
+//     },
+//     credentials: true
+// }));
 app.use(cors({
-    origin: function (origin, callback) {
-        // Allow any localhost origin (any port) or no origin (curl/Postman)
-        if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin) || /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('CORS: Not allowed - ' + origin));
-        }
-    },
+    origin: [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://litux-workflow.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
+
+app.options("*", cors());
+
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
