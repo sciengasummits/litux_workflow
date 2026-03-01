@@ -46,17 +46,26 @@ const PORT = process.env.PORT || 5000;
 //     },
 //     credentials: true
 // }));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://litux-workflow.vercel.app"
+];
+
 app.use(cors({
-    origin: [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://litux-workflow.vercel.app"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false); // IMPORTANT: do NOT throw error
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 
-app.options("*", cors());
+app.options("*", cors()); // Handle preflight
+
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
