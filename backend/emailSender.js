@@ -6,7 +6,7 @@ dotenv.config();
 export class RealEmailSender {
     constructor() {
         this.user = process.env.SMTP_USER || 'liutex@sciengasummits.com';
-        this.pass = (process.env.SMTP_PASS || 'wejr dtuq bbwc been').replace(/\s/g, ''); // strip spaces from App Password
+        this.pass = (process.env.SMTP_PASS || 'piet meud pzjw rlak').replace(/\s/g, ''); // strip spaces from App Password
 
         // Use Gmail service preset — automatically uses correct host/port/security
         // Port 465 (SSL) works on Render; port 587 (STARTTLS) is blocked
