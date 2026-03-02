@@ -650,6 +650,31 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'LIUTEX Dashboard API running' });
 });
 
+// ── SMTP Diagnostic Test (GET /api/test-email?to=your@email.com) ─────────────
+app.get('/api/test-email', async (req, res) => {
+    const to = req.query.to || process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com';
+    const smtpConfig = {
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: process.env.SMTP_PORT || '587',
+        user: process.env.SMTP_USER || '(not set)',
+        passSet: !!(process.env.SMTP_PASS),
+        passLength: (process.env.SMTP_PASS || '').trim().replace(/\s/g, '').length,
+    };
+    console.log(`🧪 TEST EMAIL REQUEST → sending to: ${to}`);
+    console.log(`🧪 SMTP CONFIG:`, smtpConfig);
+    try {
+        const result = await realEmailSender.sendEmail(
+            to,
+            '✅ SMTP Test - Conference Dashboard',
+            `<div style="font-family:Arial;padding:20px;"><h2>SMTP Test Successful!</h2><p>Your email configuration is working correctly on Render.</p><p><strong>SMTP:</strong> ${smtpConfig.host}:${smtpConfig.port}</p><p><strong>User:</strong> ${smtpConfig.user}</p></div>`,
+            'TEST'
+        );
+        res.json({ success: result.success, smtpConfig, result, sentTo: to });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message, smtpConfig, sentTo: to });
+    }
+});
+
 // ── Authentication
 // Supported conference accounts with email mapping
 const CONFERENCE_ACCOUNTS = [
