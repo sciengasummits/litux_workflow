@@ -302,12 +302,12 @@ Registration Summary:
                                 </th>
                                 <th className={activePhase === 'standard' ? 'active-header-standard' : ''}>
                                     Standard<br />
-                                    <span className="date">Oct 30, 2026</span>
+                                    <span className="date">DEC 30, 2026</span>
                                     {activePhase === 'standard' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                                 <th className={activePhase === 'onspot' ? 'active-header-onspot' : ''}>
                                     On-Spot<br />
-                                    <span className="date">Dec 14, 2026</span>
+                                    <span className="date">March 23, 2027</span>
                                     {activePhase === 'onspot' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                             </tr>

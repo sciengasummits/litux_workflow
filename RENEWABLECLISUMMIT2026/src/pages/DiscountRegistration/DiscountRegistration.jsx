@@ -185,11 +185,11 @@ const DiscountRegistration = () => {
                                 </div>
                                 <div className="category-col category-standard">
                                     <span className="phase-title">Standard</span>
-                                    <span className="phase-date">Oct 30, 2026</span>
+                                    <span className="phase-date">DEC 30, 2026</span>
                                 </div>
                                 <div className="category-col category-onspot">
                                     <span className="phase-title">On-Spot</span>
-                                    <span className="phase-date">Dec 14, 2026</span>
+                                    <span className="phase-date">March 23, 2027</span>
                                 </div>
                             </div>
                             {registrationCategories.map((cat) => (
