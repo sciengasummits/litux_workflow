@@ -1,0 +1,131 @@
+/* Visa Info Page Styles - Simplified to match screenshot */
+.visa-page {
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+.page-header {
+    text-align: center;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--color-white);
+}
+
+.page-breadcrumb {
+    color: var(--color-white);
+    font-size: 1rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Main Content Wrapper */
+.visa-text-section {
+    padding: 60px 0;
+}
+
+.visa-content-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: var(--font-primary);
+    color: #333;
+    line-height: 1.6;
+}
+
+.visa-main-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #000;
+}
+
+.visa-intro-text {
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Blocks */
+.visa-info-block {
+    margin-bottom: 2rem;
+}
+
+.visa-block-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #000;
+}
+
+.visa-list {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.visa-list li {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #444;
+}
+
+.visa-list li strong {
+    color: #000;
+    font-weight: 700;
+}
+
+/* Invitation Form - Simplified */
+.simple-invite-form {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    max-width: 500px;
+}
+
+.simple-invite-form p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.text-invite-form {
+    display: flex;
+    gap: 10px;
+}
+
+.text-invite-form input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.text-invite-form .btn-sm {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    text-transform: none;
+    /* Override uppercase if needed for subtlety */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .visa-main-title {
+        font-size: 1.25rem;
+    }
+
+    .visa-block-title {
+        font-size: 1rem;
+    }
+
+    .text-invite-form {
+        flex-direction: column;
+    }
+}
