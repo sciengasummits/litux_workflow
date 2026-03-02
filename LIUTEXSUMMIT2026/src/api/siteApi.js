@@ -2,7 +2,7 @@
 // Fetches live data from the dashboard backend (port 5000)
 
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 async function get(endpoint) {
     try {

@@ -48,7 +48,9 @@ const PORT = process.env.PORT || 5000;
 // }));
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://litux-workflow.vercel.app"
+  "http://localhost:5173",
+  "https://litux-workflow.vercel.app",
+  "https://litux-workflow.onrender.com"
 ];
 
 app.use(cors({

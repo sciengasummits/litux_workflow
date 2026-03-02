@@ -1,7 +1,7 @@
 // API service for FOODAGRISUMMIT2026 website
 // Fetches live data from the shared dashboard backend (port 5000)
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // ── This must ALWAYS be 'foodagri' for this conference site ──
 const CONFERENCE_ID = 'foodagri';
