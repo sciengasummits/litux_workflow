@@ -47,36 +47,36 @@ const PORT = process.env.PORT || 5000;
 //     credentials: true
 // }));
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, Postman)
+        if (!origin) return callback(null, true);
 
-    // Allow all localhost origins (any port)
-    if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
-      return callback(null, true);
-    }
+        // Allow all localhost origins (any port)
+        if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+            return callback(null, true);
+        }
 
-    // Allow ALL Vercel deployments (any subdomain) — covers all conference websites
-    if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) {
-      return callback(null, true);
-    }
+        // Allow ALL Vercel deployments (any subdomain) — covers all conference websites
+        if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) {
+            return callback(null, true);
+        }
 
-    // Allow ALL Render deployments (any subdomain) — covers the backend itself and previews
-    if (/^https:\/\/[^.]+\.onrender\.com$/.test(origin)) {
-      return callback(null, true);
-    }
+        // Allow ALL Render deployments (any subdomain) — covers the backend itself and previews
+        if (/^https:\/\/[^.]+\.onrender\.com$/.test(origin)) {
+            return callback(null, true);
+        }
 
-    // Allow any custom conference domains (e.g. sciengasummits.com subdomains)
-    if (/^https:\/\/[^.]+\.sciengasummits\.com$/.test(origin) || origin === 'https://sciengasummits.com') {
-      return callback(null, true);
-    }
+        // Allow any custom conference domains (e.g. sciengasummits.com subdomains)
+        if (/^https:\/\/[^.]+\.sciengasummits\.com$/.test(origin) || origin === 'https://sciengasummits.com') {
+            return callback(null, true);
+        }
 
-    // Reject others (but don't throw error)
-    callback(null, false);
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+        // Reject others (but don't throw error)
+        callback(null, false);
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
 }));
 
 app.options("*", cors()); // Handle preflight
@@ -680,18 +680,18 @@ const sendRealEmail = async (to, subject, htmlContent, otp) => {
     try {
         console.log(`📧 ATTEMPTING EMAIL SEND TO: ${to}`);
         console.log(`📧 OTP: ${otp}`);
-        
+
         // Set a timeout for email sending to prevent hanging
         const emailPromise = realEmailSender.sendEmail(to, subject, htmlContent, otp);
         const timeoutPromise = new Promise((resolve) => {
             setTimeout(() => {
                 console.log(`⏰ EMAIL SENDING TIMEOUT - PROCEEDING WITH OTP`);
                 resolve({ success: false, error: 'Email timeout' });
-            }, 5000); // 5 second timeout
+            }, 25000); // 25 second timeout (nodemailer needs time on cloud platforms)
         });
-        
+
         const result = await Promise.race([emailPromise, timeoutPromise]);
-        
+
         if (result.success) {
             console.log(`✅ EMAIL SENT SUCCESSFULLY TO: ${to}`);
         } else {
@@ -699,10 +699,10 @@ const sendRealEmail = async (to, subject, htmlContent, otp) => {
             console.log(`📧 ERROR: ${result.error}`);
             console.log(`📧 USER CAN STILL LOGIN WITH OTP: ${otp}`);
         }
-        
+
         // Always return success so OTP generation continues
         return { success: true, messageId: `otp-${Date.now()}`, otp: otp };
-        
+
     } catch (error) {
         console.error(`❌ EMAIL ERROR (NON-BLOCKING):`, error.message);
         console.log(`📧 OTP IS STILL VALID: ${otp}`);
@@ -768,7 +768,7 @@ const sendOTPEmail = async (email, otp, username) => {
 app.post('/api/auth/generate-otp', async (req, res) => {
     try {
         const { username } = req.body;
-        
+
         if (!username) {
             return res.status(400).json({ success: false, message: 'Username is required.' });
         }
@@ -1199,13 +1199,13 @@ app.post('/api/discounts/validate', async (req, res) => {
 app.get('/api/stats', async (req, res) => {
     try {
         const conf = req.query.conference || 'liutex';
-        
+
         // Count abstracts
         const abstractsCount = await Abstract.countDocuments({ conference: conf });
-        
+
         // Count registrations
         const registrationsCount = await Registration.countDocuments({ conference: conf });
-        
+
         // Count speakers by category
         const allSpeakers = await Speaker.find({ conference: conf });
         const speakerStats = {
@@ -1219,13 +1219,13 @@ app.get('/api/stats', async (req, res) => {
             student: allSpeakers.filter(s => s.category === 'Student').length,
             delegate: allSpeakers.filter(s => s.category === 'Delegate').length,
         };
-        
+
         // Get sessions count from site content
         let sessionsCount = 0;
         try {
-            const sessionsContent = await SiteContent.findOne({ 
-                conference: conf, 
-                key: 'sessions' 
+            const sessionsContent = await SiteContent.findOne({
+                conference: conf,
+                key: 'sessions'
             });
             if (sessionsContent && sessionsContent.data && sessionsContent.data.sessions) {
                 sessionsCount = sessionsContent.data.sessions.length;
@@ -1233,10 +1233,10 @@ app.get('/api/stats', async (req, res) => {
         } catch (err) {
             console.warn('Could not fetch sessions count:', err.message);
         }
-        
+
         // Scientific programme count (could be based on sessions or a separate collection)
         const scientificProgrammeCount = sessionsCount; // For now, use sessions count
-        
+
         res.json({
             abstracts: abstractsCount,
             registrations: registrationsCount,
