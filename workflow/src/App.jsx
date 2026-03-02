@@ -79,7 +79,7 @@ const CONFERENCE_CONFIG = {
 /* ── Simple page router ── */
 function PageContent({ activeNav, setActiveNav }) {
   switch (activeNav) {
-    // Existing mappings
+    // Sidebar navigation mappings
     case 'committee': return <OrganizingCommittee />;
     case 'committee-speakers': return <CommitteeSpeakers />;
     case 'speakers-list': return <Speakers />;
@@ -116,8 +116,6 @@ function PageContent({ activeNav, setActiveNav }) {
     case 'abstracts': return <ViewAbstracts />;
     case 'registrations': return <ViewRegistrations />;
     case 'scientific': return <Sessions />;
-    case 'committee': return <CommitteeSpeakers />;
-    case 'speakers-list': return <Speakers />;
     case 'plenary': return <PlenarySpeakers />;
     case 'keynote': return <KeynoteSpeakers />;
     case 'featured': return <FeaturedSpeakers />;

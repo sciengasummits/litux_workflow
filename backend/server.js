@@ -46,22 +46,35 @@ const PORT = process.env.PORT || 5000;
 //     },
 //     credentials: true
 // }));
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "https://litux-workflow.vercel.app",
-  "https://litux-workflow.onrender.com"
-];
-
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, false); // IMPORTANT: do NOT throw error
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    // Allow all localhost origins (any port)
+    if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+      return callback(null, true);
     }
+
+    // Allow ALL Vercel deployments (any subdomain) — covers all conference websites
+    if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow ALL Render deployments (any subdomain) — covers the backend itself and previews
+    if (/^https:\/\/[^.]+\.onrender\.com$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow any custom conference domains (e.g. sciengasummits.com subdomains)
+    if (/^https:\/\/[^.]+\.sciengasummits\.com$/.test(origin) || origin === 'https://sciengasummits.com') {
+      return callback(null, true);
+    }
+
+    // Reject others (but don't throw error)
+    callback(null, false);
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
@@ -858,6 +871,14 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
+// Helper: build a fully-qualified URL for an uploaded file that works in both dev and production
+function buildFileUrl(req, filename) {
+    // In production on Render the server is behind HTTPS — use the request's host
+    const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+    const host = req.headers['x-forwarded-host'] || req.headers.host || `localhost:${PORT}`;
+    return `${proto}://${host}/uploads/${filename}`;
+}
+
 // Upload image (images only)
 app.post('/api/upload', (req, res, next) => {
     upload.single('image')(req, res, (err) => {
@@ -869,7 +890,7 @@ app.post('/api/upload', (req, res, next) => {
             return res.status(400).json({ error: err.message || 'Upload failed' });
         }
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-        const url = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+        const url = buildFileUrl(req, req.file.filename);
         res.json({ url, filename: req.file.filename });
     });
 });
@@ -877,7 +898,7 @@ app.post('/api/upload', (req, res, next) => {
 // Upload document — PDF / DOC / DOCX / ZIP (for abstract submissions)
 app.post('/api/upload-file', uploadFile.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    const url = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+    const url = buildFileUrl(req, req.file.filename);
     res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
 });
 

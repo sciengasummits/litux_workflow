@@ -16,10 +16,10 @@ async function get(endpoint) {
 }
 
 // Get a single content block by key (e.g. 'hero', 'about', etc.)
-export const fetchContent = (key) => get(`/content/${key}`);
+export const fetchContent = (key) => get(`/content/${key}?conference=liutex`);
 
 // Get all content blocks at once
-export const fetchAllContent = () => get('/content');
+export const fetchAllContent = () => get('/content?conference=liutex');
 
 // Speakers — uses public endpoint (visible only, sorted by order)
 // Always pass conference=liutex so the backend filters correctly
@@ -28,7 +28,7 @@ export const fetchSpeakers = (category) =>
 
 // Sponsors/Media partners — uses public endpoint (visible only)
 export const fetchSponsors = (type) =>
-    get(`/sponsors${type ? `?type=${encodeURIComponent(type)}` : ''}`);
+    get(`/sponsors?conference=liutex${type ? `&type=${encodeURIComponent(type)}` : ''}`);
 
 // Submit an abstract — always tags conference: 'liutex'
 export async function submitAbstract(payload) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Activity,
@@ -29,35 +29,40 @@ import {
     Mic,
     Factory
 } from 'lucide-react';
+import { fetchContent } from '../../../api/siteApi';
 import './KeyThemesSection.css';
 import Button from '../../common/Button/Button';
 
-const sessionsData = [
-    { title: "Fundamentals of Liutex Theory", icon: Compass },
-    { title: "Vortex Identification Methods", icon: Target },
-    { title: "Vector & Tensor Decompositions", icon: Binary },
-    { title: "Omega (Ω) Method Applications", icon: Settings },
-    { title: "Liutex-based Turbulence Modeling", icon: Layers },
-    { title: "Vortex Dynamics in Aerospace", icon: Wind },
-    { title: "CFD & High-Order Methods", icon: Cpu },
-    { title: "AI in Flow Field Identification", icon: Terminal },
-    { title: "Vortex-Induced Vibrations", icon: Activity },
-    { title: "Bio-inspired Vortex Flows", icon: Zap },
-    { title: "Hydrodynamics & Wake Analysis", icon: Droplet },
-    { title: "Oceanic & Atmospheric Vortices", icon: Globe },
-    { title: "Rotating Machinery Dynamics", icon: Factory },
-    { title: "Experimental Flow Visualization", icon: Eye },
-    { title: "Acoustic Noise & Vortex Flow", icon: Mic },
-    { title: "Liutex in Medical Fluid Dynamics", icon: Activity },
-    { title: "Mathematical Vortex Foundations", icon: Boxes },
-    { title: "Complex Flow Topology", icon: Share2 },
-    { title: "RANS/LES/DNS Comparisons", icon: Database },
-    { title: "Vortex Core Tracking Algorithms", icon: Layout },
+// Cycle through icons for dynamic session lists
+const SESSION_ICONS = [
+    Compass, Target, Binary, Settings, Layers, Wind, Cpu, Terminal, Activity, Zap,
+    Droplet, Globe, Factory, Eye, Mic, Activity, Boxes, Share2, Database, Layout,
 ];
 
-const Link = ({ href, children }) => <a href={href}>{children}</a>; // Placeholder if needed
+const DEFAULT_SESSIONS = [
+    'Fundamentals of Liutex Theory',
+    'Vortex Identification Methods',
+    'Vector & Tensor Decompositions',
+    'Omega (Ω) Method Applications',
+    'Liutex-based Turbulence Modeling',
+    'Vortex Dynamics in Aerospace',
+    'CFD & High-Order Methods',
+    'AI in Flow Field Identification',
+    'Vortex-Induced Vibrations',
+    'Bio-inspired Vortex Flows',
+    'Hydrodynamics & Wake Analysis',
+    'Oceanic & Atmospheric Vortices',
+    'Rotating Machinery Dynamics',
+    'Experimental Flow Visualization',
+    'Acoustic Noise & Vortex Flow',
+    'Liutex in Medical Fluid Dynamics',
+    'Mathematical Vortex Foundations',
+    'Complex Flow Topology',
+    'RANS/LES/DNS Comparisons',
+    'Vortex Core Tracking Algorithms',
+];
 
-const scheduleData = {
+const DEFAULT_SCHEDULE = {
     day1: [
         { time: '8.30 – 9.00', program: 'Registration' },
         { time: '9.00 – 9.30', program: 'Conference Inauguration' },
@@ -85,16 +90,51 @@ const scheduleData = {
         { time: '11.00 – 12.30', program: 'Future Trends Workshop' },
         { time: '12.30 – 13.30', program: 'Lunch' },
         { time: '13.30 – 15.00', program: 'Final Remarks & Departure' },
-    ]
+    ],
 };
 
 const KeyThemesSection = ({ showLearnMore = false }) => {
     const [activeDay, setActiveDay] = useState('day1');
     const navigate = useNavigate();
+    const [sessions, setSessions] = useState(DEFAULT_SESSIONS);
+    const [schedule, setSchedule] = useState(DEFAULT_SCHEDULE);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('sessions').then(d => {
+                if (!cancelled && d) {
+                    if (d.sessions && d.sessions.length > 0) setSessions(d.sessions);
+                    if (d.schedule) setSchedule(prev => ({ ...prev, ...d.schedule }));
+                }
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, []);
+
+    // Build sessions with icons (api returns plain strings, we pair icons by index)
+    const sessionsWithIcons = sessions.map((s, i) => ({
+        title: typeof s === 'string' ? s : (s.title || s),
+        icon: SESSION_ICONS[i % SESSION_ICONS.length],
+    }));
+
+    const activeSchedule = schedule[activeDay] || [];
 
     // Limit items if in preview mode (Home page)
-    const displaySessions = showLearnMore ? sessionsData.slice(0, 10) : sessionsData;
-    const displaySchedule = showLearnMore ? scheduleData[activeDay].slice(0, 5) : scheduleData[activeDay];
+    const displaySessions = showLearnMore ? sessionsWithIcons.slice(0, 10) : sessionsWithIcons;
+    const displaySchedule = showLearnMore ? activeSchedule.slice(0, 5) : activeSchedule;
 
     return (
         <section className={`sessions-schedule-section section-padding ${showLearnMore ? 'preview-mode' : ''}`} id="sessions">

@@ -1,48 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetchContent } from '../../../api/siteApi';
 import './VenueSection.css';
 import heroImg from '../../../assets/images/Hero.png';
 
-const venues = [
-    {
-        id: 1,
-        image: "https://images.unsplash.com/photo-1525625230556-8e8ad8aaad9d?w=1920&q=80", // Singapore Skyline
-        local: heroImg
-    },
-    {
-        id: 2,
-        image: "https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80", // Large Conference Hall
-        local: heroImg
-    },
-    {
-        id: 3,
-        image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1920&q=80", // Modern Tech Conference
-        local: heroImg
-    },
-    {
-        id: 4,
-        image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1920&q=80", // Singapore Botanic Gardens (Venue atmosphere)
-        local: heroImg
-    },
-    {
-        id: 5,
-        image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=80", // Networking/Forum area
-        local: heroImg
-    }
+const DEFAULT_IMAGES = [
+    'https://images.unsplash.com/photo-1525625230556-8e8ad8aaad9d?w=1920&q=80',
+    'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80',
+    'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1920&q=80',
+    'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1920&q=80',
+    'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=80',
 ];
 
 const VenueSection = () => {
     const [activeVenue, setActiveVenue] = useState(0);
     const [direction, setDirection] = useState('next');
+    const [images, setImages] = useState(DEFAULT_IMAGES);
 
+    useEffect(() => {
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('venue').then(d => {
+                if (!cancelled && d && d.images && d.images.length > 0) {
+                    setImages(d.images);
+                }
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, []);
+
+    // Auto-rotate slideshow
     useEffect(() => {
         const interval = setInterval(() => {
             setDirection('next');
-            setActiveVenue((prev) => (prev + 1) % venues.length);
+            setActiveVenue((prev) => (prev + 1) % images.length);
         }, 5000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [images.length]);
 
     const goToVenue = (index) => {
         if (index !== activeVenue) {
@@ -53,28 +60,28 @@ const VenueSection = () => {
 
     const goToPrev = () => {
         setDirection('prev');
-        setActiveVenue((prev) => (prev - 1 + venues.length) % venues.length);
+        setActiveVenue((prev) => (prev - 1 + images.length) % images.length);
     };
 
     const goToNext = () => {
         setDirection('next');
-        setActiveVenue((prev) => (prev + 1) % venues.length);
+        setActiveVenue((prev) => (prev + 1) % images.length);
     };
 
     return (
         <section className="venue" id="venue" style={{ backgroundColor: '#083344' }}>
             <div className="venue__slides">
-                {venues.map((venue, index) => (
+                {images.map((imgUrl, index) => (
                     <div
-                        key={venue.id}
+                        key={index}
                         className={`venue__slide ${index === activeVenue ? 'active' : ''} ${index === activeVenue ? direction : ''}`}
                     >
                         <img
-                            src={venue.image}
-                            alt={`Venue view showing ${venue.id}`}
+                            src={imgUrl}
+                            alt={`Venue view ${index + 1}`}
                             onError={(e) => {
                                 e.target.onerror = null;
-                                e.target.src = venue.local || heroImg;
+                                e.target.src = heroImg;
                             }}
                             style={{
                                 width: '100%',
@@ -82,7 +89,7 @@ const VenueSection = () => {
                                 objectFit: 'cover',
                                 display: 'block',
                                 position: 'relative',
-                                zIndex: 0
+                                zIndex: 0,
                             }}
                         />
                         <div className="venue__overlay"></div>
@@ -96,7 +103,7 @@ const VenueSection = () => {
                 </button>
 
                 <div className="venue__indicators">
-                    {venues.map((_, index) => (
+                    {images.map((_, index) => (
                         <button
                             key={index}
                             className={`venue__indicator ${index === activeVenue ? 'active' : ''}`}
