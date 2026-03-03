@@ -6,6 +6,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs';
+import crypto from 'crypto';
+import Razorpay from 'razorpay';
 import dns from 'dns';
 
 // ─── Critical Fix: Node.js c-ares DNS fails for mongodb.net on Windows ──────
@@ -1272,6 +1274,127 @@ app.get('/api/stats', async (req, res) => {
     } catch (err) {
         console.error('Stats API error:', err);
         res.status(500).json({ error: err.message });
+    }
+});
+
+// ──────────────────────────────────────────────────────────────
+// ─── Razorpay Payment Gateway ─────────────────────────────────
+// ──────────────────────────────────────────────────────────────
+
+// Initialize Razorpay instance (only if keys are configured)
+let razorpayInstance = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET
+    && process.env.RAZORPAY_KEY_ID !== 'rzp_test_YOUR_KEY_ID') {
+    razorpayInstance = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+    console.log('💳 Razorpay payment gateway initialized');
+} else {
+    console.warn('⚠️  Razorpay keys not configured — payment routes will return errors. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env');
+}
+
+// GET /api/payment/key — returns the Razorpay public key (safe to expose to frontend)
+app.get('/api/payment/key', (req, res) => {
+    if (!process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_ID') {
+        return res.status(503).json({ error: 'Razorpay is not configured. Please set RAZORPAY_KEY_ID in .env' });
+    }
+    res.json({ key: process.env.RAZORPAY_KEY_ID });
+});
+
+// POST /api/payment/create-order — creates a Razorpay order
+// Body: { amount (in USD), currency?, registrationId?, conference, description }
+// Returns: { success, order: { id, amount, currency, ... } }
+app.post('/api/payment/create-order', async (req, res) => {
+    try {
+        if (!razorpayInstance) {
+            return res.status(503).json({ success: false, error: 'Razorpay is not configured on the server.' });
+        }
+
+        const { amount, currency = 'USD', registrationId, conference = 'liutex', description = 'Conference Registration' } = req.body;
+
+        if (!amount || amount <= 0) {
+            return res.status(400).json({ success: false, error: 'Invalid amount. Must be greater than 0.' });
+        }
+
+        // Razorpay expects amount in smallest currency unit (cents for USD, paise for INR)
+        const amountInSmallestUnit = Math.round(amount * 100);
+
+        const options = {
+            amount: amountInSmallestUnit,
+            currency: currency.toUpperCase(),
+            receipt: `rcpt_${conference}_${Date.now()}`,
+            notes: {
+                conference,
+                registrationId: registrationId || '',
+                description,
+            },
+        };
+
+        const order = await razorpayInstance.orders.create(options);
+        console.log(`💳 Razorpay order created: ${order.id} for $${amount} (${conference})`);
+
+        res.json({
+            success: true,
+            order: {
+                id: order.id,
+                amount: order.amount,
+                currency: order.currency,
+                receipt: order.receipt,
+            },
+        });
+    } catch (err) {
+        console.error('❌ Razorpay create-order error:', err.message);
+        res.status(500).json({ success: false, error: err.message || 'Failed to create payment order.' });
+    }
+});
+
+// POST /api/payment/verify — verifies the Razorpay payment signature
+// Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature, registrationId? }
+// Returns: { success, message, paymentId }
+app.post('/api/payment/verify', async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, registrationId } = req.body;
+
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+            return res.status(400).json({ success: false, message: 'Missing payment verification parameters.' });
+        }
+
+        // Verify signature using HMAC SHA256
+        const body = razorpay_order_id + '|' + razorpay_payment_id;
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+            .update(body)
+            .digest('hex');
+
+        if (expectedSignature !== razorpay_signature) {
+            console.warn(`⚠️ Payment signature verification FAILED for order ${razorpay_order_id}`);
+            return res.status(400).json({ success: false, message: 'Payment verification failed. Invalid signature.' });
+        }
+
+        console.log(`✅ Payment verified: ${razorpay_payment_id} for order ${razorpay_order_id}`);
+
+        // If a registrationId was provided, update the registration status and txnId
+        if (registrationId) {
+            try {
+                await Registration.findByIdAndUpdate(registrationId, {
+                    status: 'Paid',
+                    txnId: razorpay_payment_id,
+                });
+                console.log(`✅ Registration ${registrationId} marked as Paid (txn: ${razorpay_payment_id})`);
+            } catch (dbErr) {
+                console.warn(`⚠️ Payment verified but failed to update registration: ${dbErr.message}`);
+            }
+        }
+
+        res.json({
+            success: true,
+            message: 'Payment verified successfully.',
+            paymentId: razorpay_payment_id,
+        });
+    } catch (err) {
+        console.error('❌ Payment verification error:', err.message);
+        res.status(500).json({ success: false, message: 'Payment verification failed.' });
     }
 });
 
