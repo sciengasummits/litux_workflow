@@ -30,9 +30,25 @@ const StatsSection = () => {
     });
 
     useEffect(() => {
-        fetchContent('stats').then(data => {
-            if (data) setStats(prev => ({ ...prev, ...data }));
-        });
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('stats').then(data => {
+                if (!cancelled && data) setStats(prev => ({ ...prev, ...data }));
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     return (

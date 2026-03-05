@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ScheduleSection.css';
+import { fetchContent } from '../../../api/siteApi';
 
-const scheduleData = {
+const defaultScheduleData = {
     day1: [
         { time: '8.30 – 9.00', program: 'Registration' },
         { time: '9.00 – 9.30', program: 'Conference Inauguration' },
@@ -35,7 +36,30 @@ const scheduleData = {
 
 const ScheduleSection = () => {
     const [activeDay, setActiveDay] = useState('day1');
+    const [scheduleData, setScheduleData] = useState(defaultScheduleData);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let cancelled = false;
+        const load = () => {
+            fetchContent('sessions').then(data => {
+                if (!cancelled && data && data.schedule) {
+                    setScheduleData(data.schedule);
+                }
+            });
+        };
+
+        load();
+        const interval = setInterval(load, 15000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, []);
 
     return (
         <section className="schedule section-padding" id="schedule">
@@ -59,14 +83,14 @@ const ScheduleSection = () => {
                             onClick={() => setActiveDay('day2')}
                         >
                             <span className="tab-day">Day 02</span>
-                            <span className="tab-date">Discussions</span>
+                            <span className="tab-date">Conference</span>
                         </button>
                         <button
                             className={`schedule__tab ${activeDay === 'day3' ? 'active' : ''}`}
                             onClick={() => setActiveDay('day3')}
                         >
                             <span className="tab-day">Day 03</span>
-                            <span className="tab-date">Workshops</span>
+                            <span className="tab-date">Conference</span>
                         </button>
                     </div>
                 </div>
@@ -81,7 +105,7 @@ const ScheduleSection = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {scheduleData[activeDay].slice(0, 6).map((item, index) => (
+                                {(scheduleData[activeDay] || []).slice(0, 6).map((item, index) => (
                                     <tr key={index}>
                                         <td className="time-col">
                                             <div className="time-badge">{item.time}</div>

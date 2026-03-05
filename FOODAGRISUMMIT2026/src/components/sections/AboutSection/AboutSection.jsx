@@ -36,8 +36,22 @@ const AboutSection = () => {
     ]);
 
     useEffect(() => {
-        fetchContent('about').then(data => { if (data) setAbout(prev => ({ ...prev, ...data })); });
-        fetchContent('importantDates').then(data => { if (data?.dates) setDates(data.dates); });
+        let cancelled = false;
+        const load = () => {
+            fetchContent('about').then(data => { if (!cancelled && data) setAbout(prev => ({ ...prev, ...data })); });
+            fetchContent('importantDates').then(data => { if (!cancelled && data?.dates) setDates(data.dates); });
+        };
+
+        load();
+        const interval = setInterval(load, 15000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     return (

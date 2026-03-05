@@ -25,21 +25,33 @@ const UniversitiesMarquee = () => {
     const [marqueeData, setMarqueeData] = useState({ title: 'Supporting Universities & Institutions' });
 
     useEffect(() => {
-        fetchContent('marquee').then(data => {
-            if (data) {
-                setMarqueeData(data);
-                if (data.items && Array.isArray(data.items) && data.items.length > 0) {
-                    // Convert text items to university objects with fallback images
-                    const dynamicUniversities = data.items.map((name, index) => ({
-                        name: name,
-                        imgUrl: [uni1, uni2, uni3, uni4][index % 4], // Cycle through available images
-                        id: index + 1
-                    }));
-                    // Duplicate for seamless scrolling
-                    setUniversities([...dynamicUniversities, ...dynamicUniversities]);
+        let cancelled = false;
+        const load = () => {
+            fetchContent('marquee').then(data => {
+                if (!cancelled && data) {
+                    setMarqueeData(data);
+                    if (data.items && Array.isArray(data.items) && data.items.length > 0) {
+                        const dynamicUniversities = data.items.map((name, index) => ({
+                            name: name,
+                            imgUrl: [uni1, uni2, uni3, uni4][index % 4],
+                            id: index + 1
+                        }));
+                        setUniversities([...dynamicUniversities, ...dynamicUniversities]);
+                    }
                 }
-            }
-        });
+            });
+        };
+
+        load();
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     return (

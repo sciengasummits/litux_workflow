@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../../common/Button/Button';
 import './BrochureSection.css';
+import { fetchContent } from '../../../api/siteApi';
 
 const BrochureSection = () => {
+    const [title, setTitle] = useState('FLUID MECHANICS & TURBOMACHINERY');
+
+    useEffect(() => {
+        fetchContent('hero').then(data => {
+            if (data && data.title) {
+                setTitle(data.title.replace('\n', ' '));
+            }
+        });
+    }, []);
+
     const handleDownload = () => {
         window.open('/brochure', '_self');
     };
@@ -12,7 +23,7 @@ const BrochureSection = () => {
             <div className="container brochure__container">
                 <div className="brochure__content">
                     <h2 className="section-title">Conference Brochure</h2>
-                    <p className="brochure__description">
+                    <div className="brochure__description">
                         Download the official conference brochure to get detailed information about:
                         <ul>
                             <li>Comprehensive Tentative Program</li>
@@ -21,7 +32,7 @@ const BrochureSection = () => {
                             <li>Sponsorship Opportunities</li>
                             <li>Registration Packages</li>
                         </ul>
-                    </p>
+                    </div>
                     <div className="brochure__cta">
                         <Button onClick={handleDownload} size="large">
                             Download Brochure (PDF)
@@ -32,7 +43,7 @@ const BrochureSection = () => {
                     {/* Placeholder for brochure preview image */}
                     <div className="preview-card">
                         <div className="preview-page">
-                            <h3>FLUID MECHANICS & TURBOMACHINERY</h3>
+                            <h3>{title}</h3>
                             <p>2026 EDITION</p>
                             <div className="preview-lines"></div>
                         </div>

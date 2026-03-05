@@ -39,15 +39,31 @@ const VenueSection = () => {
     const [venues, setVenues] = useState(defaultVenues);
 
     useEffect(() => {
-        fetchContent('venue').then(data => {
-            if (data && data.images && Array.isArray(data.images) && data.images.length > 0) {
-                const venueImages = data.images.map((image, index) => ({
-                    id: index + 1,
-                    image: image
-                }));
-                setVenues(venueImages);
-            }
-        });
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('venue').then(data => {
+                if (!cancelled && data && data.images && Array.isArray(data.images) && data.images.length > 0) {
+                    const venueImages = data.images.map((image, index) => ({
+                        id: index + 1,
+                        image: image
+                    }));
+                    setVenues(venueImages);
+                }
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     useEffect(() => {

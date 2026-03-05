@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Register.css';
 import { countries } from '../../assets/constants/countries';
-import { submitRegistration } from '../../api/siteApi';
+import * as siteApi from '../../api/siteApi';
 
 const Register = ({ isDiscounted = false }) => {
     // State for form fields
@@ -49,11 +49,11 @@ const Register = ({ isDiscounted = false }) => {
 
     // Pricing Data (Liutex-specific)
     const pricingData = [
-        { id: 'speaker', label: 'Speaker Registration', early: applyDiscount(749), standard: applyDiscount(849), onspot: applyDiscount(949) },
-        { id: 'delegate', label: 'Delegate Registration', early: applyDiscount(899), standard: applyDiscount(999), onspot: applyDiscount(1099) },
-        { id: 'poster', label: 'Poster Registration', early: applyDiscount(449), standard: applyDiscount(549), onspot: applyDiscount(649) },
+        { id: 'speaker', label: 'Speaker Registration', early: applyDiscount(599), standard: applyDiscount(699), onspot: applyDiscount(799) },
+        { id: 'delegate', label: 'Delegate Registration', early: applyDiscount(699), standard: applyDiscount(799), onspot: applyDiscount(899) },
+        { id: 'poster', label: 'Poster Registration', early: applyDiscount(399), standard: applyDiscount(499), onspot: applyDiscount(599) },
         { id: 'student', label: 'Student', early: applyDiscount(299), standard: applyDiscount(399), onspot: applyDiscount(499) },
-        { id: 'virtual', label: 'Virtual(Online)', early: applyDiscount(199), standard: applyDiscount(249), onspot: applyDiscount(299) },
+        { id: 'virtual', label: 'Virtual(Online)', early: applyDiscount(200), standard: applyDiscount(300), onspot: applyDiscount(400) },
     ];
 
     const accommodationOptions = [
@@ -105,6 +105,10 @@ const Register = ({ isDiscounted = false }) => {
         }
 
         const total = calculateTotal();
+        if (total <= 0) {
+            alert('Please select a registration category or sponsorship.');
+            return;
+        }
 
         // Build description string
         const descParts = [];
@@ -143,12 +147,67 @@ const Register = ({ isDiscounted = false }) => {
         setSubmitting(true);
         setSubmitStatus(null);
         try {
-            // submitRegistration() from siteApi automatically adds conference: 'liutex'
-            await submitRegistration(payload);
-            setSubmitStatus('success');
-            handleReset();
-        } catch {
+            // 1. Create registration record (Pending)
+            const registration = await siteApi.submitRegistration(payload);
+            if (!registration || registration.error) throw new Error(registration?.error || 'Failed to save registration.');
+
+            // 2. Fetch Razorpay key & Create order
+            const { key } = await siteApi.fetchPaymentKey();
+            const { order } = await siteApi.createPaymentOrder({
+                amount: total,
+                registrationId: registration._id,
+                description: `LIUTEX Registration: ${formData.fullName}`
+            });
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'LIUTEX Summit 2026',
+                description: `Payment for ${formData.fullName}`,
+                order_id: order.id,
+                prefill: {
+                    name: formData.fullName,
+                    email: formData.email,
+                    contact: formData.telephone,
+                },
+                theme: { color: '#2563eb' },
+                handler: async (response) => {
+                    // 4. Verify Payment
+                    try {
+                        const verifyResult = await siteApi.verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            registrationId: registration._id,
+                        });
+
+                        if (verifyResult.success) {
+                            setSubmitStatus('success');
+                            handleReset();
+                        } else {
+                            throw new Error(verifyResult.message || 'Payment verification failed.');
+                        }
+                    } catch (err) {
+                        alert('Payment success but verification failed: ' + err.message);
+                        setSubmitStatus('error');
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setSubmitting(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.error('Registration/Payment error:', err);
             setSubmitStatus('error');
+            alert(err.message || 'An error occurred during registration.');
         } finally {
             setSubmitting(false);
         }

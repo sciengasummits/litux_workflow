@@ -12,21 +12,36 @@ const SpeakersSection = ({ showViewAll }) => {
     const [speakers, setSpeakers] = useState(staticSpeakers);
 
     useEffect(() => {
-        fetchSpeakers().then(data => {
-            if (data && data.length > 0) {
-                // Map backend speaker fields to the format expected by the UI
-                const mapped = data.filter(s => s.visible !== false).map(s => ({
-                    id: s._id,
-                    name: s.name,
-                    title: s.designation || s.title || '',
-                    affiliation: s.affiliation || s.institution || '',
-                    category: s.category || 'Speakers',
-                    image: s.image || s.photo || '',
-                    bio: s.bio || '',
-                }));
-                if (mapped.length > 0) setSpeakers(mapped);
-            }
-        });
+        let cancelled = false;
+
+        const load = () => {
+            fetchSpeakers().then(data => {
+                if (!cancelled && data && data.length > 0) {
+                    const mapped = data.filter(s => s.visible !== false).map(s => ({
+                        id: s._id,
+                        name: s.name,
+                        title: s.designation || s.title || '',
+                        affiliation: s.affiliation || s.institution || '',
+                        category: s.category || 'Speakers',
+                        image: s.image || s.photo || '',
+                        bio: s.bio || '',
+                    }));
+                    if (mapped.length > 0) setSpeakers(mapped);
+                }
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     const getDisplayCategory = (category) => {

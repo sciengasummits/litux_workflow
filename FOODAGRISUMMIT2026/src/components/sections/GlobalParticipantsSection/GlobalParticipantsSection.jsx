@@ -1,53 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Globe, Building2, Award } from 'lucide-react';
 import './GlobalParticipantsSection.css';
+import { fetchContent } from '../../../api/siteApi';
+
+const DEFAULT_PARTICIPANTS = [
+    { id: 1, iconType: 'Users', number: "500+", label: "Global Participants" },
+    { id: 2, iconType: 'Globe', number: "50+", label: "Countries" },
+    { id: 3, iconType: 'Building2', number: "100+", label: "Organizations" },
+    { id: 4, iconType: 'Award', number: "200+", label: "Speakers" }
+];
+
+const ICON_MAP = { Users, Globe, Building2, Award };
 
 const GlobalParticipantsSection = () => {
-    const participants = [
-        {
-            id: 1,
-            icon: <Users size={48} />,
-            number: "500+",
-            label: "Global Participants"
-        },
-        {
-            id: 2,
-            icon: <Globe size={48} />,
-            number: "50+",
-            label: "Countries"
-        },
-        {
-            id: 3,
-            icon: <Building2 size={48} />,
-            number: "100+",
-            label: "Organizations"
-        },
-        {
-            id: 4,
-            icon: <Award size={48} />,
-            number: "200+",
-            label: "Speakers"
-        }
-    ];
+    const [data, setData] = useState({ title: "Global Participants", items: DEFAULT_PARTICIPANTS });
+
+    useEffect(() => {
+        let cancelled = false;
+        const load = () => {
+            fetchContent('participants').then(d => {
+                if (!cancelled && d) {
+                    setData(prev => ({ ...prev, ...d }));
+                }
+            });
+        };
+
+        load();
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, []);
+
+    const items = data.items || DEFAULT_PARTICIPANTS;
 
     return (
         <section className="global-participants section-padding">
             <div className="container">
                 <div className="text-center mb-5">
-                    <h2 className="section-title">Global Participants</h2>
+                    <h2 className="section-title">{data.title}</h2>
                     <div className="section-line"></div>
                 </div>
 
                 <div className="participants-grid">
-                    {participants.map((item) => (
-                        <div key={item.id} className="participant-card">
-                            <div className="participant-icon">
-                                {item.icon}
+                    {items.map((item, idx) => {
+                        const IconComponent = ICON_MAP[item.iconType] || Users;
+                        return (
+                            <div key={item.id || idx} className="participant-card">
+                                <div className="participant-icon">
+                                    <IconComponent size={48} />
+                                </div>
+                                <div className="participant-number">{item.number}</div>
+                                <div className="participant-label">{item.label}</div>
                             </div>
-                            <div className="participant-number">{item.number}</div>
-                            <div className="participant-label">{item.label}</div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </section>

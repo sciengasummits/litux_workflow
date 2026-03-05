@@ -64,16 +64,28 @@ export default function SponsorsSection() {
     const [sponsorsData, setSponsorsData] = useState(staticSponsorsData);
 
     useEffect(() => {
-        fetchSponsors('media partner').then(data => {
-            if (data && Array.isArray(data) && data.length > 0) {
-                // Map backend sponsor format to what MarqueeRow expects
-                const mapped = data.map(s => ({ name: s.name, logo: s.image || s.logoUrl || s.logo }));
-                setSponsorsData(mapped);
-            }
-            // else keep static fallback
-        }).catch(() => {
-            // keep static fallback on error
-        });
+        let cancelled = false;
+
+        const load = () => {
+            fetchSponsors('media partner').then(data => {
+                if (!cancelled && data && Array.isArray(data) && data.length > 0) {
+                    const mapped = data.map(s => ({ name: s.name, logo: s.image || s.logoUrl || s.logo }));
+                    setSponsorsData(mapped);
+                }
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 60000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     const row1 = sponsorsData.slice(0, Math.ceil(sponsorsData.length / 2));

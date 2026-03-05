@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Tag, CheckCircle, XCircle, Loader, ShieldCheck, AlertCircle } from 'lucide-react';
 import './DiscountRegistration.css';
 import { countries } from '../../data/countriesData';
-import { validateDiscountCode, submitRegistration } from '../../api/siteApi';
+import * as siteApi from '../../api/siteApi';
 
 /* ── Pricing base values (USD) ─────────────────────────────── */
 const BASE_PRICING = [
@@ -93,13 +93,13 @@ const DiscountRegistration = () => {
         }
         setCouponStatus('checking');
         setCouponMsg('');
-        const result = await validateDiscountCode(code);
+        const result = await siteApi.validateDiscountCode(code);
         if (result.valid) {
             setDiscount(result);
             setCouponStatus('valid');
             setCouponMsg(`✅ "${result.coupon}" applied — ${result.percentage}% off ${result.category === 'both' ? 'registration & accommodation'
-                    : result.category === 'accommodation' ? 'accommodation'
-                        : 'registration'
+                : result.category === 'accommodation' ? 'accommodation'
+                    : 'registration'
                 }!`);
         } else {
             setDiscount(null);
@@ -199,12 +199,67 @@ const DiscountRegistration = () => {
         setSubmitting(true);
         setSubmitStatus(null);
         try {
-            const result = await submitRegistration(payload);
-            if (result && result.error) throw new Error(result.error);
-            setSubmitStatus('success');
-            handleReset();
-        } catch {
+            // 1. Create registration record (Pending)
+            const registration = await siteApi.submitRegistration(payload);
+            if (!registration || registration.error) throw new Error(registration?.error || 'Failed to save registration.');
+
+            // 2. Fetch Razorpay key & Create order
+            const { key } = await siteApi.fetchPaymentKey();
+            const { order } = await siteApi.createPaymentOrder({
+                amount: total,
+                registrationId: registration._id,
+                description: `Fluid Discount Reg: ${formData.fullName}`
+            });
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Fluid Mechanics Summit 2026',
+                description: `Payment for ${formData.fullName}`,
+                order_id: order.id,
+                prefill: {
+                    name: formData.fullName,
+                    email: formData.email,
+                    contact: formData.telephone,
+                },
+                theme: { color: '#0369a1' },
+                handler: async (response) => {
+                    // 4. Verify Payment
+                    try {
+                        const verifyResult = await siteApi.verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            registrationId: registration._id,
+                        });
+
+                        if (verifyResult.success) {
+                            setSubmitStatus('success');
+                            handleReset();
+                        } else {
+                            throw new Error(verifyResult.message || 'Payment verification failed.');
+                        }
+                    } catch (err) {
+                        alert('Payment success but verification failed: ' + err.message);
+                        setSubmitStatus('error');
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setSubmitting(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.error('Registration/Payment error:', err);
             setSubmitStatus('error');
+            alert(err.message || 'An error occurred during registration.');
         } finally {
             setSubmitting(false);
         }

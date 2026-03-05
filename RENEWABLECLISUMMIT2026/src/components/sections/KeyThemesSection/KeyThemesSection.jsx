@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Sun,
@@ -20,46 +20,46 @@ import {
     Lightbulb,
     BarChart,
     TreeDeciduous,
-    Mountain
+    Mountain,
+    Stethoscope
 } from 'lucide-react';
 import './KeyThemesSection.css';
+import { fetchContent } from '../../../api/siteApi';
 
-const sessionsData = [
-    { title: "Solar Energy & Photovoltaics", icon: Sun },
-    { title: "Wind Energy Technologies", icon: Wind },
-    { title: "Climate Change & Global Warming", icon: Thermometer },
-    { title: "Hydroelectric Power Systems", icon: Droplet },
-    { title: "Bioenergy & Biofuels", icon: Leaf },
-    { title: "Smart Grids & Energy Storage", icon: Battery },
-    { title: "Green Hydrogen Economy", icon: Flame },
-    { title: "Carbon Capture & Storage", icon: CloudRain },
-    { title: "Environmental Policy & Regulation", icon: ShieldCheck },
-    { title: "Electric Vehicles & Clean Transport", icon: Zap },
-    { title: "Geothermal Energy", icon: Mountain },
-    { title: "Ocean & Tidal Energy", icon: Anchor },
-    { title: "Sustainable Urban Planning", icon: Factory },
-    { title: "Waste-to-Energy Systems", icon: Recycle },
-    { title: "AI in Energy Management", icon: Cpu },
-    { title: "Energy Economics & Finance", icon: BarChart },
-    { title: "Circular Economy", icon: Activity },
-    { title: "Nuclear Energy & Safety", icon: Zap },
-    { title: "Climate Adaptation Strategies", icon: Globe },
-    { title: "Forestry & Carbon Sinks", icon: TreeDeciduous },
-    { title: "Energy Efficiency in Industry", icon: Factory },
-    { title: "Advanced Battery Technologies", icon: Battery },
-    { title: "Renewable Energy Integration", icon: Zap },
-    { title: "Meteorology & Climate Modeling", icon: CloudRain },
-    { title: "Sustainable Agriculture & Land Use", icon: Leaf },
-    { title: "Green Building Technologies", icon: Factory },
-    { title: "Environmental Impact Assessment", icon: Activity },
-    { title: "Social Aspects of Climate Change", icon: Globe },
-    { title: "Innovation in Clean Tech", icon: Lightbulb },
-    { title: "Future of Global Energy", icon: Sun },
+const DEFAULT_SESSIONS = [
+    { title: "Solar Energy & Photovoltaics", icon: "Sun" },
+    { title: "Wind Energy Technologies", icon: "Wind" },
+    { title: "Climate Change & Global Warming", icon: "Thermometer" },
+    { title: "Hydroelectric Power Systems", icon: "Droplet" },
+    { title: "Bioenergy & Biofuels", icon: "Leaf" },
+    { title: "Smart Grids & Energy Storage", icon: "Battery" },
+    { title: "Green Hydrogen Economy", icon: "Flame" },
+    { title: "Carbon Capture & Storage", icon: "CloudRain" },
+    { title: "Environmental Policy & Regulation", icon: "ShieldCheck" },
+    { title: "Electric Vehicles & Clean Transport", icon: "Zap" },
+    { title: "Geothermal Energy", icon: "Mountain" },
+    { title: "Ocean & Tidal Energy", icon: "Anchor" },
+    { title: "Sustainable Urban Planning", icon: "Factory" },
+    { title: "Waste-to-Energy Systems", icon: "Recycle" },
+    { title: "AI in Energy Management", icon: "Cpu" },
+    { title: "Energy Economics & Finance", icon: "BarChart" },
+    { title: "Circular Economy", icon: "Activity" },
+    { title: "Nuclear Energy & Safety", icon: "Zap" },
+    { title: "Climate Adaptation Strategies", icon: "Globe" },
+    { title: "Forestry & Carbon Sinks", icon: "TreeDeciduous" },
+    { title: "Energy Efficiency in Industry", icon: "Factory" },
+    { title: "Advanced Battery Technologies", icon: "Battery" },
+    { title: "Renewable Energy Integration", icon: "Zap" },
+    { title: "Meteorology & Climate Modeling", icon: "CloudRain" },
+    { title: "Sustainable Agriculture & Land Use", icon: "Leaf" },
+    { title: "Green Building Technologies", icon: "Factory" },
+    { title: "Environmental Impact Assessment", icon: "Activity" },
+    { title: "Social Aspects of Climate Change", icon: "Globe" },
+    { title: "Innovation in Clean Tech", icon: "Lightbulb" },
+    { title: "Future of Global Energy", icon: "Sun" },
 ];
 
-const Link = ({ href, children }) => <a href={href}>{children}</a>; // Placeholder if needed
-
-const scheduleData = {
+const DEFAULT_SCHEDULE = {
     day1: [
         { time: '8.30 – 9.00', program: 'Registration' },
         { time: '9.00 – 9.30', program: 'Conference Inauguration' },
@@ -90,13 +90,31 @@ const scheduleData = {
     ]
 };
 
+const iconMap = {
+    Sun, Wind, Zap, Droplet, Leaf, Globe, ShieldCheck, Thermometer,
+    Recycle, Battery, CloudRain, Cpu, Anchor, Flame, Activity,
+    Factory, Lightbulb, BarChart, TreeDeciduous, Mountain
+};
+
 const KeyThemesSection = ({ showLearnMore = false }) => {
     const [activeDay, setActiveDay] = useState('day1');
+    const [sessions, setSessions] = useState(DEFAULT_SESSIONS);
+    const [schedule, setSchedule] = useState(DEFAULT_SCHEDULE);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        fetchContent('sessions').then(d => {
+            if (d) {
+                if (d.sessions) setSessions(d.sessions.map((s, i) => typeof s === 'string' ? { title: s } : s));
+                if (d.schedule) setSchedule(d.schedule);
+            }
+        });
+    }, []);
+
     // Limit items if in preview mode (Home page)
-    const displaySessions = showLearnMore ? sessionsData.slice(0, 10) : sessionsData;
-    const displaySchedule = showLearnMore ? scheduleData[activeDay].slice(0, 5) : scheduleData[activeDay];
+    const displaySessions = showLearnMore ? sessions.slice(0, 10) : sessions;
+    const currentDaySchedule = schedule[activeDay] || [];
+    const displaySchedule = showLearnMore ? currentDaySchedule.slice(0, 5) : currentDaySchedule;
 
     return (
         <section className={`sessions-schedule-section section-padding ${showLearnMore ? 'preview-mode' : ''}`} id="sessions">
@@ -113,7 +131,7 @@ const KeyThemesSection = ({ showLearnMore = false }) => {
                         <div className="sessions-list-container">
                             <ul className="sessions-list-clean">
                                 {displaySessions.map((session, index) => {
-                                    const Icon = session.icon || Stethoscope;
+                                    const Icon = iconMap[session.icon] || Stethoscope;
                                     return (
                                         <li key={index} className="session-item-clean">
                                             <span className="session-icon-small">

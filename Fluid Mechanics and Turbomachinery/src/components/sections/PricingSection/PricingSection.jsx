@@ -24,9 +24,25 @@ const PricingSection = () => {
     const [pricing, setPricing] = useState({ title: 'REGISTRATION PRICING', packages: DEFAULT_PACKAGES });
 
     useEffect(() => {
-        fetchContent('pricing').then(data => {
-            if (data) setPricing(prev => ({ ...prev, ...data }));
-        });
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('pricing').then(data => {
+                if (!cancelled && data) setPricing(prev => ({ ...prev, ...data }));
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     const packages = pricing.packages?.length > 0 ? pricing.packages : DEFAULT_PACKAGES;
@@ -52,7 +68,7 @@ const PricingSection = () => {
                                     </li>
                                 ))}
                             </ul>
-                            <button 
+                            <button
                                 className="pricing-card__button"
                                 onClick={() => navigate('/register')}
                             >

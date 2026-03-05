@@ -74,6 +74,18 @@ const CONFERENCE_CONFIG = {
     accentColor: '#0891b2',   // cyan-600
     accentGlow: 'rgba(8,145,178,0.35)',
   },
+  renewable: {
+    conferenceId: 'renewable',
+    displayName: 'RENEWABLE ENERGY & CLIMATE CHANGE 2026',
+    shortName: 'RENEWABLE SUMMIT',
+    logoText: 'RE',
+    logoSub: 'Summit',
+    brandTop: 'RENEWABLE ENERGY',
+    brandSub: '& CLIMATE CHANGE',
+    footerText: '© Copyright 2026 RENEWABLE ENERGY & CLIMATE CHANGE SUMMIT.',
+    accentColor: '#2E7D32',   // green-700
+    accentGlow: 'rgba(46,125,50,0.35)',
+  },
 };
 
 /* ── Simple page router ── */
@@ -111,7 +123,7 @@ function PageContent({ activeNav, setActiveNav }) {
     case 'ws-marquee': return <WebsiteSections section="marquee" />;
     case 'ws-pricing': return <WebsiteSections section="pricing" />;
     case 'ws-partners': return <WebsiteSections section="partners" />;
-    
+
     // Dashboard card navigation mappings
     case 'abstracts': return <ViewAbstracts />;
     case 'registrations': return <ViewRegistrations />;

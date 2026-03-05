@@ -63,16 +63,29 @@ export default function SponsorsSection() {
     const [sponsorsData, setSponsorsData] = useState(staticSponsorsData);
 
     useEffect(() => {
-        // Fetch media partners from backend
-        fetchSponsors('media').then(data => {
-            if (data && data.length > 0) {
-                const mapped = data.map(s => ({
-                    name: s.name,
-                    logo: s.logo || s.image || '',
-                })).filter(s => s.logo);
-                if (mapped.length > 0) setSponsorsData(mapped);
-            }
-        });
+        let cancelled = false;
+        const load = () => {
+            fetchSponsors('media').then(data => {
+                if (!cancelled && data && data.length > 0) {
+                    const mapped = data.map(s => ({
+                        name: s.name,
+                        logo: s.logo || s.image || '',
+                    })).filter(s => s.logo);
+                    if (mapped.length > 0) setSponsorsData(mapped);
+                }
+            });
+        };
+
+        load();
+        const interval = setInterval(load, 60000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     const row1 = sponsorsData.slice(0, Math.ceil(sponsorsData.length / 2));

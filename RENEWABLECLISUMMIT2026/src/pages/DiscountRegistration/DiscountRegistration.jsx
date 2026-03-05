@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../../components/common/Button/Button';
+import * as siteApi from '../../api/siteApi';
 import './DiscountRegistration.css';
 
 // Comprehensive list of all countries
@@ -37,12 +38,16 @@ const DiscountRegistration = () => {
         company: '',
         address: ''
     });
-    
+
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSponsorship, setSelectedSponsorship] = useState('');
     const [includeAccompanying, setIncludeAccompanying] = useState(false);
     const [selectedAccommodation, setSelectedAccommodation] = useState('');
     const [termsAccepted, setTermsAccepted] = useState(false);
+
+    // Submission states
+    const [submitting, setSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error'
 
     const registrationCategories = [
         { id: 'speaker', label: 'Speaker Registration', early: 749, standard: 849, onspot: 949 },
@@ -75,32 +80,151 @@ const DiscountRegistration = () => {
 
     const calculateTotal = () => {
         let total = 0;
-        
+
         if (selectedCategory) {
             const category = registrationCategories.find(c => c.id === selectedCategory);
             if (category) total += category[activePhase];
         }
-        
+
         if (selectedSponsorship) {
             const sponsor = sponsorshipOptions.find(s => s.id === selectedSponsorship);
             if (sponsor) total += sponsor.price;
         }
-        
+
         if (includeAccompanying) total += 249;
-        
+
         if (selectedAccommodation) {
             const [nights, type] = selectedAccommodation.split('-');
             const option = accommodationOptions.find(o => o.nights === parseInt(nights));
             if (option) total += option[type];
         }
-        
+
         return total;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        alert('Registration submitted successfully! (This is a demo)');
+
+        if (!formData.name || !formData.email) {
+            alert('Please fill in your Full Name and Email before submitting.');
+            return;
+        }
+
+        if (!termsAccepted) {
+            alert('Please accept the terms & conditions.');
+            return;
+        }
+
+        const total = calculateTotal();
+        if (total <= 0) {
+            alert('Please select a registration category or sponsorship.');
+            return;
+        }
+
+        // Build description string
+        const descParts = [];
+        if (selectedCategory) {
+            const cat = registrationCategories.find(p => p.id === selectedCategory);
+            if (cat) descParts.push(`${cat.label} : $${cat[activePhase]}`);
+        }
+        if (selectedSponsorship) {
+            const sp = sponsorshipOptions.find(p => p.id === selectedSponsorship);
+            if (sp) descParts.push(`${sp.label} : $${sp.price}`);
+        }
+        if (includeAccompanying) descParts.push('Accompanying Person : $249');
+        if (selectedAccommodation) descParts.push(`Accommodation : ${selectedAccommodation}`);
+        if (discountCode) descParts.push(`Discount Code: ${discountCode}`);
+
+        const payload = {
+            title: formData.title,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            country: formData.country,
+            company: formData.company,
+            address: formData.address,
+            registrationCategory: selectedCategory
+                ? registrationCategories.find(p => p.id === selectedCategory)?.label || ''
+                : '',
+            accommodation: selectedAccommodation || '',
+            sponsorship: selectedSponsorship
+                ? sponsorshipOptions.find(p => p.id === selectedSponsorship)?.label || ''
+                : '',
+            accompanyingPerson: includeAccompanying,
+            totalAmount: total,
+            description: descParts.join('\n'),
+            status: 'Pending',
+            conference: 'renewable'
+        };
+
+        setSubmitting(true);
+        setSubmitStatus(null);
+
+        try {
+            // 1. Create registration record (Pending)
+            const registration = await siteApi.submitRegistration(payload);
+            if (!registration || registration.error) throw new Error(registration?.error || 'Failed to save registration.');
+
+            // 2. Fetch Razorpay key & Create order
+            const { key } = await siteApi.fetchPaymentKey();
+            const { order } = await siteApi.createPaymentOrder({
+                amount: total,
+                registrationId: registration._id,
+                description: `Discount Registration: ${formData.name}`
+            });
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Renewable Climate Summit 2026',
+                description: `Payment for ${formData.name}`,
+                order_id: order.id,
+                prefill: {
+                    name: formData.name,
+                    email: formData.email,
+                    contact: formData.phone,
+                },
+                theme: { color: '#059669' },
+                handler: async (response) => {
+                    // 4. Verify Payment
+                    try {
+                        const verifyResult = await siteApi.verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            registrationId: registration._id,
+                        });
+
+                        if (verifyResult.success) {
+                            setSubmitStatus('success');
+                            alert('Registration and payment successful!');
+                        } else {
+                            throw new Error(verifyResult.message || 'Payment verification failed.');
+                        }
+                    } catch (err) {
+                        alert('Payment success but verification failed: ' + err.message);
+                        setSubmitStatus('error');
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setSubmitting(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.error('Registration/Payment error:', err);
+            setSubmitStatus('error');
+            alert(err.message || 'An error occurred during registration.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -120,7 +244,7 @@ const DiscountRegistration = () => {
                         <div className="payment-badges-box">
                             <div className="stripe-header">
                                 <span className="stripe-text">stripe</span>
-                                <span className="secure-text">SECURE<br/>PAYMENTS</span>
+                                <span className="secure-text">SECURE<br />PAYMENTS</span>
                             </div>
                             <div className="payment-icons-small">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" />
@@ -129,7 +253,7 @@ const DiscountRegistration = () => {
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/JCB_logo.svg" alt="JCB" />
                             </div>
                         </div>
-                        
+
                         <div className="discount-code-header">
                             <h3><span className="tag-icon">🏷️</span> Have a Discount Code?</h3>
                             <p>Enter the discount code provided by the organizers to get reduced pricing.</p>
@@ -265,9 +389,17 @@ const DiscountRegistration = () => {
                         </div>
                         <p className="processing-note">Note: 5% processing charges will be applicable.</p>
                         <div className="form-actions">
-                            <Button type="submit">REGISTER NOW</Button>
+                            <Button
+                                type="submit"
+                                disabled={submitting}
+                                style={{ opacity: submitting ? 0.7 : 1 }}
+                            >
+                                {submitting ? 'SUBMITTING...' : 'REGISTER NOW'}
+                            </Button>
                             <button type="button" className="btn-reset" onClick={() => window.location.reload()}>RESET</button>
                         </div>
+                        {submitStatus === 'success' && <p style={{ color: 'green', marginTop: '10px' }}>✅ Registration successful!</p>}
+                        {submitStatus === 'error' && <p style={{ color: 'red', marginTop: '10px' }}>❌ Registration failed. Try again.</p>}
                     </div>
                 </form>
             </div>

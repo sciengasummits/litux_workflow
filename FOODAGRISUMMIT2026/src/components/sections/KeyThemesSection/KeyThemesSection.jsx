@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Zap,
@@ -19,33 +19,38 @@ import {
     FlaskConical
 } from 'lucide-react';
 import './KeyThemesSection.css';
+import { fetchContent } from '../../../api/siteApi';
 
-const sessionsData = [
-    { title: "Food Processing & Engineering", icon: Factory },
-    { title: "Sustainable Agriculture", icon: Leaf },
-    { title: "Food Safety & Quality Control", icon: ShieldCheck },
-    { title: "Agricultural Biotechnology", icon: FlaskConical },
-    { title: "Nutritional Science & Dietetics", icon: Activity },
-    { title: "Smart Farming & IoT", icon: Cpu },
-    { title: "Soil Science & Plant Nutrition", icon: TreeDeciduous },
-    { title: "Post-Harvest Technology", icon: Clock },
-    { title: "Food Microbiology", icon: FlaskConical },
-    { title: "Animal Science & Husbandry", icon: Activity },
-    { title: "Organic Farming", icon: TreeDeciduous },
-    { title: "Food Supply Chain Management", icon: BarChart },
-    { title: "Precision Agriculture", icon: MapPin },
-    { title: "Food Waste Management", icon: Recycle },
-    { title: "Climate-Resilient Agriculture", icon: CloudRain },
-    { title: "Aquaculture & Fisheries", icon: Anchor },
-    { title: "Dairy Technology", icon: Droplet },
-    { title: "Functional Foods & Nutraceuticals", icon: Zap },
-    { title: "Agricultural Economics", icon: BarChart },
-    { title: "Food Packaging Innovations", icon: Package },
+// Cycle through icons for dynamic session lists
+const SESSION_ICONS = [
+    Leaf, Factory, ShieldCheck, FlaskConical, Activity, Cpu, TreeDeciduous,
+    Clock, Recycle, CloudRain, Anchor, Droplet, Zap, BarChart, MapPin, Package
 ];
 
-const Link = ({ href, children }) => <a href={href}>{children}</a>; // Placeholder if needed
+const DEFAULT_SESSIONS = [
+    "Food Processing & Engineering",
+    "Sustainable Agriculture",
+    "Food Safety & Quality Control",
+    "Agricultural Biotechnology",
+    "Nutritional Science & Dietetics",
+    "Smart Farming & IoT",
+    "Soil Science & Plant Nutrition",
+    "Post-Harvest Technology",
+    "Food Microbiology",
+    "Animal Science & Husbandry",
+    "Organic Farming",
+    "Food Supply Chain Management",
+    "Precision Agriculture",
+    "Food Waste Management",
+    "Climate-Resilient Agriculture",
+    "Aquaculture & Fisheries",
+    "Dairy Technology",
+    "Functional Foods & Nutraceuticals",
+    "Agricultural Economics",
+    "Food Packaging Innovations",
+];
 
-const scheduleData = {
+const DEFAULT_SCHEDULE = {
     day1: [
         { time: '8.30 – 9.00', program: 'Registration' },
         { time: '9.00 – 9.30', program: 'Conference Inauguration' },
@@ -79,10 +84,45 @@ const scheduleData = {
 const KeyThemesSection = ({ showLearnMore = false }) => {
     const [activeDay, setActiveDay] = useState('day1');
     const navigate = useNavigate();
+    const [sessions, setSessions] = useState(DEFAULT_SESSIONS);
+    const [schedule, setSchedule] = useState(DEFAULT_SCHEDULE);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('sessions').then(d => {
+                if (!cancelled && d) {
+                    if (d.sessions && d.sessions.length > 0) setSessions(d.sessions);
+                    if (d.schedule) setSchedule(prev => ({ ...prev, ...d.schedule }));
+                }
+            });
+        };
+
+        load();
+
+        const interval = setInterval(load, 30000);
+        const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, []);
+
+    // Build sessions with icons (api returns plain strings, we pair icons by index)
+    const sessionsWithIcons = sessions.map((s, i) => ({
+        title: typeof s === 'string' ? s : (s.title || s),
+        icon: SESSION_ICONS[i % SESSION_ICONS.length],
+    }));
+
+    const activeSchedule = schedule[activeDay] || [];
 
     // Limit items if in preview mode (Home page)
-    const displaySessions = showLearnMore ? sessionsData.slice(0, 10) : sessionsData;
-    const displaySchedule = showLearnMore ? scheduleData[activeDay].slice(0, 5) : scheduleData[activeDay];
+    const displaySessions = showLearnMore ? sessionsWithIcons.slice(0, 10) : sessionsWithIcons;
+    const displaySchedule = showLearnMore ? activeSchedule.slice(0, 5) : activeSchedule;
 
     return (
         <section className={`sessions-schedule-section section-padding ${showLearnMore ? 'preview-mode' : ''}`} id="sessions">
@@ -99,7 +139,7 @@ const KeyThemesSection = ({ showLearnMore = false }) => {
                         <div className="sessions-list-container">
                             <ul className="sessions-list-clean">
                                 {displaySessions.map((session, index) => {
-                                    const Icon = session.icon || Stethoscope;
+                                    const Icon = session.icon || Activity;
                                     return (
                                         <li key={index} className="session-item-clean">
                                             <span className="session-icon-small">
@@ -151,8 +191,8 @@ const KeyThemesSection = ({ showLearnMore = false }) => {
                                 <table className="schedule__table">
                                     <thead>
                                         <tr>
-                                            <th>Time</th>
-                                            <th>Conference Schedule</th>
+                                            <th>TIME</th>
+                                            <th>CONFERENCE SCHEDULE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -173,9 +213,6 @@ const KeyThemesSection = ({ showLearnMore = false }) => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Fade Overlay */}
-                    {showLearnMore && <div className="key-themes-fade-overlay"></div>}
                 </div>
 
                 {/* Learn More Button */}

@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
-import { speakers } from '../../../data/speakersData';
+import { fetchSpeakers } from '../../../api/siteApi';
 import './SpeakersSection.css';
 
 const SpeakersSection = ({ showViewAll }) => {
     const location = useLocation();
     const [activeCategory, setActiveCategory] = useState(location.state?.category || 'Committee');
     const [selectedSpeaker, setSelectedSpeaker] = useState(null);
+    const [speakersList, setSpeakersList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const getDisplayCategory = (category) => {
         if (category === 'Student') return 'Student Speaker';
@@ -15,15 +17,23 @@ const SpeakersSection = ({ showViewAll }) => {
         return category;
     };
 
-    const filteredSpeakers = speakers.filter(speaker => {
-        if (activeCategory === 'Committee') return speaker.category === 'Committee';
-        if (activeCategory === 'Speakers') return true;
-        if (activeCategory === 'Posters') return speaker.category === 'Poster Presenter';
-        if (activeCategory === 'Students') return speaker.category === 'Student';
-        if (activeCategory === 'Delegates') return speaker.category === 'Delegate';
-        return true;
-        return true;
-    }).slice(0, showViewAll ? 8 : speakers.length);
+    useEffect(() => {
+        setLoading(true);
+        // Map frontend categories to backend categories if needed
+        // Backend usually expects 'Committee', 'Keynote', 'Oral', 'Poster', etc.
+        let categoryToFetch = activeCategory;
+        if (activeCategory === 'Speakers') categoryToFetch = 'Keynote'; // example mapping
+        if (activeCategory === 'Posters') categoryToFetch = 'Poster Presenter';
+        if (activeCategory === 'Students') categoryToFetch = 'Student';
+        if (activeCategory === 'Delegates') categoryToFetch = 'Delegate';
+
+        fetchSpeakers(categoryToFetch).then(d => {
+            if (d) setSpeakersList(d);
+            setLoading(false);
+        });
+    }, [activeCategory]);
+
+    const displaySpeakers = showViewAll ? speakersList.slice(0, 8) : speakersList;
 
     const openModal = (speaker) => {
         setSelectedSpeaker(speaker);
@@ -56,13 +66,11 @@ const SpeakersSection = ({ showViewAll }) => {
                 </div>
 
                 <div className="speakers__grid">
-                    {filteredSpeakers.map((speaker) => (
-                        <div className="speaker-card" key={speaker.id}>
+                    {displaySpeakers.map((speaker, index) => (
+                        <div className="speaker-card" key={speaker._id || index}>
                             <div className="speaker-img-wrapper">
                                 <img src={speaker.image} alt={speaker.name} className="speaker-img" />
-                                <div className="speaker-overlay">
-                                    {/* Social icons could go here */}
-                                </div>
+                                <div className="speaker-overlay"></div>
                             </div>
                             <div className="speaker-info">
                                 {speaker.category && <span className="speaker-category">{getDisplayCategory(speaker.category)}</span>}
@@ -76,7 +84,13 @@ const SpeakersSection = ({ showViewAll }) => {
                         </div>
                     ))}
                 </div>
-                {showViewAll && (
+
+                {loading && <div className="text-center mt-4">Loading members...</div>}
+                {!loading && displaySpeakers.length === 0 && (
+                    <div className="text-center mt-4">No participants found in this category.</div>
+                )}
+
+                {showViewAll && speakersList.length > 8 && (
                     <div className="text-center mt-5">
                         <Link
                             to="/speakers"
@@ -91,23 +105,21 @@ const SpeakersSection = ({ showViewAll }) => {
             </div>
 
             {/* Speaker Modal */}
-            {
-                selectedSpeaker && (
-                    <div className="modal-overlay" onClick={closeModal}>
-                        <div className="modal-content" onClick={e => e.stopPropagation()}>
-                            <button className="modal-close" onClick={closeModal}>&times;</button>
+            {selectedSpeaker && (
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="modal-close" onClick={closeModal}>&times;</button>
 
-                            <div className="modal-body">
-                                {selectedSpeaker.category && <p className="modal-category">{getDisplayCategory(selectedSpeaker.category)}</p>}
-                                <h3 className="modal-title">{selectedSpeaker.name}</h3>
-                                <span className="modal-type">{selectedSpeaker.title}</span>
-                                <p className="modal-affiliation-highlight">{selectedSpeaker.affiliation}</p>
-                                <p className="modal-desc">{selectedSpeaker.bio || "A distinguished expert in the field of general medicine, contributing significantly to research and clinical practice. With years of experience leading healthcare initiatives and publishing groundbreaking studies, they have become a pivotal figure in advancing medical standards globally. Their work focuses on innovative treatment methodologies and improving patient outcomes through evidence-based medicine."}</p>
-                            </div>
+                        <div className="modal-body">
+                            {selectedSpeaker.category && <p className="modal-category">{getDisplayCategory(selectedSpeaker.category)}</p>}
+                            <h3 className="modal-title">{selectedSpeaker.name}</h3>
+                            <span className="modal-type">{selectedSpeaker.title}</span>
+                            <p className="modal-affiliation-highlight">{selectedSpeaker.affiliation}</p>
+                            <p className="modal-desc">{selectedSpeaker.bio || "A distinguished expert in the field of renewable energy and climate science, contributing significantly to research and sustainable development."}</p>
                         </div>
                     </div>
-                )
-            }
+                </div>
+            )}
         </section >
     );
 };

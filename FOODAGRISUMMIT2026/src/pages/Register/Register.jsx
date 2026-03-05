@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { submitRegistration } from '../../api/siteApi';
+import * as siteApi from '../../api/siteApi';
 import { countries } from '../../data/countriesData';
 import './Register.css';
 
@@ -124,6 +124,10 @@ const Register = ({ isDiscounted = false }) => {
         }
 
         const total = calculateTotal();
+        if (total <= 0) {
+            alert('Please select a registration category or sponsorship.');
+            return;
+        }
 
         // Build description string
         const descParts = [];
@@ -161,14 +165,69 @@ const Register = ({ isDiscounted = false }) => {
 
         setSubmitting(true);
         setSubmitStatus(null);
+
         try {
-            // submitRegistration() from siteApi automatically adds conference:'foodagri'
-            const result = await submitRegistration(payload);
-            if (result?.error) throw new Error(result.error);
-            setSubmitStatus('success');
-            handleReset();
-        } catch {
+            // 1. Create a registration record first (Pending)
+            const registration = await siteApi.submitRegistration(payload);
+            if (!registration || registration.error) throw new Error(registration?.error || 'Failed to save registration.');
+
+            // 2. Fetch Razorpay key & Create order
+            const { key } = await siteApi.fetchPaymentKey();
+            const { order } = await siteApi.createPaymentOrder({
+                amount: total,
+                registrationId: registration._id,
+                description: `Registration: ${formData.fullName}`
+            });
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Food Agri Summit 2026',
+                description: `Payment for ${formData.fullName}`,
+                order_id: order.id,
+                prefill: {
+                    name: formData.fullName,
+                    email: formData.email,
+                    contact: formData.telephone,
+                },
+                theme: { color: '#2563eb' },
+                handler: async (response) => {
+                    // 4. Verify Payment
+                    try {
+                        const verifyResult = await siteApi.verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            registrationId: registration._id,
+                        });
+
+                        if (verifyResult.success) {
+                            setSubmitStatus('success');
+                            handleReset();
+                        } else {
+                            throw new Error(verifyResult.message || 'Payment verification failed.');
+                        }
+                    } catch (err) {
+                        alert('Payment success but verification failed: ' + err.message);
+                        setSubmitStatus('error');
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setSubmitting(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.error('Registration/Payment error:', err);
             setSubmitStatus('error');
+            alert(err.message || 'An error occurred during registration.');
         } finally {
             setSubmitting(false);
         }

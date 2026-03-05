@@ -29,13 +29,34 @@ const HeroSection = () => {
 
     // Fetch dynamic hero content from backend
     useEffect(() => {
-        fetchContent('hero').then(data => {
-            if (data) setHero({ ...DEFAULTS, ...data });
-        });
+        let cancelled = false;
+
+        const load = () => {
+            fetchContent('hero').then(data => {
+                if (!cancelled && data) setHero(prev => ({ ...prev, ...data }));
+            });
+        };
+
+        load();
+
+        // Polling every 15s to reflect dashboard changes live
+        const interval = setInterval(load, 15000);
+
+        // Also refresh when tab becomes visible
+        const onVisible = () => {
+            if (document.visibilityState === 'visible') load();
+        };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, []);
 
     useEffect(() => {
-        const targetDate = new Date(hero.countdownTarget || '2026-12-14T09:00:00+01:00').getTime();
+        const targetDate = new Date(hero.countdownTarget || DEFAULTS.countdownTarget).getTime();
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
@@ -60,14 +81,35 @@ const HeroSection = () => {
         navigate('/brochure');
     };
 
+    // Parse date for info-card (expects "Month Day-Day, Year" or similar)
+    const monthStr = hero.conferenceDate?.split(' ')[0] || 'December';
+    const daysStr = hero.conferenceDate?.split(' ').slice(1).join(' ') || '14-16, 2026';
+
+    // Support multiline title via backend \n
+    const renderTitle = () => {
+        if (!hero.title) return DEFAULTS.title;
+        return hero.title.split('\n').map((line, i) => (
+            <React.Fragment key={i}>
+                {line}
+                {i !== hero.title.split('\n').length - 1 && <br />}
+            </React.Fragment>
+        ));
+    };
+
+    const heroBgStyle = {
+        backgroundImage: hero.bgImage
+            ? `linear-gradient(rgba(0, 15, 31, 0.6), rgba(0, 15, 31, 0.6)), url(${hero.bgImage})`
+            : `linear-gradient(rgba(0, 15, 31, 0.6), rgba(0, 15, 31, 0.6)), url('https://5.imimg.com/data5/SELLER/Default/2023/4/304158028/BI/ED/JG/115492319/cryopump-coldhead-and-helium-compressor-repair-services-500x500.jpg')`
+    };
+
     return (
-        <section className="hero" style={{ backgroundImage: `linear-gradient(rgba(0, 15, 31, 0.6), rgba(0, 15, 31, 0.6)), url('https://5.imimg.com/data5/SELLER/Default/2023/4/304158028/BI/ED/JG/115492319/cryopump-coldhead-and-helium-compressor-repair-services-500x500.jpg')` }}>
+        <section className="hero" style={heroBgStyle}>
             <div className="hero__overlay"></div>
             <div className="container hero__container">
                 <div className="hero__content">
                     <h1 className="hero__title">
                         <span className="hero__title-sub">{hero.subtitle}</span> <br />
-                        {hero.title}
+                        {renderTitle()}
                     </h1>
 
                     <div className="hero__countdown-wrapper">
@@ -96,13 +138,13 @@ const HeroSection = () => {
                         {hero.description}
                     </p>
                     <div className="hero__actions">
-                        {hero.showBrochure && (
+                        {hero.showBrochure !== false && (
                             <Button onClick={handleDownloadBrochure}>Download Brochure</Button>
                         )}
-                        {hero.showRegister && (
+                        {hero.showRegister !== false && (
                             <Button onClick={() => navigate('/register')}>Register Now</Button>
                         )}
-                        {hero.showAbstract && (
+                        {hero.showAbstract !== false && (
                             <Button onClick={() => navigate('/abstract-submission')}>
                                 Submit Abstract
                             </Button>
@@ -112,8 +154,8 @@ const HeroSection = () => {
 
                 <div className="hero__info-cards">
                     <div className="info-card date-card">
-                        <h3>December</h3>
-                        <p>14-16, 2026</p>
+                        <h3>{monthStr}</h3>
+                        <p>{daysStr}</p>
                     </div>
 
                     <div className="info-card venue-card">

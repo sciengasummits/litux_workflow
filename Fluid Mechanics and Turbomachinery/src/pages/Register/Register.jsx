@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { submitRegistration } from '../../api/siteApi';
+import * as siteApi from '../../api/siteApi';
 import './Register.css';
 
 const Register = ({ isDiscounted = false }) => {
@@ -148,38 +148,118 @@ const Register = ({ isDiscounted = false }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!selectedAcademicCategory && !selectedSponsorship) {
-            setSubmitMsg({ type: 'error', text: 'Please select a registration category.' });
+        if (!formData.fullName || !formData.email) {
+            alert('Please fill in your Full Name and Email before submitting.');
             return;
         }
         if (!termsAccepted) {
-            setSubmitMsg({ type: 'error', text: 'Please accept the terms & conditions.' });
+            alert('Please accept the terms & conditions.');
             return;
         }
 
         const total = calculateTotal();
-        const selectedCat = academicPricing.find(p => p.id === selectedAcademicCategory);
-        const selectedSponsor = sponsorshipPricing.find(p => p.id === selectedSponsorship);
+        if (total <= 0) {
+            alert('Please select a registration category or sponsorship.');
+            return;
+        }
+
+        // Build description string
+        const descParts = [];
+        if (selectedAcademicCategory) {
+            const cat = academicPricing.find(p => p.id === selectedAcademicCategory);
+            if (cat) descParts.push(`${cat.label} : $${cat[activePhase]}`);
+        }
+        if (selectedSponsorship) {
+            const sp = sponsorshipPricing.find(p => p.id === selectedSponsorship);
+            if (sp) descParts.push(`${sp.label} : $${sp.price}`);
+        }
+        if (includeAccompanying) descParts.push('Accompanying Person : $249');
+        if (selectedAccommodation) descParts.push(`Accommodation : ${selectedAccommodation}`);
 
         const payload = {
-            ...formData,
-            category: selectedCat ? selectedCat.label : (selectedSponsor ? selectedSponsor.label : ''),
-            amount: total,
-            phase: activePhase,
+            title: formData.designation,
+            name: formData.fullName,
+            email: formData.email,
+            phone: formData.telephone,
+            country: formData.country,
+            company: formData.company,
+            address: formData.address,
+            registrationCategory: selectedAcademicCategory
+                ? academicPricing.find(p => p.id === selectedAcademicCategory)?.label || ''
+                : '',
             accommodation: selectedAccommodation || '',
-            sponsorship: selectedSponsor ? selectedSponsor.label : '',
+            sponsorship: selectedSponsorship
+                ? sponsorshipPricing.find(p => p.id === selectedSponsorship)?.label || ''
+                : '',
             accompanyingPerson: includeAccompanying,
-            status: 'pending',
+            totalAmount: total,
+            description: descParts.join('\n'),
+            status: 'Pending',
         };
 
         setSubmitting(true);
         setSubmitMsg(null);
         try {
-            await submitRegistration(payload);
-            setSubmitMsg({ type: 'success', text: 'Registration submitted successfully! Our team will contact you shortly.' });
-            handleReset();
+            // 1. Create registration record (Pending)
+            const registration = await siteApi.submitRegistration(payload);
+            if (!registration || registration.error) throw new Error(registration?.error || 'Failed to save registration.');
+
+            // 2. Fetch Razorpay key & Create order
+            const { key } = await siteApi.fetchPaymentKey();
+            const { order } = await siteApi.createPaymentOrder({
+                amount: total,
+                registrationId: registration._id,
+                description: `Fluid Summit Registration: ${formData.fullName}`
+            });
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Fluid Mechanics Summit 2026',
+                description: `Payment for ${formData.fullName}`,
+                order_id: order.id,
+                prefill: {
+                    name: formData.fullName,
+                    email: formData.email,
+                    contact: formData.telephone,
+                },
+                theme: { color: '#0369a1' }, // Sky blue theme
+                handler: async (response) => {
+                    // 4. Verify Payment
+                    try {
+                        const verifyResult = await siteApi.verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            registrationId: registration._id,
+                        });
+
+                        if (verifyResult.success) {
+                            setSubmitMsg({ type: 'success', text: 'Registration and payment successful!' });
+                            handleReset();
+                        } else {
+                            throw new Error(verifyResult.message || 'Payment verification failed.');
+                        }
+                    } catch (err) {
+                        alert('Payment success but verification failed: ' + err.message);
+                        setSubmitMsg({ type: 'error', text: 'Payment verification failed.' });
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setSubmitting(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
         } catch (err) {
-            setSubmitMsg({ type: 'error', text: 'Submission failed. Please try again or contact support.' });
+            console.error('Registration/Payment error:', err);
+            setSubmitMsg({ type: 'error', text: err.message || 'An error occurred during registration.' });
         } finally {
             setSubmitting(false);
         }

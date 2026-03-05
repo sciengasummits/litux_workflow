@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Button from '../../components/common/Button/Button';
 import { CalendarDays } from 'lucide-react';
 import './AbstractSubmission.css';
+import { submitAbstract } from '../../api/siteApi';
 
-// Comprehensive list of all countries
 const countries = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
     "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
@@ -39,16 +39,41 @@ const AbstractSubmission = () => {
         topic: '',
         address: ''
     });
+    const [file, setFile] = useState(null);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, files } = e.target;
+        if (files) {
+            setFile(files[0]);
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        alert('Abstract submitted successfully! (This is a demo)');
+
+        const data = new FormData();
+        Object.keys(formData).forEach(key => data.append(key, formData[key]));
+        if (file) data.append('file', file);
+        data.append('conference', 'renewable');
+
+        try {
+            const res = await submitAbstract(data);
+            if (res.success) {
+                alert('Abstract submitted successfully! We will contact you soon.');
+                setFormData({
+                    title: '', name: '', email: '', mobile: '', organization: '',
+                    country: '', interest: '', topic: '', address: ''
+                });
+                setFile(null);
+            } else {
+                alert('Submission failed. Please try again or contact support.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred. Please try again.');
+        }
     };
 
     return (

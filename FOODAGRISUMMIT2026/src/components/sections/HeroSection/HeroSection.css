@@ -93,8 +93,8 @@
 
 .hero__info-cards {
     position: relative;
-    width: 380px;
-    height: 280px;
+    width: 450px;
+    height: 320px;
     flex-shrink: 0;
 }
 
@@ -111,7 +111,7 @@
     top: 0;
     left: 0;
     background: var(--color-primary-gradient);
-    width: 240px;
+    width: 280px;
     text-align: center;
     z-index: 2;
 }
@@ -156,11 +156,11 @@
 }
 
 .venue-card {
-    top: 100px;
+    top: 140px;
     right: 0;
     background: linear-gradient(135deg, var(--color-primary-start), var(--color-primary-end));
     border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 220px;
+    width: 260px;
     z-index: 1;
 }
 

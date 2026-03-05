@@ -603,10 +603,395 @@ async function seedDefaultData() {
         }
     ];
 
-    // ─── Seed Data for Both Conferences ──────────────────────────
+    // ─── FOODAGRI Conference Data ─────────────────────────────────
+    const foodagriDefaults = [
+        {
+            key: 'hero',
+            data: {
+                subtitle: 'INTERNATIONAL CONFERENCE ON',
+                title: 'FOOD SCIENCE TECHNOLOGY AND AGRICULTURE',
+                description: 'International Conference on Food Science Technology and Agriculture, where global experts unite to shape the future of food science and agricultural innovation. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming our world.',
+                conferenceDate: 'December 07-09, 2026',
+                venue: 'Marina Bay, Singapore',
+                countdownTarget: '2026-12-07T09:00:00+08:00',
+                showRegister: true,
+                showAbstract: true,
+                showBrochure: true
+            }
+        },
+        {
+            key: 'about',
+            data: {
+                subtitle: 'Advancing Food Innovation',
+                title: 'About The Conference',
+                paragraph1: 'The International Conference on Food Science Technology and Agriculture is a premier international platform dedicated to advancing the understanding of food science, agricultural innovation, and sustainable food systems.',
+                paragraph2: 'This conference brings together leading researchers, academicians, food scientists, agricultural experts, and industry professionals to explore recent developments, innovative technologies, sustainable practices, and real-world applications in food science and agriculture.',
+                objectives: [
+                    'Promote advancements in food science and technology',
+                    'Explore innovations in sustainable agriculture',
+                    'Discuss food safety, quality control, and nutritional science',
+                    'Bridge academia and industry in agricultural research',
+                    'Encourage collaboration across food processing, biotechnology, and environmental sustainability domains'
+                ],
+                keyThemes: [
+                    'Food Processing and Preservation Technologies',
+                    'Sustainable Agriculture and Crop Management',
+                    'Food Safety and Quality Assurance',
+                    'Nutritional Science and Functional Foods',
+                    'Agricultural Biotechnology and Genetic Engineering',
+                    'Smart Farming and Precision Agriculture'
+                ]
+            }
+        },
+        {
+            key: 'importantDates',
+            data: {
+                dates: [
+                    { month: 'JUL', day: '01', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' },
+                    { month: 'SEP', day: '30', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' },
+                    { month: 'NOV', day: '15', year: '2026', event: 'Submission Deadline', icon: 'Clock' },
+                    { month: 'DEC', day: '07', year: '2026', event: 'Conference Date', icon: 'Star', sub: 'December 07-09, Singapore' }
+                ]
+            }
+        },
+        {
+            key: 'stats',
+            data: {
+                title: 'FOOD AGRI SUMMIT CONFERENCES APPROACH',
+                items: [
+                    { number: '15+', label: 'Years Experience' },
+                    { number: '100+', label: 'Events' },
+                    { number: '200+', label: 'Onsite Approach' },
+                    { number: '2000+', label: 'Speakers' },
+                    { number: '5000+', label: 'Attendees' },
+                    { number: '20+', label: 'Exhibitors' },
+                    { number: '150+', label: 'Countries' },
+                    { number: '2000+', label: 'Publications' }
+                ]
+            }
+        },
+        {
+            key: 'pricing',
+            data: {
+                title: 'REGISTRATION PRICING',
+                packages: [
+                    {
+                        title: 'Speaker',
+                        price: '799',
+                        currency: 'USD',
+                        features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                    },
+                    {
+                        title: 'Delegate',
+                        price: '899',
+                        currency: 'USD',
+                        features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                    },
+                    {
+                        title: 'Student',
+                        price: '499',
+                        currency: 'USD',
+                        features: ['Student Presentation', 'Meet Our Experts', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                    }
+                ]
+            }
+        },
+        {
+            key: 'sessions',
+            data: {
+                sessions: [
+                    'Food Processing & Engineering',
+                    'Sustainable Agriculture',
+                    'Food Safety & Quality Control',
+                    'Agricultural Biotechnology',
+                    'Nutritional Science & Dietetics',
+                    'Smart Farming & IoT',
+                    'Soil Science & Plant Nutrition',
+                    'Post-Harvest Technology',
+                    'Food Microbiology',
+                    'Animal Science & Husbandry',
+                    'Organic Farming',
+                    'Food Supply Chain Management',
+                    'Precision Agriculture',
+                    'Food Waste Management',
+                    'Climate-Resilient Agriculture',
+                    'Aquaculture & Fisheries',
+                    'Dairy Technology',
+                    'Functional Foods & Nutraceuticals',
+                    'Agricultural Economics',
+                    'Food Packaging Innovations'
+                ],
+                schedule: {
+                    day1: [
+                        { time: '8.30 – 9.00', program: 'Registration' },
+                        { time: '9.00 – 9.30', program: 'Conference Inauguration' },
+                        { time: '9.30 – 11.00', program: 'Plenary Sessions' },
+                        { time: '11.00 – 11.20', program: 'Tea/Coffee Break' },
+                        { time: '11.20 – 13.00', program: 'Plenary Sessions' },
+                        { time: '13.00 – 13.10', program: 'Group Photograph' },
+                        { time: '13.10 – 14.00', program: 'Lunch' },
+                        { time: '14.00 – 15.40', program: 'Keynote Sessions' },
+                        { time: '15.40 – 16.00', program: 'Tea/Coffee Break' },
+                        { time: '16.00 – 17.30', program: 'Keynote Sessions' },
+                        { time: '17.30 – 18.30', program: 'Workshop' }
+                    ],
+                    day2: [
+                        { time: '9.00 – 10.30', program: 'Scientific Sessions' },
+                        { time: '10.30 – 10.50', program: 'Tea/Coffee Break' },
+                        { time: '10.50 – 13.00', program: 'Poster Presentations' },
+                        { time: '13.00 – 14.00', program: 'Lunch' },
+                        { time: '14.00 – 15.30', program: 'Panel Discussions' },
+                        { time: '15.30 – 16.00', program: 'Award Ceremony & Closing' }
+                    ],
+                    day3: [
+                        { time: '9.00 – 10.30', program: 'Networking Session' },
+                        { time: '10.30 – 11.00', program: 'Tea/Coffee Break' },
+                        { time: '11.00 – 12.30', program: 'Future Trends Workshop' },
+                        { time: '12.30 – 13.30', program: 'Lunch' },
+                        { time: '13.30 – 15.00', program: 'Final Remarks & Departure' }
+                    ]
+                }
+            }
+        },
+        {
+            key: 'venue',
+            data: {
+                title: 'Conference Venue',
+                name: 'Marina Bay, Singapore',
+                address: 'Singapore',
+                description: 'A world-class conference venue in Marina Bay, Singapore, offering state-of-the-art facilities for an international food science and agriculture conference.',
+                images: [
+                    'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80',
+                    'https://images.unsplash.com/photo-1512470876302-972fad2aa9dd?w=1920&q=80',
+                    'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=80'
+                ]
+            }
+        },
+        {
+            key: 'marquee',
+            data: {
+                title: 'Supporting Universities & Institutions',
+                items: [
+                    'National University of Singapore',
+                    'Wageningen University & Research',
+                    'Cornell University',
+                    'UC Davis',
+                    'China Agricultural University',
+                    'University of Reading',
+                    'Texas A&M University',
+                    'University of Guelph',
+                    'Nanyang Technological University',
+                    'University of Tokyo'
+                ]
+            }
+        }
+    ];
+
+    // ─── Seed Data for All Conferences ────────────────────────────
     const conferences = [
         { name: 'liutex', defaults: liutexDefaults },
-        { name: 'fluid', defaults: fluidDefaults }
+        { name: 'fluid', defaults: fluidDefaults },
+        { name: 'foodagri', defaults: foodagriDefaults },
+        {
+            name: 'renewable',
+            defaults: [
+                {
+                    key: 'hero',
+                    data: {
+                        subtitle: 'INTERNATIONAL CONFERENCE ON',
+                        title: 'RENEWABLE ENERGY & CLIMATE CHANGE',
+                        description: 'Join distinguished researchers, industry leaders, and policymakers at the forefront of renewable energy innovation and climate action. Engage with cutting-edge research, establish strategic collaborations, and contribute to sustainable solutions addressing critical global environmental challenges.',
+                        conferenceDate: 'March 23-25, 2027',
+                        venue: 'Munich, Germany',
+                        countdownTarget: '2027-03-23T09:00:00+01:00',
+                        showRegister: true,
+                        showAbstract: true,
+                        showBrochure: true
+                    }
+                },
+                {
+                    key: 'about',
+                    data: {
+                        subtitle: 'Renewable Energy & Climate Action',
+                        title: 'About The Conference',
+                        paragraph1: 'The International Conference on Renewable Energy & Climate Change is a leading global forum dedicated to advancing sustainable energy technologies and fostering proactive solutions for climate change mitigation.',
+                        paragraph2: 'This conference brings together scientists, engineers, environmentalists, and industry experts to share revolutionary research, discuss policy frameworks, and explore the latest innovations in solar, wind, bioenergy, and climate science.',
+                        objectives: [
+                            'Global Synergy: Foster international cooperation among researchers, policymakers, and industry leaders',
+                            'Innovation Catalyst: Showcase breakthrough technologies in renewable energy storage and conversion',
+                            'Bridge Science & Policy: Facilitate dialogue for translating climate research into actionable policies',
+                            'Sustainability Leadership: Explore scalable solutions for achieving global net-zero targets',
+                            'Empowering the Next Gen: Offer a platform for young researchers and students to present their work',
+                            'Knowledge Hub: Publish significant findings and promote cross-disciplinary learning'
+                        ],
+                        keyThemes: [
+                            'Solar & Wind Energy Technologies: Efficiency improvements and large-scale integration',
+                            'Climate Change Mitigation: Carbon capture, storage, and emissions reduction strategies',
+                            'Hydrogen Energy & Fuel Cells: Innovations in production and infrastructure',
+                            'Bioenergy & Bio-refineries: Sustainable sources and technological advancements',
+                            'Smart Grids & Energy Storage: Modernizing power distribution and battery tech',
+                            'Environmental Policy & Economics: Market-driven solutions and regulatory frameworks'
+                        ]
+                    }
+                },
+                {
+                    key: 'importantDates',
+                    data: {
+                        dates: [
+                            { month: 'SEP', day: '01', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' },
+                            { month: 'DEC', day: '15', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' },
+                            { month: 'FEB', day: '10', year: '2027', event: 'Submission Deadline', icon: 'Clock' },
+                            { month: 'MAR', day: '23', year: '2027', event: 'Conference Date', icon: 'Star', sub: 'March 23-25, 2027, Munich, Germany' }
+                        ]
+                    }
+                },
+                {
+                    key: 'stats',
+                    data: {
+                        title: 'RENEWABLE ENERGY SUMMIT IMPACT',
+                        items: [
+                            { number: '15+', label: 'Years Experience' },
+                            { number: '100+', label: 'Events' },
+                            { number: '200+', label: 'Onsite Approach' },
+                            { number: '2000+', label: 'Speakers' },
+                            { number: '5000+', label: 'Attendees' },
+                            { number: '20+', label: 'Exhibitors' },
+                            { number: '150+', label: 'Countries' },
+                            { number: '2000+', label: 'Publications' }
+                        ]
+                    }
+                },
+                {
+                    key: 'pricing',
+                    data: {
+                        title: 'REGISTRATION PRICING',
+                        packages: [
+                            {
+                                title: 'Speaker',
+                                price: '799',
+                                currency: 'USD',
+                                features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            },
+                            {
+                                title: 'Delegate',
+                                price: '899',
+                                currency: 'USD',
+                                features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            },
+                            {
+                                title: 'Student',
+                                price: '499',
+                                currency: 'USD',
+                                features: ['Student Presentation', 'Meet Our Experts', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            }
+                        ]
+                    }
+                },
+                {
+                    key: 'sessions',
+                    data: {
+                        sessions: [
+                            'Solar Energy Technologies',
+                            'Wind Energy Systems',
+                            'Climate Change Mitigation',
+                            'Hydrogen Production & Infrastructure',
+                            'Bioenergy & Biofuels',
+                            'Smart Grids & Energy storage',
+                            'Environmental Policy & Economics',
+                            'Geothermal Energy Systems',
+                            'Ocean & Tidal Energy',
+                            'Energy Efficient Buildings',
+                            'Sustainable Urban Planning',
+                            'Electric Vehicle Infrastructure',
+                            'Circular Economy in Energy',
+                            'Carbon Capture & Storage',
+                            'Ecosystem Restoration',
+                            'Climate Adaptation Strategies',
+                            'Green Financing & Investment',
+                            'Renewable Energy Integration',
+                            'Artificial Intelligence in Climate Action',
+                            'Waste-to-Energy Innovations'
+                        ],
+                        schedule: {
+                            day1: [
+                                { time: '8.30 – 9.00', program: 'Registration' },
+                                { time: '9.00 – 9.30', program: 'Conference Inauguration' },
+                                { time: '9.30 – 11.00', program: 'Plenary Sessions' },
+                                { time: '11.00 – 11.20', program: 'Tea/Coffee Break' },
+                                { time: '11.20 – 13.00', program: 'Plenary Sessions' },
+                                { time: '13.00 – 13.10', program: 'Group Photograph' },
+                                { time: '13.10 – 14.00', program: 'Lunch' },
+                                { time: '14.00 – 15.40', program: 'Keynote Sessions' },
+                                { time: '15.40 – 16.00', program: 'Tea/Coffee Break' },
+                                { time: '16.00 – 17.30', program: 'Keynote Sessions' },
+                                { time: '17.30 – 18.30', program: 'Workshop' }
+                            ],
+                            day2: [
+                                { time: '9.00 – 10.30', program: 'Scientific Sessions' },
+                                { time: '10.30 – 10.50', program: 'Tea/Coffee Break' },
+                                { time: '10.50 – 13.00', program: 'Poster Presentations' },
+                                { time: '13.00 – 14.00', program: 'Lunch' },
+                                { time: '14.00 – 15.30', program: 'Panel Discussions' },
+                                { time: '15.30 – 16.00', program: 'Award Ceremony & Closing' }
+                            ],
+                            day3: [
+                                { time: '9.00 – 10.30', program: 'Networking Session' },
+                                { time: '10.30 – 11.00', program: 'Tea/Coffee Break' },
+                                { time: '11.00 – 12.30', program: 'Future Trends Workshop' },
+                                { time: '12.30 – 13.30', program: 'Lunch' },
+                                { time: '13.30 – 15.00', program: 'Final Remarks & Departure' }
+                            ]
+                        }
+                    }
+                },
+                {
+                    key: 'venue',
+                    data: {
+                        title: 'Conference Venue',
+                        name: 'Munich, Germany',
+                        address: 'Munich, Germany',
+                        description: 'Munich, the capital of Bavaria, is a city where history meets high-tech. Known for its beautiful architecture, world-class museums, and as a hub for engineering and environmental innovation, it provides the perfect backdrop for our conference.',
+                        images: [
+                            'https://images.unsplash.com/photo-1595181710363-f1109f2d1130?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80'
+                        ]
+                    }
+                },
+                {
+                    key: 'contact',
+                    data: {
+                        email: 'info@renewableclisummit.com',
+                        phone: '+49 000 000 000',
+                        address: 'Munich, Germany',
+                        socialLinks: {
+                            facebook: '',
+                            twitter: '',
+                            linkedin: '',
+                            instagram: ''
+                        }
+                    }
+                },
+                {
+                    key: 'marquee',
+                    data: {
+                        title: 'Supporting Universities & Institutions',
+                        items: [
+                            'Technical University of Munich',
+                            'University of Stuttgart',
+                            'Max Planck Institute',
+                            'Stanford University',
+                            'ETH Zurich',
+                            'Fraunhofer Institute',
+                            'National Renewable Energy Laboratory (NREL)',
+                            'Imperial College London',
+                            'University of California, Berkeley',
+                            'University of Cambridge'
+                        ]
+                    }
+                }
+            ]
+        }
     ];
 
     // Keys whose DEFAULT fields should be merged in if missing
@@ -697,6 +1082,12 @@ const CONFERENCE_ACCOUNTS = [
         email: process.env.FLUID_EMAIL || 'fluid@sciengasummits.com',
         conferenceId: 'fluid',
         displayName: 'FLUID MECHANICS & TURBOMACHINERY 2026',
+    },
+    {
+        username: 'RENEWABLECLISUMMIT2026',
+        email: process.env.RENEWABLE_EMAIL || 'renewable@sciengasummits.com',
+        conferenceId: 'renewable',
+        displayName: 'RENEWABLE ENERGY & CLIMATE CHANGE 2026',
     },
 ];
 
@@ -1120,10 +1511,13 @@ app.patch('/api/abstracts/:id', async (req, res) => {
 // PUBLIC — website form submits here (conference in body)
 app.post('/api/registrations', async (req, res) => {
     try {
-        const reg = new Registration(req.body); // conference comes from body
+        console.log('📝 Registration request received:', req.body.email, `(${req.body.conference})`);
+        const reg = new Registration(req.body);
         await reg.save();
+        console.log('✅ Registration saved:', reg._id);
         res.status(201).json(reg);
     } catch (err) {
+        console.error('❌ Registration save error:', err.message);
         res.status(500).json({ error: err.message });
     }
 });

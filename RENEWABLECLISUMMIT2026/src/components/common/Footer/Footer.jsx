@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Facebook, Linkedin, Instagram } from 'lucide-react';
 import Logo from '../Logo/Logo';
 import './Footer.css';
+import { fetchContent } from '../../../api/siteApi';
+
+const DEFAULT_CONTACT = {
+    email: 'contact@renewableenergyconf.com',
+    phone: '+91 7842090097',
+    venue: 'Munich, Germany',
+    facebook: 'https://www.facebook.com/profile.php?id=61588065033161',
+    linkedin: 'https://www.linkedin.com/company/scienga-summits/',
+    instagram: 'https://www.instagram.com/sciengasummits/'
+};
 
 const Footer = () => {
+    const [contact, setContact] = useState(DEFAULT_CONTACT);
+
+    useEffect(() => {
+        fetchContent('contact').then(d => d && setContact(prev => ({ ...prev, ...d })));
+    }, []);
+
     return (
         <footer className="footer">
             <div className="container">
@@ -18,9 +34,9 @@ const Footer = () => {
                             Discover ground-breaking technologies and connect with top environmental professionals.
                         </p>
                         <div className="footer__socials">
-                            <a href="https://www.facebook.com/profile.php?id=61588065033161" target="_blank" rel="noopener noreferrer" className="social-icon"><Facebook size={20} /></a>
-                            <a href="https://www.linkedin.com/company/scienga-summits/" target="_blank" rel="noopener noreferrer" className="social-icon"><Linkedin size={20} /></a>
-                            <a href="https://www.instagram.com/sciengasummits/" target="_blank" rel="noopener noreferrer" className="social-icon"><Instagram size={20} /></a>
+                            {contact.facebook && <a href={contact.facebook} target="_blank" rel="noopener noreferrer" className="social-icon"><Facebook size={20} /></a>}
+                            {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon"><Linkedin size={20} /></a>}
+                            {contact.instagram && <a href={contact.instagram} target="_blank" rel="noopener noreferrer" className="social-icon"><Instagram size={20} /></a>}
                         </div>
                     </div>
 
@@ -44,17 +60,17 @@ const Footer = () => {
                                 <MapPin size={18} />
                                 <div>
                                     <span style={{ display: 'block', fontWeight: 'bold', color: 'white' }}>Venue:</span>
-                                    <span>Munich, Germany</span>
+                                    <span>{contact.venue}</span>
                                 </div>
                             </li>
 
                             <li>
                                 <Mail size={18} />
-                                <span>contact@renewableenergyconf.com</span>
+                                <span>{contact.email}</span>
                             </li>
                             <li>
                                 <Phone size={18} />
-                                <span>+91 7842090097</span>
+                                <span>{contact.phone}</span>
                             </li>
                         </ul>
                     </div>
