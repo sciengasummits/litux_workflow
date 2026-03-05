@@ -27,3 +27,5 @@ services:
         sync: false
       - key: FLUID_EMAIL
         sync: false
+      - key: RENEWABLE_EMAIL
+        sync: false
