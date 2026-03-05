@@ -1,5 +1,5 @@
 // Central API service for all dashboard <-> backend communication
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://litux-workflow.onrender.com/api';
 
 // ── Active conference (set at login, used in all requests) ──────────────────
 let _conference = 'liutex'; // default

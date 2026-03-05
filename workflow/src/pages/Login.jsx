@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { User, Lock, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-// const API_BASE = 'http://localhost:5000';
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://litux-workflow.onrender.com';
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -38,7 +37,7 @@ export default function Login({ onLogin }) {
         body: JSON.stringify({ username: username.trim() })
       });
       const data = await res.json();
-      
+
       if (data.success) {
         setLoading(false);
         setOtpSent(true);
@@ -222,7 +221,7 @@ export default function Login({ onLogin }) {
                       <span>{otpSentMessage}</span>
                     </div>
                   )}
-                  
+
                   {otpSent && (
                     <div className="login-otp-notice">
                       <Lock size={13} />
