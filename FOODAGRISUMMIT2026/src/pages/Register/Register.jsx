@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import * as siteApi from '../../api/siteApi';
+import { countries } from '../../data/countriesData';
 import './Register.css';
+
+
 
 const Register = ({ isDiscounted = false }) => {
     // State for form fields
@@ -13,29 +16,6 @@ const Register = ({ isDiscounted = false }) => {
         company: '',
         address: ''
     });
-
-    const countries = [
-        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
-        "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
-        "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
-        "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
-        "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt",
-        "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
-        "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
-        "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
-        "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan",
-        "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
-        "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia",
-        "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal",
-        "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan",
-        "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar",
-        "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia",
-        "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa",
-        "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan",
-        "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
-        "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
-        "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-    ];
 
     // State for selected academic category (Radio)
     const [selectedAcademicCategory, setSelectedAcademicCategory] = useState(null);
@@ -54,12 +34,10 @@ const Register = ({ isDiscounted = false }) => {
 
     // Date Logic to determine active phase
     const currentDate = new Date();
-    const earlyBirdEnd = new Date('2026-09-25');
+    const earlyBirdEnd = new Date('2026-09-29');
     const standardEnd = new Date('2026-10-30');
-    // const earlyBirdEnd = new Date('2026-10-25');
-    // const standardEnd = new Date('2027-02-16');
 
-    let activePhase;
+    let activePhase = 'early';
 
     if (currentDate <= earlyBirdEnd) {
         activePhase = 'early';
@@ -70,21 +48,13 @@ const Register = ({ isDiscounted = false }) => {
     }
 
     // Pricing Data
-    const baseAcademicPricing = [
-        { id: 'speaker', label: 'Speaker Registration', early: 749, standard: 849, onspot: 949 },
-        { id: 'delegate', label: 'Delegate Registration', early: 899, standard: 999, onspot: 1099 },
-        { id: 'poster', label: 'Poster Registration', early: 449, standard: 549, onspot: 649 },
-        { id: 'student', label: 'Student', early: 299, standard: 399, onspot: 499 },
-        { id: 'virtual', label: 'Virtual (Online)', early: 199, standard: 249, onspot: 299 },
+    const academicPricing = [
+        { id: 'speaker', label: 'Speaker Registration ', early: applyDiscount(749), standard: applyDiscount(849), onspot: applyDiscount(949) },
+        { id: 'delegate', label: 'Delegate Registration', early: applyDiscount(899), standard: applyDiscount(999), onspot: applyDiscount(1099) },
+        { id: 'poster', label: 'Poster Registration', early: applyDiscount(449), standard: applyDiscount(549), onspot: applyDiscount(649) },
+        { id: 'student', label: 'Student ', early: applyDiscount(299), standard: applyDiscount(399), onspot: applyDiscount(499) },
+        { id: 'virtual', label: 'Virtual(Online)', early: applyDiscount(199), standard: applyDiscount(249), onspot: applyDiscount(299) },
     ];
-
-    const academicPricing = baseAcademicPricing.map(item => ({
-        ...item,
-        early: applyDiscount(item.early),
-        standard: applyDiscount(item.standard),
-        onspot: applyDiscount(item.onspot),
-        original: item // Keep original for display
-    }));
 
     const accommodationOptions = [
         { nights: 2, single: 360, double: 400, triple: 440 },
@@ -143,17 +113,13 @@ const Register = ({ isDiscounted = false }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const [submitting, setSubmitting] = useState(false);
-    const [submitMsg, setSubmitMsg] = useState(null);
+    const [submitting, setSubmitting] = React.useState(false);
+    const [submitStatus, setSubmitStatus] = React.useState(null); // 'success' | 'error'
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.fullName || !formData.email) {
             alert('Please fill in your Full Name and Email before submitting.');
-            return;
-        }
-        if (!termsAccepted) {
-            alert('Please accept the terms & conditions.');
             return;
         }
 
@@ -198,26 +164,36 @@ const Register = ({ isDiscounted = false }) => {
         };
 
         setSubmitting(true);
-        setSubmitMsg(null);
+        setSubmitStatus(null);
+
         try {
-            // 1. Create registration record (Pending)
+            // 1. Create a registration record first (Pending)
             const registration = await siteApi.submitRegistration(payload);
             if (!registration || registration.error) throw new Error(registration?.error || 'Failed to save registration.');
 
             // 2. Fetch Razorpay key & Create order
-            const { key } = await siteApi.fetchPaymentKey();
-            const { order } = await siteApi.createPaymentOrder({
+            const keyResult = await siteApi.fetchPaymentKey();
+            if (!keyResult || !keyResult.key) {
+                throw new Error('Could not fetch payment key. Please try again later.');
+            }
+            const { key } = keyResult;
+
+            const orderResult = await siteApi.createPaymentOrder({
                 amount: total,
                 registrationId: registration._id,
-                description: `Fluid Summit Registration: ${formData.fullName}`
+                description: `Registration: ${formData.fullName}`
             });
+            if (!orderResult || !orderResult.order) {
+                throw new Error('Could not create payment order. Please try again later.');
+            }
+            const { order } = orderResult;
 
             // 3. Open Razorpay Checkout
             const options = {
                 key: key,
                 amount: order.amount,
                 currency: order.currency,
-                name: 'Fluid Mechanics Summit 2026',
+                name: 'Food Agri Summit 2026',
                 description: `Payment for ${formData.fullName}`,
                 order_id: order.id,
                 prefill: {
@@ -225,7 +201,7 @@ const Register = ({ isDiscounted = false }) => {
                     email: formData.email,
                     contact: formData.telephone,
                 },
-                theme: { color: '#0369a1' }, // Sky blue theme
+                theme: { color: '#2563eb' },
                 handler: async (response) => {
                     // 4. Verify Payment
                     try {
@@ -237,14 +213,14 @@ const Register = ({ isDiscounted = false }) => {
                         });
 
                         if (verifyResult.success) {
-                            setSubmitMsg({ type: 'success', text: 'Registration and payment successful!' });
+                            setSubmitStatus('success');
                             handleReset();
                         } else {
                             throw new Error(verifyResult.message || 'Payment verification failed.');
                         }
                     } catch (err) {
                         alert('Payment success but verification failed: ' + err.message);
-                        setSubmitMsg({ type: 'error', text: 'Payment verification failed.' });
+                        setSubmitStatus('error');
                     }
                 },
                 modal: {
@@ -259,7 +235,8 @@ const Register = ({ isDiscounted = false }) => {
 
         } catch (err) {
             console.error('Registration/Payment error:', err);
-            setSubmitMsg({ type: 'error', text: err.message || 'An error occurred during registration.' });
+            setSubmitStatus('error');
+            alert(err.message || 'An error occurred during registration.');
         } finally {
             setSubmitting(false);
         }
@@ -292,16 +269,6 @@ const Register = ({ isDiscounted = false }) => {
             </div>
 
             <div className="container section-padding">
-
-                {isDiscounted && (
-                    <div className="discount-banner">
-                        <span className="discount-icon">🎉</span>
-                        <div className="discount-text">
-                            <h3>Special Discount Activated!</h3>
-                            <p>You have unlocked a <strong>20% discount</strong> on all registration categories.</p>
-                        </div>
-                    </div>
-                )}
 
                 <div className="registration-form-container">
                     {/* Left Side: Form */}
@@ -391,7 +358,7 @@ const Register = ({ isDiscounted = false }) => {
                                 <th className="category-header">TYPES OF PARTICIPATION</th>
                                 <th className={activePhase === 'early' ? 'active-header-early' : ''}>
                                     Early Bird Registration<br />
-                                    <span className="date">September 25, 2026</span>
+                                    <span className="date">September 29, 2026</span>
                                     {activePhase === 'early' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                                 <th className={activePhase === 'standard' ? 'active-header-standard' : ''}>
@@ -401,7 +368,7 @@ const Register = ({ isDiscounted = false }) => {
                                 </th>
                                 <th className={activePhase === 'onspot' ? 'active-header-onspot' : ''}>
                                     OnSpot Registration<br />
-                                    <span className="date">December 14, 2026</span>
+                                    <span className="date">December 07, 2026</span>
                                     {activePhase === 'onspot' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                             </tr>
@@ -421,22 +388,13 @@ const Register = ({ isDiscounted = false }) => {
                                         </label>
                                     </td>
                                     <td className={`${activePhase === 'early' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}`}>
-                                        <div className="price-wrapper">
-                                            {isDiscounted && <span className="original-price">${item.original.early}</span>}
-                                            <span className={activePhase === 'early' ? 'price-active' : ''}>$ {item.early}</span>
-                                        </div>
+                                        <span className={activePhase === 'early' ? 'price-active' : ''}>$ {item.early}</span>
                                     </td>
                                     <td className={`${activePhase === 'standard' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}`}>
-                                        <div className="price-wrapper">
-                                            {isDiscounted && <span className="original-price">${item.original.standard}</span>}
-                                            <span className={activePhase === 'standard' ? 'price-active' : ''}>$ {item.standard}</span>
-                                        </div>
+                                        <span className={activePhase === 'standard' ? 'price-active' : ''}>$ {item.standard}</span>
                                     </td>
                                     <td className={`${activePhase === 'onspot' && selectedAcademicCategory === item.id ? 'selected-active-cell' : ''}`}>
-                                        <div className="price-wrapper">
-                                            {isDiscounted && <span className="original-price">${item.original.onspot}</span>}
-                                            <span className={activePhase === 'onspot' ? 'price-active' : ''}>$ {item.onspot}</span>
-                                        </div>
+                                        <span className={activePhase === 'onspot' ? 'price-active' : ''}>$ {item.onspot}</span>
                                     </td>
                                 </tr>
                             ))}
@@ -550,29 +508,31 @@ const Register = ({ isDiscounted = false }) => {
                                 checked={termsAccepted}
                                 onChange={(e) => setTermsAccepted(e.target.checked)}
                             />
-                            I've read and accept the <span className="terms-link">terms &amp; conditions</span>.
+                            I've read and accept the <span className="terms-link">terms & conditions</span>.
                         </label>
                     </div>
 
                     <p className="processing-fee">Note: 5% of processing charges will be applicable.</p>
 
-                    {submitMsg && (
-                        <div style={{
-                            padding: '12px 16px',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            background: submitMsg.type === 'success' ? '#dcfce7' : '#fee2e2',
-                            color: submitMsg.type === 'success' ? '#166534' : '#991b1b',
-                            border: `1px solid ${submitMsg.type === 'success' ? '#86efac' : '#fca5a5'}`,
-                            fontWeight: '500',
-                        }}>
-                            {submitMsg.text}
+                    {submitStatus === 'success' && (
+                        <div style={{ padding: '14px 20px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '10px', color: '#15803d', fontWeight: 600, marginBottom: '16px', textAlign: 'center' }}>
+                            ✅ Registration submitted successfully! We will contact you shortly.
+                        </div>
+                    )}
+                    {submitStatus === 'error' && (
+                        <div style={{ padding: '14px 20px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '10px', color: '#dc2626', fontWeight: 600, marginBottom: '16px', textAlign: 'center' }}>
+                            ❌ Submission failed. Please check your connection and try again.
                         </div>
                     )}
 
                     <div className="action-buttons">
-                        <button className="btn-register" onClick={handleSubmit} disabled={submitting}>
-                            {submitting ? 'Submitting...' : 'REGISTER NOW'}
+                        <button
+                            className="btn-register"
+                            onClick={handleSubmit}
+                            disabled={submitting}
+                            style={{ opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}
+                        >
+                            {submitting ? 'Submitting…' : 'REGISTER NOW'}
                         </button>
                         <button className="btn-reset" onClick={handleReset}>RESET</button>
                     </div>
