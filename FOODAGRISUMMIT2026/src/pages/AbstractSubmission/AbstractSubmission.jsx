@@ -40,10 +40,16 @@ const AbstractSubmission = () => {
 
     // Live-fetch Important Dates from backend; silently fall back to defaults
     useEffect(() => {
-        fetch('http://localhost:5000/api/content/importantDates?conference=foodagri')
-            .then(r => r.ok ? r.json() : null)
-            .then(data => { if (data?.dates?.length) setImportantDates(data.dates); })
-            .catch(() => { });
+        // Use the siteApi instead of hardcoded fetch
+        const loadDates = async () => {
+            try {
+                const data = await fetchContent('importantDates');
+                if (data?.dates?.length) setImportantDates(data.dates);
+            } catch (err) {
+                console.warn('[AbstractSubmission] Failed to fetch dates:', err.message);
+            }
+        };
+        loadDates();
     }, []);
 
     const handleChange = (e) => {
