@@ -8,7 +8,7 @@ const DEFAULT = {
     subtitle: 'International Conference on',
     title: 'Liutex Theory and Applications\nin Vortex Identification and Vortex Dynamics',
     description: 'International Conference on Liutex Theory and Applications in Vortex Identification and Vortex Dynamics. where global experts unite to shape the future of fluid mechanics. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming our world.',
-    conferenceDate: 'December 14-16, 2026',
+    conferenceDate: ' 14-16, 2026',
     venue: 'Outram, Singapore',
     countdownTarget: '2026-12-14T09:00:00+01:00',
     showRegister: true,

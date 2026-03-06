@@ -6,6 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5175,
-    strictPort: true,
-  },
+    proxy: {
+      '/api': {
+        target: 'https://backend-phi-ivory-81.vercel.app',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+ },
 })

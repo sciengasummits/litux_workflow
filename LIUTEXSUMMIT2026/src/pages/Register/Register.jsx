@@ -1,7 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Register.css';
 import { countries } from '../../assets/constants/countries';
 import * as siteApi from '../../api/siteApi';
+import { fetchContent } from '../../api/siteApi';
+
+// ─── Default registration config (shown if backend is unreachable) ────────────
+const DEFAULT_CONFIG = {
+    pricingData: [
+        { id: 'speaker', label: 'Speaker Registration', early: 599, standard: 699, onspot: 799 },
+        { id: 'delegate', label: 'Delegate Registration', early: 699, standard: 799, onspot: 899 },
+        { id: 'poster', label: 'Poster Registration', early: 399, standard: 499, onspot: 599 },
+        { id: 'student', label: 'Student', early: 299, standard: 399, onspot: 499 },
+        { id: 'virtual', label: 'Virtual(Online)', early: 200, standard: 300, onspot: 400 },
+    ],
+    accommodationOptions: [
+        { nights: 2, single: 360, double: 400, triple: 440 },
+        { nights: 3, single: 540, double: 600, triple: 660 },
+        { nights: 4, single: 720, double: 800, triple: 880 },
+        { nights: 5, single: 900, double: 1000, triple: 1100 },
+    ],
+    sponsorshipPricing: [
+        { id: 'platinum', label: 'Platinum Sponsor', price: 4999 },
+        { id: 'diamond', label: 'Diamond Sponsor', price: 3999 },
+        { id: 'gold', label: 'Gold Sponsor', price: 2999 },
+        { id: 'exhibitor', label: 'Exhibitor', price: 1999 },
+    ],
+    earlyBirdEnd: '2026-09-25',
+    standardEnd: '2026-10-30',
+    earlyBirdLabel: 'September 25, 2026',
+    standardLabel: 'October 30, 2026',
+    onspotLabel: 'December 14, 2026',
+    accompanyingPrice: 249,
+    processingNote: 'Note: 5% of processing charges will be applicable.',
+    conferenceName: 'LIUTEX Summit 2026',
+    themeColor: '#2563eb',
+};
 
 const Register = ({ isDiscounted = false }) => {
     // State for form fields
@@ -29,14 +62,23 @@ const Register = ({ isDiscounted = false }) => {
     const [submitting, setSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error'
 
+    // ─── Live config from backend (falls back to DEFAULT_CONFIG) ──────────
+    const [config, setConfig] = useState(DEFAULT_CONFIG);
+
+    useEffect(() => {
+        fetchContent('registration')
+            .then(data => { if (data) setConfig(prev => ({ ...prev, ...data })); })
+            .catch(() => { });
+    }, []);
+
     // Discount multiplier (20% off if discounted)
     const discountMultiplier = isDiscounted ? 0.8 : 1;
     const applyDiscount = (price) => Math.round(price * discountMultiplier);
 
     // Date Logic to determine active phase
     const currentDate = new Date();
-    const earlyBirdEnd = new Date('2026-09-25');
-    const standardEnd = new Date('2026-10-30');
+    const earlyBirdEnd = new Date(config.earlyBirdEnd);
+    const standardEnd = new Date(config.standardEnd);
 
     let activePhase = 'early';
     if (currentDate <= earlyBirdEnd) {
@@ -47,28 +89,22 @@ const Register = ({ isDiscounted = false }) => {
         activePhase = 'onspot';
     }
 
-    // Pricing Data (Liutex-specific)
-    const pricingData = [
-        { id: 'speaker', label: 'Speaker Registration', early: applyDiscount(599), standard: applyDiscount(699), onspot: applyDiscount(799) },
-        { id: 'delegate', label: 'Delegate Registration', early: applyDiscount(699), standard: applyDiscount(799), onspot: applyDiscount(899) },
-        { id: 'poster', label: 'Poster Registration', early: applyDiscount(399), standard: applyDiscount(499), onspot: applyDiscount(599) },
-        { id: 'student', label: 'Student', early: applyDiscount(299), standard: applyDiscount(399), onspot: applyDiscount(499) },
-        { id: 'virtual', label: 'Virtual(Online)', early: applyDiscount(200), standard: applyDiscount(300), onspot: applyDiscount(400) },
-    ];
+    // Pricing Data — derived from live config
+    const pricingData = (config.pricingData || DEFAULT_CONFIG.pricingData).map(item => ({
+        ...item,
+        early: applyDiscount(item.early),
+        standard: applyDiscount(item.standard),
+        onspot: applyDiscount(item.onspot),
+    }));
 
-    const accommodationOptions = [
-        { nights: 2, single: 360, double: 400, triple: 440 },
-        { nights: 3, single: 540, double: 600, triple: 660 },
-        { nights: 4, single: 720, double: 800, triple: 880 },
-        { nights: 5, single: 900, double: 1000, triple: 1100 },
-    ];
+    const accommodationOptions = config.accommodationOptions || DEFAULT_CONFIG.accommodationOptions;
 
-    const sponsorshipPricing = [
-        { id: 'platinum', label: 'Platinum Sponsor', price: applyDiscount(4999) },
-        { id: 'diamond', label: 'Diamond Sponsor', price: applyDiscount(3999) },
-        { id: 'gold', label: 'Gold Sponsor', price: applyDiscount(2999) },
-        { id: 'exhibitor', label: 'Exhibitor', price: applyDiscount(1999) },
-    ];
+    const sponsorshipPricing = (config.sponsorshipPricing || DEFAULT_CONFIG.sponsorshipPricing).map(item => ({
+        ...item,
+        price: applyDiscount(item.price),
+    }));
+
+    const accompanyingPrice = config.accompanyingPrice || 249;
 
     // Helper to calculate total
     const calculateTotal = () => {
@@ -82,7 +118,7 @@ const Register = ({ isDiscounted = false }) => {
             const item = sponsorshipPricing.find(p => p.id === selectedSponsorship);
             if (item) total += item.price;
         }
-        if (includeAccompanying) total += 249;
+        if (includeAccompanying) total += accompanyingPrice;
         if (selectedAccommodation) {
             const [nights, type] = selectedAccommodation.split('-');
             const option = accommodationOptions.find(o => o.nights === parseInt(nights));
@@ -120,7 +156,7 @@ const Register = ({ isDiscounted = false }) => {
             const sp = sponsorshipPricing.find(p => p.id === selectedSponsorship);
             if (sp) descParts.push(`${sp.label} : $${sp.price}`);
         }
-        if (includeAccompanying) descParts.push('Accompanying Person : $249');
+        if (includeAccompanying) descParts.push(`Accompanying Person : $${accompanyingPrice}`);
         if (selectedAccommodation) descParts.push(`Accommodation : ${selectedAccommodation}`);
 
         const payload = {
@@ -156,7 +192,7 @@ const Register = ({ isDiscounted = false }) => {
             const { order } = await siteApi.createPaymentOrder({
                 amount: total,
                 registrationId: registration._id,
-                description: `LIUTEX Registration: ${formData.fullName}`
+                description: `${config.conferenceName || 'LIUTEX Summit 2026'} Registration: ${formData.fullName}`
             });
 
             // 3. Open Razorpay Checkout
@@ -164,7 +200,7 @@ const Register = ({ isDiscounted = false }) => {
                 key: key,
                 amount: order.amount,
                 currency: order.currency,
-                name: 'LIUTEX Summit 2026',
+                name: config.conferenceName || 'LIUTEX Summit 2026',
                 description: `Payment for ${formData.fullName}`,
                 order_id: order.id,
                 prefill: {
@@ -172,7 +208,7 @@ const Register = ({ isDiscounted = false }) => {
                     email: formData.email,
                     contact: formData.telephone,
                 },
-                theme: { color: '#2563eb' },
+                theme: { color: config.themeColor || '#2563eb' },
                 handler: async (response) => {
                     // 4. Verify Payment
                     try {
@@ -323,17 +359,17 @@ const Register = ({ isDiscounted = false }) => {
                                 <th className="category-header">Types of Participation</th>
                                 <th className={activePhase === 'early' ? 'active-header-early' : ''}>
                                     Early Bird Registration<br />
-                                    <span className="date">September 25, 2026</span>
+                                    <span className="date">{config.earlyBirdLabel}</span>
                                     {activePhase === 'early' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                                 <th className={activePhase === 'standard' ? 'active-header-standard' : ''}>
                                     Standard Registration<br />
-                                    <span className="date">October 30, 2026</span>
+                                    <span className="date">{config.standardLabel}</span>
                                     {activePhase === 'standard' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                                 <th className={activePhase === 'onspot' ? 'active-header-onspot' : ''}>
                                     OnSpot Registration<br />
-                                    <span className="date">December 14, 2026</span>
+                                    <span className="date">{config.onspotLabel}</span>
                                     {activePhase === 'onspot' && <span className="badge-active">ACTIVE</span>}
                                 </th>
                             </tr>
@@ -404,7 +440,7 @@ const Register = ({ isDiscounted = false }) => {
                                 checked={includeAccompanying}
                                 onChange={(e) => setIncludeAccompanying(e.target.checked)}
                             />
-                            <strong>Include Accompanying Person ( $249 Extra)</strong>
+                            <strong>Include Accompanying Person ( ${accompanyingPrice} Extra)</strong>
                         </label>
                     </div>
 
@@ -477,7 +513,7 @@ const Register = ({ isDiscounted = false }) => {
                         </label>
                     </div>
 
-                    <p className="processing-fee">Note: 5% of processing charges will be applicable.</p>
+                    <p className="processing-fee">{config.processingNote || 'Note: 5% of processing charges will be applicable.'}</p>
 
                     {submitStatus === 'success' && (
                         <div style={{ padding: '14px 20px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '10px', color: '#15803d', fontWeight: 600, marginBottom: '16px', textAlign: 'center' }}>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CalendarDays, CheckCircle, Clock, Star, Calendar, MapPin } from 'lucide-react';
 import { countries } from '../../data/countriesData';
 import './AbstractSubmission.css';
-import { submitAbstract, uploadAbstractFile } from '../../api/siteApi';
+import { submitAbstract, uploadAbstractFile, fetchContent } from '../../api/siteApi';
 
 // ─── Important Dates defaults (shown if backend is unreachable) ───────────────
 const DEFAULT_DATES = [

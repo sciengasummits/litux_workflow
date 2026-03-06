@@ -1,37 +1,46 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Tag, CheckCircle, XCircle, Loader, ShieldCheck, AlertCircle } from 'lucide-react';
 import './OnlineRegistration.css';
 import { countries } from '../../assets/constants/countries';
 import * as siteApi from '../../api/siteApi';
+import { fetchContent } from '../../api/siteApi';
 
-/* ── Pricing base values (USD) ─────────────────────────────── */
-const BASE_PRICING = [
-    { id: 'speaker', label: 'Speaker Registration', early: 599, standard: 699, onspot: 799 },
-    { id: 'delegate', label: 'Delegate Registration', early: 699, standard: 799, onspot: 899 },
-    { id: 'poster', label: 'Poster Registration', early: 399, standard: 499, onspot: 599 },
-    { id: 'student', label: 'Student', early: 299, standard: 399, onspot: 499 },
-    { id: 'virtual', label: 'Virtual (Online)', early: 200, standard: 300, onspot: 400 },
-];
-
-const ACCOMMODATION_OPTIONS = [
-    { nights: 2, single: 360, double: 400, triple: 440 },
-    { nights: 3, single: 540, double: 600, triple: 660 },
-    { nights: 4, single: 720, double: 800, triple: 880 },
-    { nights: 5, single: 900, double: 1000, triple: 1100 },
-];
-
-const SPONSORSHIP_BASE = [
-    { id: 'platinum', label: 'Platinum Sponsor', price: 4999 },
-    { id: 'diamond', label: 'Diamond Sponsor', price: 3999 },
-    { id: 'gold', label: 'Gold Sponsor', price: 2999 },
-    { id: 'exhibitor', label: 'Exhibitor', price: 1999 },
-];
+/* ── Default config (shown if backend is unreachable) ──────── */
+const DEFAULT_CONFIG = {
+    pricingData: [
+        { id: 'speaker', label: 'Speaker Registration', early: 599, standard: 699, onspot: 799 },
+        { id: 'delegate', label: 'Delegate Registration', early: 699, standard: 799, onspot: 899 },
+        { id: 'poster', label: 'Poster Registration', early: 399, standard: 499, onspot: 599 },
+        { id: 'student', label: 'Student', early: 299, standard: 399, onspot: 499 },
+        { id: 'virtual', label: 'Virtual (Online)', early: 200, standard: 300, onspot: 400 },
+    ],
+    accommodationOptions: [
+        { nights: 2, single: 360, double: 400, triple: 440 },
+        { nights: 3, single: 540, double: 600, triple: 660 },
+        { nights: 4, single: 720, double: 800, triple: 880 },
+        { nights: 5, single: 900, double: 1000, triple: 1100 },
+    ],
+    sponsorshipPricing: [
+        { id: 'platinum', label: 'Platinum Sponsor', price: 4999 },
+        { id: 'diamond', label: 'Diamond Sponsor', price: 3999 },
+        { id: 'gold', label: 'Gold Sponsor', price: 2999 },
+        { id: 'exhibitor', label: 'Exhibitor', price: 1999 },
+    ],
+    earlyBirdEnd: '2026-09-25',
+    standardEnd: '2026-10-30',
+    earlyBirdLabel: 'Sep 25, 2026',
+    standardLabel: 'Oct 30, 2026',
+    onspotLabel: 'Dec 14, 2026',
+    accompanyingPrice: 249,
+    conferenceName: 'LIUTEX Summit 2026',
+    themeColor: '#2563eb',
+};
 
 /* ── Date logic ─────────────────────────────────────────────── */
-const getActivePhase = () => {
+const getActivePhase = (config) => {
     const now = new Date();
-    if (now <= new Date('2026-09-25')) return 'early';
-    if (now <= new Date('2026-10-30')) return 'standard';
+    if (now <= new Date(config.earlyBirdEnd)) return 'early';
+    if (now <= new Date(config.standardEnd)) return 'standard';
     return 'onspot';
 };
 
@@ -39,7 +48,16 @@ const getActivePhase = () => {
 const applyPct = (price, pct) => Math.round(price * (1 - pct / 100));
 
 const OnlineRegistration = () => {
-    const activePhase = getActivePhase();
+    // ─── Live config from backend (falls back to DEFAULT_CONFIG) ──────────
+    const [config, setConfig] = useState(DEFAULT_CONFIG);
+
+    useEffect(() => {
+        fetchContent('registration')
+            .then(data => { if (data) setConfig(prev => ({ ...prev, ...data })); })
+            .catch(() => { });
+    }, []);
+
+    const activePhase = getActivePhase(config);
 
     /* ── Discount state ──────────────────────────────────────── */
     const [couponInput, setCouponInput] = useState('');
@@ -70,6 +88,11 @@ const OnlineRegistration = () => {
         ? discount.percentage : 0;
     const accomDiscount = discount && (discount.category === 'accommodation' || discount.category === 'both')
         ? discount.percentage : 0;
+
+    const BASE_PRICING = config.pricingData || DEFAULT_CONFIG.pricingData;
+    const ACCOMMODATION_OPTIONS = config.accommodationOptions || DEFAULT_CONFIG.accommodationOptions;
+    const SPONSORSHIP_BASE = config.sponsorshipPricing || DEFAULT_CONFIG.sponsorshipPricing;
+    const accompanyingPrice = config.accompanyingPrice || 249;
 
     const pricingData = BASE_PRICING.map(item => ({
         ...item,
@@ -126,7 +149,7 @@ const OnlineRegistration = () => {
             const item = sponsorshipPricing.find(p => p.id === selectedSponsorship);
             if (item) total += item.price;
         }
-        if (includeAccompanying) total += 249;
+        if (includeAccompanying) total += accompanyingPrice;
         if (selectedAccommodation) {
             const [nights, type] = selectedAccommodation.split('-');
             const opt = ACCOMMODATION_OPTIONS.find(o => o.nights === parseInt(nights));
@@ -173,7 +196,7 @@ const OnlineRegistration = () => {
             const sp = sponsorshipPricing.find(p => p.id === selectedSponsorship);
             if (sp) descParts.push(`${sp.label} : $${sp.price}`);
         }
-        if (includeAccompanying) descParts.push('Accompanying Person : $249');
+        if (includeAccompanying) descParts.push(`Accompanying Person : $${accompanyingPrice}`);
         if (selectedAccommodation) descParts.push(`Accommodation : ${selectedAccommodation}`);
         if (discount) descParts.push(`Discount Code: ${discount.coupon} (${discount.percentage}% off)`);
 
@@ -208,7 +231,7 @@ const OnlineRegistration = () => {
             const { order } = await siteApi.createPaymentOrder({
                 amount: total,
                 registrationId: registration._id,
-                description: `LIUTEX Online Reg: ${formData.fullName}`
+                description: `${config.conferenceName || 'LIUTEX Summit 2026'} Online Reg: ${formData.fullName}`
             });
 
             // 3. Open Razorpay Checkout
@@ -216,7 +239,7 @@ const OnlineRegistration = () => {
                 key: key,
                 amount: order.amount,
                 currency: order.currency,
-                name: 'LIUTEX Summit 2026',
+                name: config.conferenceName || 'LIUTEX Summit 2026',
                 description: `Payment for ${formData.fullName}`,
                 order_id: order.id,
                 prefill: {
@@ -224,7 +247,7 @@ const OnlineRegistration = () => {
                     email: formData.email,
                     contact: formData.telephone,
                 },
-                theme: { color: '#2563eb' },
+                theme: { color: config.themeColor || '#2563eb' },
                 handler: async (response) => {
                     // 4. Verify Payment
                     try {
@@ -413,15 +436,15 @@ const OnlineRegistration = () => {
                                 <tr>
                                     <th>Category</th>
                                     <th className={activePhase === 'early' ? 'or-active-col' : ''}>
-                                        Early Bird<br /><span className="or-date">Sep 25, 2026</span>
+                                        Early Bird<br /><span className="or-date">{config.earlyBirdLabel}</span>
                                         {activePhase === 'early' && <span className="or-active-badge">ACTIVE</span>}
                                     </th>
                                     <th className={activePhase === 'standard' ? 'or-active-col' : ''}>
-                                        Standard<br /><span className="or-date">Oct 30, 2026</span>
+                                        Standard<br /><span className="or-date">{config.standardLabel}</span>
                                         {activePhase === 'standard' && <span className="or-active-badge">ACTIVE</span>}
                                     </th>
                                     <th className={activePhase === 'onspot' ? 'or-active-col' : ''}>
-                                        On-Spot<br /><span className="or-date">Dec 14, 2026</span>
+                                        On-Spot<br /><span className="or-date">{config.onspotLabel}</span>
                                         {activePhase === 'onspot' && <span className="or-active-badge">ACTIVE</span>}
                                     </th>
                                 </tr>
@@ -518,7 +541,7 @@ const OnlineRegistration = () => {
                                     checked={includeAccompanying}
                                     onChange={e => setIncludeAccompanying(e.target.checked)}
                                 />
-                                <strong>Include Accompanying Person ($249 extra)</strong>
+                                <strong>Include Accompanying Person (${accompanyingPrice} extra)</strong>
                             </label>
                         </div>
                         <table className="or-pricing-table">
