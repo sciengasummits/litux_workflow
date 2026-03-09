@@ -1,0 +1,345 @@
+/* Navbar.css */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.navbar--scrolled {
+    background: var(--color-white);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0;
+}
+
+.navbar__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* TOP ROW */
+.navbar__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar__logo {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    color: var(--color-white);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+/* Logo specific overrides for Navbar context */
+.navbar .app-logo .logo-text-main,
+.navbar .app-logo .logo-text-top,
+.navbar .app-logo .logo-text-sub,
+.navbar .app-logo .logo-icon-primary {
+    color: var(--color-white);
+    transition: color 0.3s ease;
+}
+
+.navbar .app-logo .logo-icon-heart {
+    /* Keep heart red or make it white/accent? Red usually pops on dark too. */
+    /* If it needs to be visible, #e63946 is fine on black. */
+}
+
+.navbar--scrolled .navbar__logo {
+    color: var(--color-text-dark);
+}
+
+.navbar--scrolled .app-logo .logo-text-main {
+    color: var(--color-text-dark);
+}
+
+.navbar--scrolled .app-logo .logo-text-top {
+    color: var(--color-text-body);
+}
+
+.navbar--scrolled .app-logo .logo-text-sub,
+.navbar--scrolled .app-logo .logo-icon-primary {
+    color: var(--color-primary-end);
+}
+
+.navbar__contact {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-white);
+}
+
+.navbar--scrolled .contact-item {
+    color: var(--color-text-dark);
+}
+
+.contact-icon {
+    color: var(--color-primary-end);
+    /* Or inherit if you want white on transparent, colored on scroll. 
+       Usually header icons are white on transparent bg. */
+    color: var(--color-white);
+}
+
+.navbar--scrolled .contact-icon {
+    color: var(--color-primary-end);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.contact-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+.contact-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+/* DIVIDER */
+.navbar__divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 100%;
+}
+
+.navbar--scrolled .navbar__divider {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* BOTTOM ROW */
+.navbar__bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar__links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.navbar__link {
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    position: relative;
+    padding: 0;
+    transition: color 0.3s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.navbar--scrolled .navbar__link {
+    color: var(--color-text-dark);
+    text-shadow: none;
+}
+
+.navbar__link:hover,
+.navbar__link.active {
+    color: var(--color-white);
+    opacity: 0.8;
+}
+
+.navbar--scrolled .navbar__link:hover,
+.navbar--scrolled .navbar__link.active {
+    color: var(--color-primary-end);
+    opacity: 1;
+}
+
+.navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar__toggle {
+    display: none;
+    background: none;
+    color: var(--color-white);
+    border: none;
+    cursor: pointer;
+}
+
+.navbar--scrolled .navbar__toggle {
+    color: var(--color-text-dark);
+}
+
+.navbar__mobile-cta {
+    display: none;
+}
+
+/* Dropdown Styles */
+.navbar__dropdown {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.navbar__dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--color-white);
+    min-width: 180px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    border-radius: 4px;
+    padding: 0.5rem 0;
+    flex-direction: column;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar__dropdown:hover .navbar__dropdown-menu {
+    display: flex;
+}
+
+.navbar__dropdown-item {
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: block;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.navbar__dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: var(--color-primary-end);
+    padding-left: 25px;
+    /* Slight movement on hover */
+}
+
+/* Ensure the parent link in dropdown looks like others */
+.navbar__dropdown .navbar__link {
+    cursor: pointer;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 992px) {
+    .navbar__toggle {
+        display: block;
+    }
+
+    .navbar__contact,
+    .navbar__divider,
+    .navbar__desktop-cta,
+    .navbar__actions {
+        /* We hide desktop actions in navbar__bottom, but Toggle is in Top now.
+           Wait, Toggle is in Top, so that's fine.
+           navbar__actions contains Desktop CTA. */
+        display: none;
+    }
+
+    /* We must allow navbar__actions to display IF it contained the toggle, 
+       but we moved toggle to navbar__top. 
+       So navbar__actions (the div in navbar__bottom) only contains desktop cta now. 
+       So hiding it is correct. */
+
+    .navbar__links {
+        position: fixed;
+        top: 60px;
+        /* Adjusted for reduced header height on mobile */
+        left: 0;
+        width: 100%;
+        background: var(--color-white);
+        flex-direction: column;
+        padding: 2rem;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        transition: all 0.4s ease-in-out;
+        gap: 1.5rem;
+        align-items: flex-start;
+        /* Changed from center to match usual mobile menus */
+    }
+
+    .navbar__links--active {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .navbar__link {
+        color: var(--color-text-dark);
+        font-size: 1.1rem;
+        padding: 10px 0;
+        text-shadow: none;
+    }
+
+    .navbar__mobile-cta {
+        display: block;
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .navbar__mobile-cta button {
+        width: 100%;
+    }
+
+    /* Mobile Dropdown */
+    .navbar__dropdown {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar__dropdown-menu {
+        display: flex;
+        position: static;
+        box-shadow: none;
+        background: rgba(0, 0, 0, 0.03);
+        width: 100%;
+        animation: none;
+        padding-left: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .navbar__dropdown-item {
+        color: var(--color-text-dark);
+        padding: 10px 0;
+        font-size: 1rem;
+    }
+
+    .navbar__dropdown-item:hover {
+        padding-left: 10px;
+        background: transparent;
+    }
+}

@@ -1,0 +1,565 @@
+.register-page {
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+}
+
+/* Global Radio Button Styling - Use browser default with green accent */
+.register-page input[type="radio"] {
+    accent-color: #2e7d32;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Section Headings */
+.section-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-transform: none;
+}
+
+.personal-details-section {
+    margin-bottom: 3rem;
+}
+
+.select-category-section {
+    margin-bottom: 3rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+/* Form Container */
+.registration-form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.form-section {
+    flex: 2;
+    min-width: 300px;
+}
+
+.logos-section {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Form Styling */
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-row.full-width {
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #555;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background-color: #fcfcfc;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+/* Pricing Table */
+.pricing-section {
+    margin-bottom: 3rem;
+}
+
+.pricing-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    color: #333;
+    font-weight: 700;
+}
+
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-spacing: 0;
+}
+
+.pricing-table th,
+.pricing-table td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+    border-collapse: collapse;
+}
+
+.pricing-table thead th {
+    background-color: #2e7d32;
+    color: white;
+    font-weight: 600;
+    vertical-align: middle;
+    border: none;
+    padding: 1.25rem 1rem;
+    text-align: center;
+}
+
+.pricing-table thead th:first-child {
+    text-align: left;
+}
+
+.pricing-table thead th:last-child {
+    border-right: none;
+}
+
+.category-column-header {
+    background-color: #1b5e20 !important;
+    text-transform: none;
+    font-weight: 600;
+    text-align: left !important;
+}
+
+.pricing-table tbody tr:first-child td {
+    border-top: none;
+}
+
+.date {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.item-cell {
+    font-weight: 500;
+    color: #333;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Sponsorship Section */
+.sponsorship-section {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.sponsorship-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+.sponsorship-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.sponsorship-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: white;
+}
+
+.sponsorship-card:hover {
+    border-color: #2e7d32;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
+}
+
+.sponsorship-card.selected {
+    border-color: #2e7d32;
+    background: #e8f5e9;
+}
+
+.sponsorship-card-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.sponsorship-card-label input[type="radio"] {
+    flex-shrink: 0;
+}
+
+.sponsor-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.sponsor-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2e7d32;
+}
+
+/* Accommodation Section */
+.accommodation-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+/* Summary Section */
+.summary-section {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.total-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.total-amount {
+    color: #2e7d32;
+}
+
+.terms-checkbox {
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.terms-link {
+    color: #d32f2f;
+    cursor: pointer;
+}
+
+.processing-fee {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn-register,
+.btn-reset {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.btn-register {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.btn-register:hover {
+    background-color: #1b5e20;
+}
+
+.btn-reset {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.btn-reset:hover {
+    background-color: #1b5e20;
+}
+
+/* Accommodation Section */
+.accommodation-section {
+    margin-bottom: 3rem;
+    background: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.accompanying-checkbox {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.accommodation-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.accommodation-table th {
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    font-weight: 700;
+}
+
+.accommodation-table td {
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.nights-cell {
+    font-weight: 700;
+    text-align: left !important;
+    background-color: #f9f9f9;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #2e7d32;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    border: 2px solid #2e7d32 !important;
+    border-radius: 50% !important;
+    outline: none;
+    position: relative;
+    background-color: white !important;
+}
+
+.radio-label input[type="radio"]:checked {
+    background-color: #2e7d32 !important;
+    border-color: #2e7d32 !important;
+}
+
+.radio-label input[type="radio"]:checked::before {
+    content: '' !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white !important;
+    display: block;
+}
+
+/* Additional styling for radio buttons in the pricing table */
+.pricing-table .item-cell .radio-label {
+    justify-content: flex-start;
+}
+
+.pricing-table .item-cell .radio-label input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .accommodation-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .registration-form-container {
+        flex-direction: column;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .pricing-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .sponsorship-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .sponsorship-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Active Column Styles - Yellow background with red badge */
+.pricing-table th.active-header-onspot,
+.pricing-table th.active-header-standard,
+.pricing-table th.active-header-early {
+    background-color: #ffd700 !important;
+    color: #1b5e20 !important;
+    position: relative;
+}
+
+/* Badge */
+.badge-active {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #d32f2f;
+    color: white;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    text-transform: uppercase;
+}
+
+/* Active Cell Background */
+.pricing-table td.active-cell-onspot,
+.pricing-table td.active-cell-standard,
+.pricing-table td.active-cell-early {
+    background-color: #fffde7 !important;
+}
+
+/* Active Price Text */
+.price-active {
+    font-weight: 800;
+    color: #004d40;
+    font-size: 1.05rem;
+}
+
+/* Ensure the radio button logic keeps the row alignment */
+.radio-label {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Selected Row Active Cell Highlight */
+.pricing-table td.selected-active-cell {
+    background-color: #ffe082 !important;
+    border: 2px solid #ffa000 !important;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Discount Banner */
+.discount-banner {
+    background: linear-gradient(135deg, #1b5e20, #43a047);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    border: 1px solid #2e7d32;
+    animation: slideDown 0.5s ease-out;
+}
+
+.discount-banner .discount-icon {
+    font-size: 2.5rem;
+}
+
+.discount-banner .discount-text h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.discount-banner .discount-text p {
+    margin: 0;
+    opacity: 0.95;
+    font-size: 1.1rem;
+}
+
+/* Price Display Improvements */
+.price-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #d32f2f;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    opacity: 0.8;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
