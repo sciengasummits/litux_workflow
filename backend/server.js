@@ -1073,7 +1073,7 @@ const CONFERENCE_ACCOUNTS = [
     },
     {
         username: 'FOODAGRISUMMIT2026',
-        email: process.env.FOODAGRI_EMAIL || 'foodagri@sciengasummits.com',
+        email: process.env.FOODAGRI_EMAIL || 'food@sciengasummits.com',
         conferenceId: 'foodagri',
         displayName: 'FOOD AGRI SUMMIT 2026',
     },
@@ -1094,13 +1094,13 @@ const CONFERENCE_ACCOUNTS = [
 const realEmailSender = new RealEmailSender();
 
 // Real email service with fallback
-const sendRealEmail = async (to, subject, htmlContent, otp) => {
+const sendRealEmail = async (to, subject, htmlContent, otp, conferenceId) => {
     try {
-        console.log(`📧 ATTEMPTING EMAIL SEND TO: ${to}`);
+        console.log(`📧 ATTEMPTING EMAIL SEND TO: ${to}  (conference: ${conferenceId || 'default'})`);
         console.log(`📧 OTP: ${otp}`);
 
         // Set a timeout for email sending to prevent hanging
-        const emailPromise = realEmailSender.sendEmail(to, subject, htmlContent, otp);
+        const emailPromise = realEmailSender.sendEmail(to, subject, htmlContent, otp, conferenceId);
         const timeoutPromise = new Promise((resolve) => {
             setTimeout(() => {
                 console.log(`⏰ EMAIL SENDING TIMEOUT - PROCEEDING WITH OTP`);
@@ -1130,8 +1130,8 @@ const sendRealEmail = async (to, subject, htmlContent, otp) => {
 };
 
 // Simple email service using fetch (alternative to nodemailer)
-const sendEmailViaAPI = async (to, subject, htmlContent, otp) => {
-    return await sendRealEmail(to, subject, htmlContent, otp);
+const sendEmailViaAPI = async (to, subject, htmlContent, otp, conferenceId) => {
+    return await sendRealEmail(to, subject, htmlContent, otp, conferenceId);
 };
 
 // Simple OTP generation function
@@ -1140,12 +1140,13 @@ const generateOTP = () => {
 };
 
 // Send OTP email
-const sendOTPEmail = async (email, otp, username) => {
+// conferenceId is used to select the correct SMTP sender account
+const sendOTPEmail = async (email, otp, username, conferenceId) => {
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
                 <h1 style="color: white; margin: 0; font-size: 24px;">Conference Management System</h1>
-                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">LIUTEX SUMMIT 2026</p>
+                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">SCIENGASUMMITS 2026</p>
             </div>
             
             <div style="background: #f8fafc; padding: 30px; border-radius: 10px; border: 1px solid #e2e8f0;">
@@ -1179,7 +1180,7 @@ const sendOTPEmail = async (email, otp, username) => {
         </div>
     `;
 
-    return await sendEmailViaAPI(email, 'Your Login OTP - Conference Management System', htmlContent, otp);
+    return await sendEmailViaAPI(email, 'Your Login OTP - Conference Management System', htmlContent, otp, conferenceId);
 };
 
 // Generate and send OTP
@@ -1221,7 +1222,7 @@ app.post('/api/auth/generate-otp', async (req, res) => {
         });
 
         // Send OTP email in background (non-blocking)
-        sendOTPEmail(account.email, otp, account.username).then(emailResult => {
+        sendOTPEmail(account.email, otp, account.username, account.conferenceId).then(emailResult => {
             if (emailResult.success) {
                 console.log(`✅ EMAIL SENT SUCCESSFULLY TO: ${account.email} with OTP: ${otp}`);
             } else {
