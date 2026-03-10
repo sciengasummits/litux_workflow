@@ -991,6 +991,205 @@ async function seedDefaultData() {
                     }
                 }
             ]
+        },
+        {
+            name: 'cyber',
+            defaults: [
+                {
+                    key: 'hero',
+                    data: {
+                        subtitle: 'ANNUAL INTERNATIONAL CONFERENCE ON',
+                        title: 'CYBERSECURITY AND QUANTUM COMPUTING',
+                        description: 'Global Summit on Cybersecurity and Quantum Computing, where global experts unite to shape the future of digital security and quantum technologies. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming our world.',
+                        conferenceDate: 'December 07-09, 2027',
+                        venue: 'Marina Bay, Singapore',
+                        countdownTarget: '2027-12-07T09:00:00+08:00',
+                        showRegister: true,
+                        showAbstract: true,
+                        showBrochure: true
+                    }
+                },
+                {
+                    key: 'about',
+                    data: {
+                        subtitle: 'Cybersecurity and Quantum Computing',
+                        title: 'About The Conference',
+                        paragraph1: 'The Annual International Conference on Cybersecurity and Quantum Computing is a premier international platform dedicated to advancing the understanding of cybersecurity challenges and quantum computing solutions in the rapidly evolving digital landscape.',
+                        paragraph2: 'This conference brings together leading researchers, academicians, cybersecurity professionals, quantum scientists, engineers, and industry leaders to explore recent developments, theoretical foundations, and real-world applications of quantum-enhanced security systems.',
+                        objectives: [
+                            'Promote advancements in quantum computing and cybersecurity',
+                            'Explore innovations in post-quantum cryptography techniques',
+                            'Discuss quantum-resistant security frameworks and protocols',
+                            'Bridge academia and industry in digital security research',
+                            'Encourage collaboration across computer science, mathematics, and engineering domains'
+                        ],
+                        keyThemes: [
+                            'Fundamentals of Quantum Computing',
+                            'Post-Quantum Cryptography Standards',
+                            'Quantum Key Distribution (QKD)',
+                            'Cybersecurity Threat Intelligence',
+                            'AI-Driven Security Analytics',
+                            'Quantum-Safe Network Architectures'
+                        ]
+                    }
+                },
+                {
+                    key: 'importantDates',
+                    data: {
+                        dates: [
+                            { month: 'SEP', day: '15', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' },
+                            { month: 'NOV', day: '25', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' },
+                            { month: 'JAN', day: '25', year: '2027', event: 'Submission Deadline', icon: 'Clock' },
+                            { month: 'DEC', day: '07', year: '2027', event: 'Conference Date', icon: 'Star', sub: 'December 07-09, 2027, Singapore' }
+                        ]
+                    }
+                },
+                {
+                    key: 'stats',
+                    data: {
+                        title: 'SCIENGA SUMMITS CONFERENCES APPROACH',
+                        items: [
+                            { number: '15+', label: 'Years Experience' },
+                            { number: '100+', label: 'Annual Events' },
+                            { number: '200+', label: 'Onsite Approach' },
+                            { number: '2000+', label: 'Speakers' },
+                            { number: '5000+', label: 'Attendees' },
+                            { number: '20+', label: 'Exhibitors' },
+                            { number: '150+', label: 'Countries' },
+                            { number: '2000+', label: 'Publications' }
+                        ]
+                    }
+                },
+                {
+                    key: 'pricing',
+                    data: {
+                        title: 'REGISTRATION PRICING',
+                        packages: [
+                            {
+                                title: 'Speaker',
+                                price: '799',
+                                currency: 'USD',
+                                features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            },
+                            {
+                                title: 'Delegate',
+                                price: '899',
+                                currency: 'USD',
+                                features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            },
+                            {
+                                title: 'Student',
+                                price: '499',
+                                currency: 'USD',
+                                features: ['Student Presentation', 'Meet Our Experts', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            }
+                        ]
+                    }
+                },
+                {
+                    key: 'sessions',
+                    data: {
+                        sessions: [
+                            'Fundamentals of Quantum Computing',
+                            'Post-Quantum Cryptography (PQC)',
+                            'Quantum Key Distribution (QKD)',
+                            'Cybersecurity Threat Intelligence',
+                            'AI-Driven Security Analytics',
+                            'Quantum-Safe Network Architectures',
+                            'Zero Trust Security Frameworks',
+                            'Blockchain & Distributed Ledger Security',
+                            'Cloud & Edge Computing Security',
+                            'Internet of Things (IoT) Security',
+                            'Digital Forensics & Incident Response',
+                            'Ethical Hacking & Penetration Testing',
+                            'Quantum Error Correction',
+                            'Quantum Algorithms & Complexity',
+                            'Quantum Machine Learning',
+                            'Critical Infrastructure Protection',
+                            'Privacy Enhancing Technologies',
+                            'Supply Chain Security',
+                            'Cyber Risk Management & Governance',
+                            'Regulatory Compliance & Policy Frameworks'
+                        ],
+                        schedule: {
+                            day1: [
+                                { time: '8.30 – 9.00', program: 'Registration' },
+                                { time: '9.00 – 9.30', program: 'Conference Inauguration' },
+                                { time: '9.30 – 11.00', program: 'Plenary Sessions' },
+                                { time: '11.00 – 11.20', program: 'Tea/Coffee Break' },
+                                { time: '11.20 – 13.00', program: 'Plenary Sessions' },
+                                { time: '13.00 – 13.10', program: 'Group Photograph' },
+                                { time: '13.10 – 14.00', program: 'Lunch' },
+                                { time: '14.00 – 15.40', program: 'Keynote Sessions' },
+                                { time: '15.40 – 16.00', program: 'Tea/Coffee Break' },
+                                { time: '16.00 – 17.30', program: 'Keynote Sessions' },
+                                { time: '17.30 – 18.30', program: 'Workshop' }
+                            ],
+                            day2: [
+                                { time: '9.00 – 10.30', program: 'Scientific Sessions' },
+                                { time: '10.30 – 10.50', program: 'Tea/Coffee Break' },
+                                { time: '10.50 – 13.00', program: 'Poster Presentations' },
+                                { time: '13.00 – 14.00', program: 'Lunch' },
+                                { time: '14.00 – 15.30', program: 'Panel Discussions' },
+                                { time: '15.30 – 16.00', program: 'Award Ceremony & Closing' }
+                            ],
+                            day3: [
+                                { time: '9.00 – 10.30', program: 'Networking Session' },
+                                { time: '10.30 – 11.00', program: 'Tea/Coffee Break' },
+                                { time: '11.00 – 12.30', program: 'Future Trends Workshop' },
+                                { time: '12.30 – 13.30', program: 'Lunch' },
+                                { time: '13.30 – 15.00', program: 'Final Remarks & Departure' }
+                            ]
+                        }
+                    }
+                },
+                {
+                    key: 'venue',
+                    data: {
+                        title: 'Conference Venue',
+                        name: 'Marina Bay, Singapore',
+                        address: 'Singapore',
+                        description: 'A world-class conference facility in Marina Bay, Singapore — a global hub for fintech, cybersecurity, and digital innovation — offering state-of-the-art facilities and stunning waterfront views.',
+                        images: [
+                            'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1512470876302-972fad2aa9dd?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=80'
+                        ]
+                    }
+                },
+                {
+                    key: 'contact',
+                    data: {
+                        email: 'contact@cyberquantumsummit.com',
+                        phone: '+91 7842090097',
+                        address: 'Marina Bay, Singapore',
+                        socialLinks: {
+                            facebook: 'https://www.facebook.com/profile.php?id=61588065033161',
+                            twitter: '',
+                            linkedin: '',
+                            instagram: 'https://www.instagram.com/sciengasummits/'
+                        }
+                    }
+                },
+                {
+                    key: 'marquee',
+                    data: {
+                        title: 'Supporting Universities & Institutions',
+                        items: [
+                            'National University of Singapore',
+                            'MIT',
+                            'Stanford University',
+                            'Carnegie Mellon University',
+                            'ETH Zurich',
+                            'Imperial College London',
+                            'Georgia Institute of Technology',
+                            'University of Waterloo',
+                            'Nanyang Technological University',
+                            'University of Maryland'
+                        ]
+                    }
+                }
+            ]
         }
     ];
 
