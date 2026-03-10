@@ -1190,6 +1190,205 @@ async function seedDefaultData() {
                     }
                 }
             ]
+        },
+        {
+            name: 'powereng',
+            defaults: [
+                {
+                    key: 'hero',
+                    data: {
+                        subtitle: 'ANNUAL INTERNATIONAL CONFERENCE ON',
+                        title: 'POWER ENERGY AND ELECTRICAL ENGINEERING',
+                        description: 'Annual International Conference on Power Energy and Electrical Engineering, where global experts unite to shape the future of sustainable energy. Discover ground-breaking power technologies, connect with top industry professionals, and explore solutions transforming our planet\'s energy grid.',
+                        conferenceDate: 'March 23-25, 2027',
+                        venue: 'Munich, Germany',
+                        countdownTarget: '2027-03-23T09:00:00+01:00',
+                        showRegister: true,
+                        showAbstract: true,
+                        showBrochure: true
+                    }
+                },
+                {
+                    key: 'about',
+                    data: {
+                        subtitle: 'Power Energy and Electrical Engineering',
+                        title: 'About The Conference',
+                        paragraph1: 'The Annual International Conference on Power Energy and Electrical Engineering is a premier international platform dedicated to advancing the understanding of power systems, electrical engineering, and sustainable energy technologies in the rapidly evolving global energy landscape.',
+                        paragraph2: 'This conference brings together leading researchers, academicians, electrical engineers, power system designers, and industry professionals to explore recent developments, innovative technologies, sustainable practices, and real-world applications in power energy and electrical engineering.',
+                        objectives: [
+                            'Facilitate global collaboration on renewable energy solutions',
+                            'Showcase cutting-edge sustainable technologies and innovations',
+                            'Bridge the gap between academic research and industrial application',
+                            'Formulate policy frameworks for a carbon-neutral future',
+                            'Inspire next-generation leaders in electrical and energy engineering'
+                        ],
+                        keyThemes: [
+                            'Smart Grid Technologies & Energy Storage',
+                            'Power Electronics & Motor Drives',
+                            'Renewable Energy Integration (Solar, Wind, Hydro)',
+                            'Electric Vehicle Infrastructure & Charging Systems',
+                            'High Voltage Engineering & Power Systems',
+                            'Energy Efficiency & Conservation Techniques'
+                        ]
+                    }
+                },
+                {
+                    key: 'importantDates',
+                    data: {
+                        dates: [
+                            { month: 'SEP', day: '15', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' },
+                            { month: 'NOV', day: '25', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' },
+                            { month: 'JAN', day: '25', year: '2027', event: 'Submission Deadline', icon: 'Clock' },
+                            { month: 'MAR', day: '23', year: '2027', event: 'Conference Date', icon: 'Star', sub: 'March 23-25, 2027, Munich, Germany' }
+                        ]
+                    }
+                },
+                {
+                    key: 'stats',
+                    data: {
+                        title: 'SCIENGA SUMMITS CONFERENCES APPROACH',
+                        items: [
+                            { number: '15+', label: 'Years Experience' },
+                            { number: '100+', label: 'Annual Events' },
+                            { number: '200+', label: 'Onsite Approach' },
+                            { number: '2000+', label: 'Speakers' },
+                            { number: '5000+', label: 'Attendees' },
+                            { number: '20+', label: 'Exhibitors' },
+                            { number: '150+', label: 'Countries' },
+                            { number: '2000+', label: 'Publications' }
+                        ]
+                    }
+                },
+                {
+                    key: 'pricing',
+                    data: {
+                        title: 'REGISTRATION PRICING',
+                        packages: [
+                            {
+                                title: 'Speaker',
+                                price: '799',
+                                currency: 'USD',
+                                features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            },
+                            {
+                                title: 'Delegate',
+                                price: '899',
+                                currency: 'USD',
+                                features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            },
+                            {
+                                title: 'Student',
+                                price: '499',
+                                currency: 'USD',
+                                features: ['Student Presentation', 'Meet Our Experts', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            }
+                        ]
+                    }
+                },
+                {
+                    key: 'sessions',
+                    data: {
+                        sessions: [
+                            'Smart Grid Technologies',
+                            'Power Electronics & Converters',
+                            'Renewable Energy Systems',
+                            'Electric Machines & Drives',
+                            'High Voltage Engineering',
+                            'Energy Storage Technologies',
+                            'Power Quality & Harmonics',
+                            'Distributed Generation Systems',
+                            'Electric Vehicles & Charging',
+                            'Microgrids & Manogrids',
+                            'HVDC & Flexible AC Transmission',
+                            'Electromagnetic Compatibility',
+                            'Protection & Control Systems',
+                            'Power System Stability & Dynamics',
+                            'Computational Intelligence in Power',
+                            'Sustainable Energy Policy',
+                            'Industrial Power Applications',
+                            'Wireless Power Transfer',
+                            'Energy Harvesting Technologies',
+                            'Digital Twins in Power Systems'
+                        ],
+                        schedule: {
+                            day1: [
+                                { time: '8.30 - 9.00', program: 'Registration' },
+                                { time: '9.00 - 9.30', program: 'Conference Inauguration' },
+                                { time: '9.30 - 11.00', program: 'Plenary Sessions' },
+                                { time: '11.00 - 11.20', program: 'Tea/Coffee Break' },
+                                { time: '11.20 - 13.00', program: 'Plenary Sessions' },
+                                { time: '13.00 - 13.10', program: 'Group Photograph' },
+                                { time: '13.10 - 14.00', program: 'Lunch' },
+                                { time: '14.00 - 15.40', program: 'Keynote Sessions' },
+                                { time: '15.40 - 16.00', program: 'Tea/Coffee Break' },
+                                { time: '16.00 - 17.30', program: 'Keynote Sessions' },
+                                { time: '17.30 - 18.30', program: 'Workshop' }
+                            ],
+                            day2: [
+                                { time: '9.00 - 10.30', program: 'Scientific Sessions' },
+                                { time: '10.30 - 10.50', program: 'Tea/Coffee Break' },
+                                { time: '10.50 - 13.00', program: 'Poster Presentations' },
+                                { time: '13.00 - 14.00', program: 'Lunch' },
+                                { time: '14.00 - 15.30', program: 'Panel Discussions' },
+                                { time: '15.30 - 16.00', program: 'Award Ceremony & Closing' }
+                            ],
+                            day3: [
+                                { time: '9.00 - 10.30', program: 'Networking Session' },
+                                { time: '10.30 - 11.00', program: 'Tea/Coffee Break' },
+                                { time: '11.00 - 12.30', program: 'Future Trends Workshop' },
+                                { time: '12.30 - 13.30', program: 'Lunch' },
+                                { time: '13.30 - 15.00', program: 'Final Remarks & Departure' }
+                            ]
+                        }
+                    }
+                },
+                {
+                    key: 'venue',
+                    data: {
+                        title: 'Conference Venue',
+                        name: 'Munich, Germany',
+                        address: 'Munich, Bavaria, Germany',
+                        description: 'Munich, the capital of Bavaria, is a global hub for engineering and energy innovation. Home to world-leading exhibitions like Intersolar Europe and countless leading engineering firms, Munich provides the ideal backdrop for this premier power and energy conference.',
+                        images: [
+                            'https://images.unsplash.com/photo-1595181710363-f1109f2d1130?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80'
+                        ]
+                    }
+                },
+                {
+                    key: 'contact',
+                    data: {
+                        email: 'contact@powerenergysummit.com',
+                        phone: '+91 7842090097',
+                        address: 'Munich, Germany',
+                        socialLinks: {
+                            facebook: 'https://www.facebook.com/profile.php?id=61588065033161',
+                            twitter: '',
+                            linkedin: 'https://www.linkedin.com/company/scienga-summits/',
+                            instagram: 'https://www.instagram.com/sciengasummits/'
+                        }
+                    }
+                },
+                {
+                    key: 'marquee',
+                    data: {
+                        title: 'Supporting Universities & Institutions',
+                        items: [
+                            'Technical University of Munich',
+                            'RWTH Aachen University',
+                            'MIT',
+                            'Stanford University',
+                            'ETH Zurich',
+                            'Imperial College London',
+                            'Georgia Institute of Technology',
+                            'Delft University of Technology',
+                            'National University of Singapore',
+                            'University of Stuttgart'
+                        ]
+                    }
+                }
+            ]
         }
     ];
 
