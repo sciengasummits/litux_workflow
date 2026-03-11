@@ -1389,6 +1389,229 @@ async function seedDefaultData() {
                     }
                 }
             ]
+        }, 
+        {
+        
+            name: 'polymat', 
+            defaults: [
+                {
+                
+                    key: 'hero', 
+                    data: {
+                    
+                        subtitle: 'ANNUAL INTERNATIONAL CONFERENCE ON', 
+                        title: 'POLYMERS AND COMPOSITE MATERIALS', 
+                        description: 'Annual International Conference on Polymers and Composite Materials, where global experts unite to advance polymer science and composite engineering. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming the future of materials.', 
+                        conferenceDate: 'November 16-18, 2026', 
+                        venue: 'Amsterdam, Netherlands', 
+                        countdownTarget: '2026-11-16T09:00:00+01:00', 
+                        showRegister: true, 
+                        showAbstract: true, 
+                        showBrochure: true
+                    }
+                }, 
+                {
+                
+                    key: 'about', 
+                    data: {
+                    
+                        subtitle: 'Polymers and Composite Materials Science', 
+                        title: 'About The Conference', 
+                        paragraph1: 'The Annual International Conference on Polymers and Composite Materials is a premier global forum for polymer scientists, composite engineers, and materials researchers dedicated to advancing the frontiers of polymer synthesis, composite manufacturing, and sustainable materials integration.', 
+                        paragraph2: 'This conference brings together leading researchers, academicians, industrial engineers, and industry professionals to explore recent developments, innovative technologies, and real-world applications in polymer science and composite materials engineering.', 
+                        objectives: [
+                            'Advance polymer synthesis and processing technologies', 
+                            'Explore innovations in composite materials and nanocomposites', 
+                            'Discuss biodegradable and sustainable polymer solutions', 
+                            'Bridge academia and industry in materials science research', 
+                            'Encourage collaboration in polymer electronics, coatings, and smart materials'
+                        ], 
+                        keyThemes: [
+                            'Polymer Synthesis & Processing', 
+                            'Composite Materials & Manufacturing', 
+                            'Biodegradable & Sustainable Polymers', 
+                            'Nanocomposites & Nanomaterials', 
+                            'Fiber-Reinforced Composites', 
+                            'Smart & Functional Polymers'
+                        ]
+                    }
+                }, 
+                {
+                
+                    key: 'importantDates', 
+                    data: {
+                    
+                        dates: [
+                            { month: 'JUN', day: '01', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' }, 
+                            { month: 'SEP', day: '25', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' }, 
+                            { month: 'OCT', day: '25', year: '2026', event: 'Submission Deadline', icon: 'Clock' }, 
+                            { month: 'NOV', day: '16', year: '2026', event: 'Conference Date', icon: 'Star', sub: 'November 16-18, 2026, Amsterdam, Netherlands' }
+                        ]
+                    }
+                }, 
+                {
+                
+                    key: 'stats', 
+                    data: {
+                    
+                        title: 'POLYMAT SUMMIT CONFERENCES APPROACH', 
+                        items: [
+                            { number: '15+', label: 'Years Experience' }, 
+                            { number: '100+', label: 'Events' }, 
+                            { number: '200+', label: 'Onsite Approach' }, 
+                            { number: '2000+', label: 'Speakers' }, 
+                            { number: '5000+', label: 'Attendees' }, 
+                            { number: '20+', label: 'Exhibitors' }, 
+                            { number: '150+', label: 'Countries' }, 
+                            { number: '2000+', label: 'Publications' }
+                        ]
+                    }
+                }, 
+                {
+                
+                    key: 'pricing', 
+                    data: {
+                    
+                        title: 'REGISTRATION PRICING', 
+                        packages: [
+                            {
+                            
+                                title: 'Speaker', 
+                                price: '749', 
+                                currency: 'USD', 
+                                features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            }, 
+                            {
+                            
+                                title: 'Delegate', 
+                                price: '899', 
+                                currency: 'USD', 
+                                features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            }, 
+                            {
+                            
+                                title: 'Student', 
+                                price: '299', 
+                                currency: 'USD', 
+                                features: ['Student Presentation', 'Meet Our Experts', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
+                            }
+                        ]
+                    }
+                }, 
+                {
+                
+                    key: 'sessions', 
+                    data: {
+                    
+                        sessions: [
+                            'Polymer Synthesis & Processing', 
+                            'Composite Materials & Manufacturing', 
+                            'Biodegradable & Sustainable Polymers', 
+                            'Nanocomposites & Nanomaterials', 
+                            'Fiber-Reinforced Composites', 
+                            'Polymer Characterization Techniques', 
+                            'Smart & Functional Polymers', 
+                            'Thermoplastics & Thermosets', 
+                            'Rubber & Elastomers', 
+                            'Adhesives & Sealants', 
+                            '3D Printing with Polymers', 
+                            'Polymer Recycling & Circular Economy', 
+                            'Bio-based Polymers & Bioplastics', 
+                            'Surface Modification of Composites', 
+                            'Carbon Fiber & Advanced Composites', 
+                            'Polymer Blends & Alloys', 
+                            'Coatings & Films', 
+                            'Epoxy & Phenolic Resins', 
+                            'Mechanical Testing of Composites', 
+                            'Polymer Electronics & Photonics'
+                        ], 
+                        schedule: {
+                        
+                            day1: [
+                                { time: '8.30 - 9.00', program: 'Registration' }, 
+                                { time: '9.00 - 9.30', program: 'Conference Inauguration' }, 
+                                { time: '9.30 - 11.00', program: 'Plenary Sessions' }, 
+                                { time: '11.00 - 11.20', program: 'Tea/Coffee Break' }, 
+                                { time: '11.20 - 13.00', program: 'Plenary Sessions' }, 
+                                { time: '13.00 - 13.10', program: 'Group Photograph' }, 
+                                { time: '13.10 - 14.00', program: 'Lunch' }, 
+                                { time: '14.00 - 15.40', program: 'Keynote Sessions' }, 
+                                { time: '15.40 - 16.00', program: 'Tea/Coffee Break' }, 
+                                { time: '16.00 - 17.30', program: 'Keynote Sessions' }, 
+                                { time: '17.30 - 18.30', program: 'Workshop' }
+                            ], 
+                            day2: [
+                                { time: '9.00 - 10.30', program: 'Scientific Sessions' }, 
+                                { time: '10.30 - 10.50', program: 'Tea/Coffee Break' }, 
+                                { time: '10.50 - 13.00', program: 'Poster Presentations' }, 
+                                { time: '13.00 - 14.00', program: 'Lunch' }, 
+                                { time: '14.00 - 15.30', program: 'Panel Discussions' }, 
+                                { time: '15.30 - 16.00', program: 'Award Ceremony & Closing' }
+                            ], 
+                            day3: [
+                                { time: '9.00 - 10.30', program: 'Networking Session' }, 
+                                { time: '10.30 - 11.00', program: 'Tea/Coffee Break' }, 
+                                { time: '11.00 - 12.30', program: 'Future Trends Workshop' }, 
+                                { time: '12.30 - 13.30', program: 'Lunch' }, 
+                                { time: '13.30 - 15.00', program: 'Final Remarks & Departure' }
+                            ]
+                        }
+                    }
+                }, 
+                {
+                
+                    key: 'venue', 
+                    data: {
+                    
+                        title: 'Conference Venue', 
+                        name: 'Amsterdam, Netherlands', 
+                        address: 'Amsterdam, North Holland, Netherlands', 
+                        description: 'Amsterdam, the capital of the Netherlands, is a world-renowned hub for science, technology, and innovation. Home to leading research institutions and a vibrant international community, Amsterdam provides the ideal backdrop for this premier polymers and materials conference.', 
+                        images: [
+                            'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=1920&q=80', 
+                            'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=1920&q=80', 
+                            'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80'
+                        ]
+                    }
+                }, 
+                {
+                
+                    key: 'contact', 
+                    data: {
+                    
+                        email: 'contact@polymatsummit.com', 
+                        phone: '+91 7842090097', 
+                        address: 'Amsterdam, Netherlands', 
+                        socialLinks: {
+                        
+                            facebook: 'https://www.facebook.com/profile.php?id=61588065033161', 
+                            twitter: '', 
+                            linkedin: 'https://www.linkedin.com/company/scienga-summits/', 
+                            instagram: 'https://www.instagram.com/sciengasummits/'
+                        }
+                    }
+                }, 
+                {
+                
+                    key: 'marquee', 
+                    data: {
+                    
+                        title: 'Supporting Universities & Institutions', 
+                        items: [
+                            'ETH Zurich', 
+                            'Delft University of Technology', 
+                            'MIT', 
+                            'Stanford University', 
+                            'Imperial College London', 
+                            'University of Cambridge', 
+                            'National University of Singapore', 
+                            'RWTH Aachen University', 
+                            'Georgia Institute of Technology', 
+                            'University of Amsterdam'
+                        ]
+                    }
+                }
+            ]
         }
     ];
 
@@ -1486,6 +1709,24 @@ const CONFERENCE_ACCOUNTS = [
         email: process.env.RENEWABLE_EMAIL || 'renewable@sciengasummits.com',
         conferenceId: 'renewable',
         displayName: 'RENEWABLE ENERGY & CLIMATE CHANGE 2026',
+    },
+    {
+        username: 'CYBERQUANTUMSUMMIT2026',
+        email: process.env.CYBER_EMAIL || 'contact@cyberquantumsummit.com',
+        conferenceId: 'cyber',
+        displayName: 'CYBERSECURITY & QUANTUM COMPUTING 2026',
+    },
+    {
+        username: 'POWERENGSUMMIT2026',
+        email: process.env.POWERENG_EMAIL || 'contact@powerenergysummit.com',
+        conferenceId: 'powereng',
+        displayName: 'POWER ENERGY & ELECTRICAL ENGINEERING 2026',
+    },
+    {
+        username: 'POLYMATSUMMIT2026',
+        email: process.env.POLYMAT_EMAIL || 'contact@polymatsummit.com',
+        conferenceId: 'polymat',
+        displayName: 'ANNUAL INTERNATIONAL CONFERENCE ON POLYMERS AND COMPOSITE MATERIALS 2026',
     },
 ];
 
