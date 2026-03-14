@@ -25,6 +25,7 @@ import Registration from './models/Registration.js';
 import Abstract from './models/Abstract.js';
 import Discount from './models/Discount.js';
 import OTP from './models/OTP.js';
+import Media from './models/Media.js';
 import { RealEmailSender } from './emailSender.js';
 
 dotenv.config();
@@ -1752,9 +1753,8 @@ const sendRealEmail = async (to, subject, htmlContent, otp, conferenceId) => {
         if (result.success) {
             console.log(`✅ EMAIL SENT SUCCESSFULLY TO: ${to}`);
         } else {
-            console.log(`⚠️ EMAIL FAILED, BUT OTP IS STILL VALID: ${otp}`);
-            console.log(`📧 ERROR: ${result.error}`);
-            console.log(`📧 USER CAN STILL LOGIN WITH OTP: ${otp}`);
+            console.log(`⚠️ EMAIL FAILED, OTP is still valid for login`);
+            console.log(`📧 EMAIL ERROR: ${result.error}`);
         }
 
         // Always return success so OTP generation continues
@@ -1762,9 +1762,8 @@ const sendRealEmail = async (to, subject, htmlContent, otp, conferenceId) => {
 
     } catch (error) {
         console.error(`❌ EMAIL ERROR (NON-BLOCKING):`, error.message);
-        console.log(`📧 OTP IS STILL VALID: ${otp}`);
         // Return success even if email fails
-        return { success: true, messageId: `fallback-${Date.now()}`, otp: otp };
+        return { success: true, messageId: `fallback-${Date.now()}` };
     }
 };
 
@@ -1775,7 +1774,7 @@ const sendEmailViaAPI = async (to, subject, htmlContent, otp, conferenceId) => {
 
 // Simple OTP generation function
 const generateOTP = () => {
-    return Math.floor(1000 + Math.random() * 9000).toString();
+    return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 // Send OTP email
@@ -1856,21 +1855,17 @@ app.post('/api/auth/generate-otp', async (req, res) => {
             success: true,
             message: `OTP sent to ${account.email}`,
             email: account.email.replace(/(.{2}).*(@.*)/, '$1***$2'), // Mask email for security
-            // For testing purposes, include the OTP in response (remove in production)
-            testOTP: otp
         });
 
         // Send OTP email in background (non-blocking)
         sendOTPEmail(account.email, otp, account.username, account.conferenceId).then(emailResult => {
             if (emailResult.success) {
-                console.log(`✅ EMAIL SENT SUCCESSFULLY TO: ${account.email} with OTP: ${otp}`);
+                console.log(`✅ OTP email sent successfully to: ${account.email}`);
             } else {
-                console.log(`⚠️ EMAIL FAILED, BUT OTP IS STILL VALID: ${otp}`);
-                console.log(`📧 ERROR: ${emailResult.error}`);
+                console.log(`⚠️ OTP email failed, but OTP is still valid for login`);
             }
         }).catch(error => {
             console.error(`❌ EMAIL ERROR (NON-BLOCKING):`, error.message);
-            console.log(`📧 OTP IS STILL VALID: ${otp}`);
         });
 
     } catch (error) {
@@ -1937,19 +1932,74 @@ function buildFileUrl(req, filename) {
     return `${proto}://${host}/uploads/${filename}`;
 }
 
-// Upload image (images only)
+// ─── NEW: Serve images from MongoDB (fixes "Images not saving in MongoDB issue") ───
+app.get('/api/media/:id', async (req, res) => {
+    try {
+        const media = await Media.findById(req.params.id);
+        if (!media) return res.status(404).send('Image not found');
+        
+        const img = Buffer.from(media.data.split(',')[1] || media.data, 'base64');
+        res.writeHead(200, {
+            'Content-Type': media.mimetype,
+            'Content-Length': img.length,
+            'Cache-Control': 'public, max-age=31536000' // cache for 1 year
+        });
+        res.end(img);
+    } catch (err) {
+        res.status(500).send('Server error');
+    }
+});
+
+// Upload image (saves to MongoDB for persistence)
 app.post('/api/upload', (req, res, next) => {
-    upload.single('image')(req, res, (err) => {
+    upload.single('image')(req, res, async (err) => {
         if (err) {
-            // Handle multer-specific errors (file too large, wrong type, etc.)
+            console.error('Multer upload error:', err);
             if (err.code === 'LIMIT_FILE_SIZE') {
                 return res.status(413).json({ error: 'File too large. Maximum size is 25MB.' });
             }
-            return res.status(400).json({ error: err.message || 'Upload failed' });
+            return res.status(400).json({ error: `Upload process error: ${err.message}` });
         }
-        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-        const url = buildFileUrl(req, req.file.filename);
-        res.json({ url, filename: req.file.filename });
+        if (!req.file) {
+            console.warn('No file received in upload request');
+            return res.status(400).json({ error: 'No file uploaded. Ensure field name is "image".' });
+        }
+        
+        try {
+            // Read file and convert to base64
+            if (!fs.existsSync(req.file.path)) {
+                throw new Error(`Uploaded file not found at ${req.file.path}`);
+            }
+            const b64 = fs.readFileSync(req.file.path, { encoding: 'base64' });
+            const dataUrl = `data:${req.file.mimetype};base64,${b64}`;
+            
+            // Save to MongoDB
+            const media = new Media({
+                filename: req.file.filename,
+                mimetype: req.file.mimetype,
+                data: dataUrl,
+                conference: req.body.conference || 'liutex'
+            });
+            await media.save();
+            
+            // Cleanup local file after saving to DB (ignore errors if file already deleted)
+            try { fs.unlinkSync(req.file.path); } catch(e) {}
+
+            const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+            const host = req.headers['x-forwarded-host'] || req.headers.host || `localhost:${PORT}`;
+            const url = `${proto}://${host}/api/media/${media._id}`;
+            
+            console.log(`✅ Upload successful: ${media._id}`);
+            res.json({ 
+                url, 
+                id: media._id, 
+                filename: media.filename,
+                message: 'Image saved to MongoDB successfully'
+            });
+        } catch (dbErr) {
+            console.error('DB/Processing error during upload:', dbErr);
+            res.status(500).json({ error: `Server failed to process upload: ${dbErr.message}` });
+        }
     });
 });
 
