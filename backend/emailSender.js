@@ -43,6 +43,10 @@ export class RealEmailSender {
                 user: process.env.POWERENG_SMTP_USER || this._defaultUser,
                 pass: (process.env.POWERENG_SMTP_PASS || this._defaultPass).replace(/\s/g, ''),
             },
+            iqces: {
+                user: process.env.IQCES_SMTP_USER || this._defaultUser,
+                pass: (process.env.IQCES_SMTP_PASS || this._defaultPass).replace(/\s/g, ''),
+            },
         };
 
         // Build one transporter per conference account
