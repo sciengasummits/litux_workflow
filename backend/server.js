@@ -2616,6 +2616,9 @@ app.get('/api/payment/key', (req, res) => {
 // POST /api/payment/create-order — creates a Razorpay order
 // Body: { amount (in USD), currency?, registrationId?, conference, description }
 // Returns: { success, order: { id, amount, currency, ... } }
+// NOTE: Razorpay only processes INR. USD amounts are converted at a fixed rate.
+//       When you have a live account with international payments enabled,
+//       set RAZORPAY_CURRENCY=USD in .env to pass USD directly.
 app.post('/api/payment/create-order', async (req, res) => {
     try {
         if (!razorpayInstance) {
@@ -2628,22 +2631,35 @@ app.post('/api/payment/create-order', async (req, res) => {
             return res.status(400).json({ success: false, error: 'Invalid amount. Must be greater than 0.' });
         }
 
-        // Razorpay expects amount in smallest currency unit (cents for USD, paise for INR)
-        const amountInSmallestUnit = Math.round(amount * 100);
+        // Razorpay test mode only supports INR.
+        // If RAZORPAY_CURRENCY is set to USD (live account with intl payments), use it directly.
+        // Otherwise convert USD → INR at a fixed rate.
+        const razorpayCurrency = process.env.RAZORPAY_CURRENCY || 'INR';
+        const USD_TO_INR = parseFloat(process.env.USD_TO_INR_RATE) || 84;
+
+        let finalAmount = amount;
+        if (razorpayCurrency === 'INR' && currency.toUpperCase() === 'USD') {
+            finalAmount = Math.round(amount * USD_TO_INR);
+            console.log(`💱 Converting $${amount} USD → ₹${finalAmount} INR (rate: ${USD_TO_INR})`);
+        }
+
+        // Razorpay expects amount in smallest unit (paise for INR, cents for USD)
+        const amountInSmallestUnit = Math.round(finalAmount * 100);
 
         const options = {
             amount: amountInSmallestUnit,
-            currency: currency.toUpperCase(),
+            currency: razorpayCurrency,
             receipt: `rcpt_${conference}_${Date.now()}`,
             notes: {
                 conference,
                 registrationId: registrationId || '',
                 description,
+                amountUSD: amount,   // store original USD amount for reference
             },
         };
 
         const order = await razorpayInstance.orders.create(options);
-        console.log(`💳 Razorpay order created: ${order.id} for $${amount} (${conference})`);
+        console.log(`💳 Razorpay order created: ${order.id} for $${amount} USD / ${razorpayCurrency} ${finalAmount} (${conference})`);
 
         res.json({
             success: true,
@@ -2652,6 +2668,7 @@ app.post('/api/payment/create-order', async (req, res) => {
                 amount: order.amount,
                 currency: order.currency,
                 receipt: order.receipt,
+                amountUSD: amount,  // pass back original USD for frontend display
             },
         });
     } catch (err) {
@@ -2659,6 +2676,7 @@ app.post('/api/payment/create-order', async (req, res) => {
         res.status(500).json({ success: false, error: err.message || 'Failed to create payment order.' });
     }
 });
+
 
 // POST /api/payment/verify — verifies the Razorpay payment signature
 // Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature, registrationId? }
