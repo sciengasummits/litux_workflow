@@ -2264,16 +2264,24 @@ app.get('/api/content/:key', async (req, res) => {
 
 app.put('/api/content/:key', async (req, res) => {
     try {
-        const { conference: conf = 'liutex', ...bodyData } = req.body;
-        // Build a dot-notation patch so partial saves from the dashboard
-        // never wipe fields that weren't included in this request
-        const patch = {};
-        for (const [field, value] of Object.entries(bodyData)) {
-            patch[`data.${field}`] = value;
+        const { conference: conf = 'liutex', _items, ...bodyData } = req.body;
+        let updateOp;
+        if (_items !== undefined) {
+            // The dashboard sent an array (e.g. heroChairs).
+            // Replacing the whole `data` field preserves the array structure.
+            updateOp = { $set: { data: _items, conference: conf } };
+        } else {
+            // Build a dot-notation patch so partial saves from the dashboard
+            // never wipe fields that weren't included in this request
+            const patch = {};
+            for (const [field, value] of Object.entries(bodyData)) {
+                patch[`data.${field}`] = value;
+            }
+            updateOp = { $set: { ...patch, conference: conf } };
         }
         const result = await SiteContent.findOneAndUpdate(
             { conference: conf, key: req.params.key },
-            { $set: { ...patch, conference: conf } },
+            updateOp,
             { upsert: true, new: true }
         );
         res.json({ success: true, data: result.data });
