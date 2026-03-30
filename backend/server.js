@@ -220,7 +220,9 @@ async function seedDefaultData() {
                 countdownTarget: '2026-12-14T09:00:00+01:00',
                 showRegister: true,
                 showAbstract: true,
-                showBrochure: true
+                showBrochure: true,
+                showAnnouncement: false,
+                announcementUrl: ''
             }
         },
         {
@@ -418,7 +420,9 @@ async function seedDefaultData() {
                 countdownTarget: '2026-12-14T09:00:00+01:00',
                 showRegister: true,
                 showAbstract: true,
-                showBrochure: true
+                showBrochure: true,
+                showAnnouncement: false,
+                announcementUrl: ''
             }
         },
         {
@@ -617,7 +621,9 @@ async function seedDefaultData() {
                 countdownTarget: '2026-12-07T09:00:00+08:00',
                 showRegister: true,
                 showAbstract: true,
-                showBrochure: true
+                showBrochure: true,
+                showAnnouncement: false,
+                announcementUrl: ''
             }
         },
         {
@@ -807,7 +813,9 @@ async function seedDefaultData() {
                         countdownTarget: '2027-03-23T09:00:00+01:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true
+                        showBrochure: true,
+                        showAnnouncement: false,
+                        announcementUrl: ''
                     }
                 },
                 {
@@ -1007,7 +1015,9 @@ async function seedDefaultData() {
                         countdownTarget: '2027-12-07T09:00:00+08:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true
+                        showBrochure: true,
+                        showAnnouncement: false,
+                        announcementUrl: ''
                     }
                 },
                 {
@@ -1206,7 +1216,9 @@ async function seedDefaultData() {
                         countdownTarget: '2027-03-23T09:00:00+01:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true
+                        showBrochure: true,
+                        showAnnouncement: false,
+                        announcementUrl: ''
                     }
                 },
                 {
@@ -1408,7 +1420,9 @@ async function seedDefaultData() {
                         countdownTarget: '2026-11-16T09:00:00+01:00', 
                         showRegister: true, 
                         showAbstract: true, 
-                        showBrochure: true
+                        showBrochure: true,
+                        showAnnouncement: false,
+                        announcementUrl: ''
                     }
                 }, 
                 {
@@ -1628,7 +1642,9 @@ async function seedDefaultData() {
                         countdownTarget: '2026-06-24T09:00:00+02:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true
+                        showBrochure: true,
+                        showAnnouncement: false,
+                        announcementUrl: ''
                     }
                 },
                 {
@@ -1820,7 +1836,7 @@ async function seedDefaultData() {
         {
             name: 'iqces2026',
             defaults: [
-                { key: 'hero', data: { subtitle: 'INTERNATIONAL CONFERENCE ON', title: 'QUANTUM COMPUTING & ENGINEERING', description: 'The International Conference on Quantum Computing & Engineering (IQCES-2026) unites global experts to shape the future of quantum technologies. Discover ground-breaking quantum algorithms, connect with top quantum professionals, and explore engineering solutions transforming our world.', conferenceDate: 'June 24-26, 2026', venue: 'Bern, Switzerland', countdownTarget: '2026-06-24T09:00:00+02:00', showRegister: true, showAbstract: true, showBrochure: true } },
+                { key: 'hero', data: { subtitle: 'INTERNATIONAL CONFERENCE ON', title: 'QUANTUM COMPUTING & ENGINEERING', description: 'The International Conference on Quantum Computing & Engineering (IQCES-2026) unites global experts to shape the future of quantum technologies. Discover ground-breaking quantum algorithms, connect with top quantum professionals, and explore engineering solutions transforming our world.', conferenceDate: 'June 24-26, 2026', venue: 'Bern, Switzerland', countdownTarget: '2026-06-24T02:00:00+02:00', showRegister: true, showAbstract: true, showBrochure: true, showAnnouncement: false, announcementUrl: '' } },
                 { key: 'about', data: { subtitle: 'Welcome to Bern, Switzerland', title: 'About the Conference', paragraph1: 'We are thrilled to welcome you to the International Conference on Quantum Computing & Engineering (IQCES-2026), scheduled to take place from June 24-26, 2026, in the historic city of Bern, Switzerland. This premier scientific gathering brings together global experts from academia and industry to discuss groundbreaking advancements in quantum science.', paragraph2: 'Our mission is to foster a collaborative environment where researchers can share innovative findings, explore the next generation of quantum platforms, and discuss the practical applications of quantum information science. Through interdisciplinary dialogue, we aim to accelerate the transition from quantum theory to industrial reality.', paragraph3: 'Join us for three immersive days of high-level plenary talks, technical sessions, and meaningful networking in the heart of Europe!', objectives: ['Accelerate Innovation: To provide a global stage for showcasing breakthrough research in quantum computing, communication, and metrology.', 'Bridge Research and Industry: To facilitate knowledge transfer between theoretical research and real-world industrial implementation.', 'Foster Collaborative Networks: To connect leading scientists with emerging researchers to build lasting international partnerships.', 'Discuss Ethical and Future Implications: To address the societal and security impacts of emerging quantum technologies.', 'Empower the Next Generation: To support students and early-career researchers through specialized workshops and poster sessions.'], keyThemes: ['Quantum Algorithms and Complexity', 'Quantum Information Processing', 'Quantum Error Correction and Fault Tolerance', 'Quantum Hardware: Superconducting, Trapped Ion, Photonic', 'Quantum Cryptography and Post-Quantum Security', 'Quantum Sensing and Precision Measurements', 'Scalability and Control of Quantum Systems', 'Hybrid Quantum-Classical Systems'] } },
                 { key: 'importantDates', data: { dates: [ { month: 'DEC', day: '10', year: '2025', event: 'Abstract Submission Opens', icon: 'CalendarDays' }, { month: 'FEB', day: '15', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' }, { month: 'APR', day: '20', year: '2026', event: 'Final Submission Deadline', icon: 'Clock' }, { month: 'JUN', day: '24', year: '2026', event: 'Conference Start Date', icon: 'Star', sub: 'June 24-26, Bern' } ] } },
                 { key: 'stats', data: { title: 'QUANTUM COMPUTING & ENGINEERING SUMMIT APPROACH', items: [ { id: 1, icon: 'Calendar', number: '15+', label: 'Years Experience' }, { id: 2, icon: 'CalendarCheck', number: '100+', label: 'Events' }, { id: 3, icon: 'MapPin', number: '200+', label: 'Onsite Approach' }, { id: 4, icon: 'Mic', number: '2000+', label: 'Speakers' }, { id: 5, icon: 'Users', number: '5000+', label: 'Attendees' }, { id: 6, icon: 'Building2', number: '20+', label: 'Exhibitors' }, { id: 7, icon: 'Globe', number: '150+', label: 'Countries' }, { id: 8, icon: 'Newspaper', number: '2000+', label: 'Publications' } ] } },
