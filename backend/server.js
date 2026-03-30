@@ -2735,6 +2735,32 @@ app.post('/api/payment/verify', async (req, res) => {
     }
 });
 
+// ─── Media Proxy for Old Workflow Uploads ───────────────────────
+// Old images were stored as base64 in MongoDB via the Next.js workflow dashboard
+// and saved in the DB as http://localhost:3000/api/media/<id>.
+// The frontend redirects those localhost:3000 URLs to THIS backend endpoint,
+// which fetches the base64 from Mongo, buffers it, and serves it properly.
+app.get('/api/media/:id', async (req, res) => {
+    try {
+        const media = await Media.findById(req.params.id);
+        if (!media) {
+            return res.status(404).send('Image not found in database');
+        }
+
+        // Base64 format: "data:image/png;base64,iVBORw0K..."
+        const base64Data = media.data.split(',')[1] || media.data;
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        res.set('Content-Type', media.mimetype || 'image/jpeg');
+        res.set('Content-Length', buffer.length.toString());
+        res.set('Cache-Control', 'public, max-age=31536000, immutable');
+        res.send(buffer);
+    } catch (err) {
+        console.error('Media proxy error:', err.message);
+        res.status(500).send('Server error retrieving media');
+    }
+});
+
 // ─── Start Server ─────────────────────────────────────────────
 app.listen(PORT, () => {
     console.log(`🚀 Backend running at http://localhost:${PORT}`);
