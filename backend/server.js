@@ -220,9 +220,7 @@ async function seedDefaultData() {
                 countdownTarget: '2026-12-14T09:00:00+01:00',
                 showRegister: true,
                 showAbstract: true,
-                showBrochure: true,
-                showAnnouncement: false,
-                announcementUrl: ''
+                showBrochure: true
             }
         },
         {
@@ -420,9 +418,7 @@ async function seedDefaultData() {
                 countdownTarget: '2026-12-14T09:00:00+01:00',
                 showRegister: true,
                 showAbstract: true,
-                showBrochure: true,
-                showAnnouncement: false,
-                announcementUrl: ''
+                showBrochure: true
             }
         },
         {
@@ -621,9 +617,7 @@ async function seedDefaultData() {
                 countdownTarget: '2026-12-07T09:00:00+08:00',
                 showRegister: true,
                 showAbstract: true,
-                showBrochure: true,
-                showAnnouncement: false,
-                announcementUrl: ''
+                showBrochure: true
             }
         },
         {
@@ -813,9 +807,7 @@ async function seedDefaultData() {
                         countdownTarget: '2027-03-23T09:00:00+01:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true,
-                        showAnnouncement: false,
-                        announcementUrl: ''
+                        showBrochure: true
                     }
                 },
                 {
@@ -1015,9 +1007,7 @@ async function seedDefaultData() {
                         countdownTarget: '2027-12-07T09:00:00+08:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true,
-                        showAnnouncement: false,
-                        announcementUrl: ''
+                        showBrochure: true
                     }
                 },
                 {
@@ -1216,9 +1206,7 @@ async function seedDefaultData() {
                         countdownTarget: '2027-03-23T09:00:00+01:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true,
-                        showAnnouncement: false,
-                        announcementUrl: ''
+                        showBrochure: true
                     }
                 },
                 {
@@ -1402,226 +1390,224 @@ async function seedDefaultData() {
                     }
                 }
             ]
-        }, 
+        },
         {
-        
-            name: 'polymat', 
+
+            name: 'polymat',
             defaults: [
                 {
-                
-                    key: 'hero', 
+
+                    key: 'hero',
                     data: {
-                    
-                        subtitle: 'ANNUAL INTERNATIONAL CONFERENCE ON', 
-                        title: 'POLYMERS AND COMPOSITE MATERIALS', 
-                        description: 'Annual International Conference on Polymers and Composite Materials, where global experts unite to advance polymer science and composite engineering. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming the future of materials.', 
-                        conferenceDate: 'November 16-18, 2026', 
-                        venue: 'Amsterdam, Netherlands', 
-                        countdownTarget: '2026-11-16T09:00:00+01:00', 
-                        showRegister: true, 
-                        showAbstract: true, 
-                        showBrochure: true,
-                        showAnnouncement: false,
-                        announcementUrl: ''
+
+                        subtitle: 'ANNUAL INTERNATIONAL CONFERENCE ON',
+                        title: 'POLYMERS AND COMPOSITE MATERIALS',
+                        description: 'Annual International Conference on Polymers and Composite Materials, where global experts unite to advance polymer science and composite engineering. Discover ground-breaking technologies, connect with top researchers, and explore solutions transforming the future of materials.',
+                        conferenceDate: 'November 16-18, 2026',
+                        venue: 'Amsterdam, Netherlands',
+                        countdownTarget: '2026-11-16T09:00:00+01:00',
+                        showRegister: true,
+                        showAbstract: true,
+                        showBrochure: true
                     }
-                }, 
+                },
                 {
-                
-                    key: 'about', 
+
+                    key: 'about',
                     data: {
-                    
-                        subtitle: 'Polymers and Composite Materials Science', 
-                        title: 'About The Conference', 
-                        paragraph1: 'The Annual International Conference on Polymers and Composite Materials is a premier global forum for polymer scientists, composite engineers, and materials researchers dedicated to advancing the frontiers of polymer synthesis, composite manufacturing, and sustainable materials integration.', 
-                        paragraph2: 'This conference brings together leading researchers, academicians, industrial engineers, and industry professionals to explore recent developments, innovative technologies, and real-world applications in polymer science and composite materials engineering.', 
+
+                        subtitle: 'Polymers and Composite Materials Science',
+                        title: 'About The Conference',
+                        paragraph1: 'The Annual International Conference on Polymers and Composite Materials is a premier global forum for polymer scientists, composite engineers, and materials researchers dedicated to advancing the frontiers of polymer synthesis, composite manufacturing, and sustainable materials integration.',
+                        paragraph2: 'This conference brings together leading researchers, academicians, industrial engineers, and industry professionals to explore recent developments, innovative technologies, and real-world applications in polymer science and composite materials engineering.',
                         objectives: [
-                            'Advance polymer synthesis and processing technologies', 
-                            'Explore innovations in composite materials and nanocomposites', 
-                            'Discuss biodegradable and sustainable polymer solutions', 
-                            'Bridge academia and industry in materials science research', 
+                            'Advance polymer synthesis and processing technologies',
+                            'Explore innovations in composite materials and nanocomposites',
+                            'Discuss biodegradable and sustainable polymer solutions',
+                            'Bridge academia and industry in materials science research',
                             'Encourage collaboration in polymer electronics, coatings, and smart materials'
-                        ], 
+                        ],
                         keyThemes: [
-                            'Polymer Synthesis & Processing', 
-                            'Composite Materials & Manufacturing', 
-                            'Biodegradable & Sustainable Polymers', 
-                            'Nanocomposites & Nanomaterials', 
-                            'Fiber-Reinforced Composites', 
+                            'Polymer Synthesis & Processing',
+                            'Composite Materials & Manufacturing',
+                            'Biodegradable & Sustainable Polymers',
+                            'Nanocomposites & Nanomaterials',
+                            'Fiber-Reinforced Composites',
                             'Smart & Functional Polymers'
                         ]
                     }
-                }, 
+                },
                 {
-                
-                    key: 'importantDates', 
+
+                    key: 'importantDates',
                     data: {
-                    
+
                         dates: [
-                            { month: 'JUN', day: '01', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' }, 
-                            { month: 'SEP', day: '25', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' }, 
-                            { month: 'OCT', day: '25', year: '2026', event: 'Submission Deadline', icon: 'Clock' }, 
+                            { month: 'JUN', day: '01', year: '2026', event: 'Abstract Submission Opens', icon: 'CalendarDays' },
+                            { month: 'SEP', day: '25', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' },
+                            { month: 'OCT', day: '25', year: '2026', event: 'Submission Deadline', icon: 'Clock' },
                             { month: 'NOV', day: '16', year: '2026', event: 'Conference Date', icon: 'Star', sub: 'November 16-18, 2026, Amsterdam, Netherlands' }
                         ]
                     }
-                }, 
+                },
                 {
-                
-                    key: 'stats', 
+
+                    key: 'stats',
                     data: {
-                    
-                        title: 'POLYMAT SUMMIT CONFERENCES APPROACH', 
+
+                        title: 'POLYMAT SUMMIT CONFERENCES APPROACH',
                         items: [
-                            { number: '15+', label: 'Years Experience' }, 
-                            { number: '100+', label: 'Events' }, 
-                            { number: '200+', label: 'Onsite Approach' }, 
-                            { number: '2000+', label: 'Speakers' }, 
-                            { number: '5000+', label: 'Attendees' }, 
-                            { number: '20+', label: 'Exhibitors' }, 
-                            { number: '150+', label: 'Countries' }, 
+                            { number: '15+', label: 'Years Experience' },
+                            { number: '100+', label: 'Events' },
+                            { number: '200+', label: 'Onsite Approach' },
+                            { number: '2000+', label: 'Speakers' },
+                            { number: '5000+', label: 'Attendees' },
+                            { number: '20+', label: 'Exhibitors' },
+                            { number: '150+', label: 'Countries' },
                             { number: '2000+', label: 'Publications' }
                         ]
                     }
-                }, 
+                },
                 {
-                
-                    key: 'pricing', 
+
+                    key: 'pricing',
                     data: {
-                    
-                        title: 'REGISTRATION PRICING', 
+
+                        title: 'REGISTRATION PRICING',
                         packages: [
                             {
-                            
-                                title: 'Speaker', 
-                                price: '749', 
-                                currency: 'USD', 
+
+                                title: 'Speaker',
+                                price: '749',
+                                currency: 'USD',
                                 features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
-                            }, 
+                            },
                             {
-                            
-                                title: 'Delegate', 
-                                price: '899', 
-                                currency: 'USD', 
+
+                                title: 'Delegate',
+                                price: '899',
+                                currency: 'USD',
                                 features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
-                            }, 
+                            },
                             {
-                            
-                                title: 'Student', 
-                                price: '299', 
-                                currency: 'USD', 
+
+                                title: 'Student',
+                                price: '299',
+                                currency: 'USD',
                                 features: ['Student Presentation', 'Meet Our Experts', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks']
                             }
                         ]
                     }
-                }, 
+                },
                 {
-                
-                    key: 'sessions', 
+
+                    key: 'sessions',
                     data: {
-                    
+
                         sessions: [
-                            'Polymer Synthesis & Processing', 
-                            'Composite Materials & Manufacturing', 
-                            'Biodegradable & Sustainable Polymers', 
-                            'Nanocomposites & Nanomaterials', 
-                            'Fiber-Reinforced Composites', 
-                            'Polymer Characterization Techniques', 
-                            'Smart & Functional Polymers', 
-                            'Thermoplastics & Thermosets', 
-                            'Rubber & Elastomers', 
-                            'Adhesives & Sealants', 
-                            '3D Printing with Polymers', 
-                            'Polymer Recycling & Circular Economy', 
-                            'Bio-based Polymers & Bioplastics', 
-                            'Surface Modification of Composites', 
-                            'Carbon Fiber & Advanced Composites', 
-                            'Polymer Blends & Alloys', 
-                            'Coatings & Films', 
-                            'Epoxy & Phenolic Resins', 
-                            'Mechanical Testing of Composites', 
+                            'Polymer Synthesis & Processing',
+                            'Composite Materials & Manufacturing',
+                            'Biodegradable & Sustainable Polymers',
+                            'Nanocomposites & Nanomaterials',
+                            'Fiber-Reinforced Composites',
+                            'Polymer Characterization Techniques',
+                            'Smart & Functional Polymers',
+                            'Thermoplastics & Thermosets',
+                            'Rubber & Elastomers',
+                            'Adhesives & Sealants',
+                            '3D Printing with Polymers',
+                            'Polymer Recycling & Circular Economy',
+                            'Bio-based Polymers & Bioplastics',
+                            'Surface Modification of Composites',
+                            'Carbon Fiber & Advanced Composites',
+                            'Polymer Blends & Alloys',
+                            'Coatings & Films',
+                            'Epoxy & Phenolic Resins',
+                            'Mechanical Testing of Composites',
                             'Polymer Electronics & Photonics'
-                        ], 
+                        ],
                         schedule: {
-                        
+
                             day1: [
-                                { time: '8.30 - 9.00', program: 'Registration' }, 
-                                { time: '9.00 - 9.30', program: 'Conference Inauguration' }, 
-                                { time: '9.30 - 11.00', program: 'Plenary Sessions' }, 
-                                { time: '11.00 - 11.20', program: 'Tea/Coffee Break' }, 
-                                { time: '11.20 - 13.00', program: 'Plenary Sessions' }, 
-                                { time: '13.00 - 13.10', program: 'Group Photograph' }, 
-                                { time: '13.10 - 14.00', program: 'Lunch' }, 
-                                { time: '14.00 - 15.40', program: 'Keynote Sessions' }, 
-                                { time: '15.40 - 16.00', program: 'Tea/Coffee Break' }, 
-                                { time: '16.00 - 17.30', program: 'Keynote Sessions' }, 
+                                { time: '8.30 - 9.00', program: 'Registration' },
+                                { time: '9.00 - 9.30', program: 'Conference Inauguration' },
+                                { time: '9.30 - 11.00', program: 'Plenary Sessions' },
+                                { time: '11.00 - 11.20', program: 'Tea/Coffee Break' },
+                                { time: '11.20 - 13.00', program: 'Plenary Sessions' },
+                                { time: '13.00 - 13.10', program: 'Group Photograph' },
+                                { time: '13.10 - 14.00', program: 'Lunch' },
+                                { time: '14.00 - 15.40', program: 'Keynote Sessions' },
+                                { time: '15.40 - 16.00', program: 'Tea/Coffee Break' },
+                                { time: '16.00 - 17.30', program: 'Keynote Sessions' },
                                 { time: '17.30 - 18.30', program: 'Workshop' }
-                            ], 
+                            ],
                             day2: [
-                                { time: '9.00 - 10.30', program: 'Scientific Sessions' }, 
-                                { time: '10.30 - 10.50', program: 'Tea/Coffee Break' }, 
-                                { time: '10.50 - 13.00', program: 'Poster Presentations' }, 
-                                { time: '13.00 - 14.00', program: 'Lunch' }, 
-                                { time: '14.00 - 15.30', program: 'Panel Discussions' }, 
+                                { time: '9.00 - 10.30', program: 'Scientific Sessions' },
+                                { time: '10.30 - 10.50', program: 'Tea/Coffee Break' },
+                                { time: '10.50 - 13.00', program: 'Poster Presentations' },
+                                { time: '13.00 - 14.00', program: 'Lunch' },
+                                { time: '14.00 - 15.30', program: 'Panel Discussions' },
                                 { time: '15.30 - 16.00', program: 'Award Ceremony & Closing' }
-                            ], 
+                            ],
                             day3: [
-                                { time: '9.00 - 10.30', program: 'Networking Session' }, 
-                                { time: '10.30 - 11.00', program: 'Tea/Coffee Break' }, 
-                                { time: '11.00 - 12.30', program: 'Future Trends Workshop' }, 
-                                { time: '12.30 - 13.30', program: 'Lunch' }, 
+                                { time: '9.00 - 10.30', program: 'Networking Session' },
+                                { time: '10.30 - 11.00', program: 'Tea/Coffee Break' },
+                                { time: '11.00 - 12.30', program: 'Future Trends Workshop' },
+                                { time: '12.30 - 13.30', program: 'Lunch' },
                                 { time: '13.30 - 15.00', program: 'Final Remarks & Departure' }
                             ]
                         }
                     }
-                }, 
+                },
                 {
-                
-                    key: 'venue', 
+
+                    key: 'venue',
                     data: {
-                    
-                        title: 'Conference Venue', 
-                        name: 'Amsterdam, Netherlands', 
-                        address: 'Amsterdam, North Holland, Netherlands', 
-                        description: 'Amsterdam, the capital of the Netherlands, is a world-renowned hub for science, technology, and innovation. Home to leading research institutions and a vibrant international community, Amsterdam provides the ideal backdrop for this premier polymers and materials conference.', 
+
+                        title: 'Conference Venue',
+                        name: 'Amsterdam, Netherlands',
+                        address: 'Amsterdam, North Holland, Netherlands',
+                        description: 'Amsterdam, the capital of the Netherlands, is a world-renowned hub for science, technology, and innovation. Home to leading research institutions and a vibrant international community, Amsterdam provides the ideal backdrop for this premier polymers and materials conference.',
                         images: [
-                            'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=1920&q=80', 
-                            'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=1920&q=80', 
+                            'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=1920&q=80',
+                            'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=1920&q=80',
                             'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80'
                         ]
                     }
-                }, 
+                },
                 {
-                
-                    key: 'contact', 
+
+                    key: 'contact',
                     data: {
-                    
-                        email: 'contact@polymatsummit.com', 
-                        phone: '+91 7842090097', 
-                        address: 'Amsterdam, Netherlands', 
+
+                        email: 'contact@polymatsummit.com',
+                        phone: '+91 7842090097',
+                        address: 'Amsterdam, Netherlands',
                         socialLinks: {
-                        
-                            facebook: 'https://www.facebook.com/profile.php?id=61588065033161', 
-                            twitter: '', 
-                            linkedin: 'https://www.linkedin.com/company/scienga-summits/', 
+
+                            facebook: 'https://www.facebook.com/profile.php?id=61588065033161',
+                            twitter: '',
+                            linkedin: 'https://www.linkedin.com/company/scienga-summits/',
                             instagram: 'https://www.instagram.com/sciengasummits/'
                         }
                     }
-                }, 
+                },
                 {
-                
-                    key: 'marquee', 
+
+                    key: 'marquee',
                     data: {
-                    
-                        title: 'Supporting Universities & Institutions', 
+
+                        title: 'Supporting Universities & Institutions',
                         items: [
-                            'ETH Zurich', 
-                            'Delft University of Technology', 
-                            'MIT', 
-                            'Stanford University', 
-                            'Imperial College London', 
-                            'University of Cambridge', 
-                            'National University of Singapore', 
-                            'RWTH Aachen University', 
-                            'Georgia Institute of Technology', 
+                            'ETH Zurich',
+                            'Delft University of Technology',
+                            'MIT',
+                            'Stanford University',
+                            'Imperial College London',
+                            'University of Cambridge',
+                            'National University of Singapore',
+                            'RWTH Aachen University',
+                            'Georgia Institute of Technology',
                             'University of Amsterdam'
                         ]
                     }
@@ -1642,9 +1628,7 @@ async function seedDefaultData() {
                         countdownTarget: '2026-06-24T09:00:00+02:00',
                         showRegister: true,
                         showAbstract: true,
-                        showBrochure: true,
-                        showAnnouncement: false,
-                        announcementUrl: ''
+                        showBrochure: true
                     }
                 },
                 {
@@ -1836,16 +1820,16 @@ async function seedDefaultData() {
         {
             name: 'iqces2026',
             defaults: [
-                { key: 'hero', data: { subtitle: 'INTERNATIONAL CONFERENCE ON', title: 'QUANTUM COMPUTING & ENGINEERING', description: 'The International Conference on Quantum Computing & Engineering (IQCES-2026) unites global experts to shape the future of quantum technologies. Discover ground-breaking quantum algorithms, connect with top quantum professionals, and explore engineering solutions transforming our world.', conferenceDate: 'June 24-26, 2026', venue: 'Bern, Switzerland', countdownTarget: '2026-06-24T02:00:00+02:00', showRegister: true, showAbstract: true, showBrochure: true, showAnnouncement: false, announcementUrl: '' } },
+                { key: 'hero', data: { subtitle: 'INTERNATIONAL CONFERENCE ON', title: 'QUANTUM COMPUTING & ENGINEERING', description: 'The International Conference on Quantum Computing & Engineering (IQCES-2026) unites global experts to shape the future of quantum technologies. Discover ground-breaking quantum algorithms, connect with top quantum professionals, and explore engineering solutions transforming our world.', conferenceDate: 'June 24-26, 2026', venue: 'Bern, Switzerland', countdownTarget: '2026-06-24T09:00:00+02:00', showRegister: true, showAbstract: true, showBrochure: true } },
                 { key: 'about', data: { subtitle: 'Welcome to Bern, Switzerland', title: 'About the Conference', paragraph1: 'We are thrilled to welcome you to the International Conference on Quantum Computing & Engineering (IQCES-2026), scheduled to take place from June 24-26, 2026, in the historic city of Bern, Switzerland. This premier scientific gathering brings together global experts from academia and industry to discuss groundbreaking advancements in quantum science.', paragraph2: 'Our mission is to foster a collaborative environment where researchers can share innovative findings, explore the next generation of quantum platforms, and discuss the practical applications of quantum information science. Through interdisciplinary dialogue, we aim to accelerate the transition from quantum theory to industrial reality.', paragraph3: 'Join us for three immersive days of high-level plenary talks, technical sessions, and meaningful networking in the heart of Europe!', objectives: ['Accelerate Innovation: To provide a global stage for showcasing breakthrough research in quantum computing, communication, and metrology.', 'Bridge Research and Industry: To facilitate knowledge transfer between theoretical research and real-world industrial implementation.', 'Foster Collaborative Networks: To connect leading scientists with emerging researchers to build lasting international partnerships.', 'Discuss Ethical and Future Implications: To address the societal and security impacts of emerging quantum technologies.', 'Empower the Next Generation: To support students and early-career researchers through specialized workshops and poster sessions.'], keyThemes: ['Quantum Algorithms and Complexity', 'Quantum Information Processing', 'Quantum Error Correction and Fault Tolerance', 'Quantum Hardware: Superconducting, Trapped Ion, Photonic', 'Quantum Cryptography and Post-Quantum Security', 'Quantum Sensing and Precision Measurements', 'Scalability and Control of Quantum Systems', 'Hybrid Quantum-Classical Systems'] } },
-                { key: 'importantDates', data: { dates: [ { month: 'DEC', day: '10', year: '2025', event: 'Abstract Submission Opens', icon: 'CalendarDays' }, { month: 'FEB', day: '15', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' }, { month: 'APR', day: '20', year: '2026', event: 'Final Submission Deadline', icon: 'Clock' }, { month: 'JUN', day: '24', year: '2026', event: 'Conference Start Date', icon: 'Star', sub: 'June 24-26, Bern' } ] } },
-                { key: 'stats', data: { title: 'QUANTUM COMPUTING & ENGINEERING SUMMIT APPROACH', items: [ { id: 1, icon: 'Calendar', number: '15+', label: 'Years Experience' }, { id: 2, icon: 'CalendarCheck', number: '100+', label: 'Events' }, { id: 3, icon: 'MapPin', number: '200+', label: 'Onsite Approach' }, { id: 4, icon: 'Mic', number: '2000+', label: 'Speakers' }, { id: 5, icon: 'Users', number: '5000+', label: 'Attendees' }, { id: 6, icon: 'Building2', number: '20+', label: 'Exhibitors' }, { id: 7, icon: 'Globe', number: '150+', label: 'Countries' }, { id: 8, icon: 'Newspaper', number: '2000+', label: 'Publications' } ] } },
+                { key: 'importantDates', data: { dates: [{ month: 'DEC', day: '10', year: '2025', event: 'Abstract Submission Opens', icon: 'CalendarDays' }, { month: 'FEB', day: '15', year: '2026', event: 'Early Bird Deadline', icon: 'CheckCircle' }, { month: 'APR', day: '20', year: '2026', event: 'Final Submission Deadline', icon: 'Clock' }, { month: 'JUN', day: '24', year: '2026', event: 'Conference Start Date', icon: 'Star', sub: 'June 24-26, Bern' }] } },
+                { key: 'stats', data: { title: 'QUANTUM COMPUTING & ENGINEERING SUMMIT APPROACH', items: [{ id: 1, icon: 'Calendar', number: '15+', label: 'Years Experience' }, { id: 2, icon: 'CalendarCheck', number: '100+', label: 'Events' }, { id: 3, icon: 'MapPin', number: '200+', label: 'Onsite Approach' }, { id: 4, icon: 'Mic', number: '2000+', label: 'Speakers' }, { id: 5, icon: 'Users', number: '5000+', label: 'Attendees' }, { id: 6, icon: 'Building2', number: '20+', label: 'Exhibitors' }, { id: 7, icon: 'Globe', number: '150+', label: 'Countries' }, { id: 8, icon: 'Newspaper', number: '2000+', label: 'Publications' }] } },
                 { key: 'contact', data: { email: 'quantumengineering@sciengasummits.com', phone: '+91 7842090097', whatsapp: '+91 7842090097', address: 'Bern, Switzerland', venue: 'Bern, Switzerland', socialLinks: { facebook: 'https://www.facebook.com/profile.php?id=61588065033161', twitter: '', linkedin: 'https://www.linkedin.com/company/scienga-summits/', instagram: 'https://www.instagram.com/sciengasummits/' } } },
-                { key: 'sessions', data: { sessions: ['Quantum Algorithms & Complexity', 'Quantum Information Processing', 'Quantum Error Correction & Fault Tolerance', 'Quantum Hardware: Superconducting, Trapped Ion, Photonic', 'Quantum Cryptography & Post-Quantum Security', 'Quantum Sensing & Precision Measurements', 'Scalability & Control of Quantum Systems', 'Hybrid Quantum-Classical Systems', 'Quantum Machine Learning', 'Topological Quantum Computing', 'Photonic Quantum Computing', 'Quantum Networking & Communication', 'Quantum Simulation', 'Post-Quantum Cryptography', 'Industrial Applications of Quantum Technologies'], schedule: { day1: [ { time: '8.30 – 9.00', program: 'Registration' }, { time: '9.00 – 9.30', program: 'Conference Inauguration' }, { time: '9.30 – 11.00', program: 'Plenary Sessions' }, { time: '11.00 – 11.20', program: 'Tea/Coffee Break' }, { time: '11:20 – 13.00', program: 'Plenary Sessions' }, { time: '13.00 – 13.10', program: 'Group Photograph' }, { time: '13.10 – 14.00', program: 'Lunch' }, { time: '14.00 – 15.40', program: 'Keynote Sessions' }, { time: '15.40 – 16.00', program: 'Tea/Coffee Break' }, { time: '16.00 – 17.30', program: 'Keynote Sessions' }, { time: '17.30 – 18.30', program: 'Workshop' } ], day2: [ { time: '9.00 – 10.30', program: 'Scientific Sessions' }, { time: '10.30 – 10.50', program: 'Tea/Coffee Break' }, { time: '10.50 – 13.00', program: 'Poster Presentations' }, { time: '13.00 – 14.00', program: 'Lunch' }, { time: '14.00 – 15.30', program: 'Panel Discussions' }, { time: '15.30 – 16.00', program: 'Award Ceremony & Closing' } ], day3: [ { time: '9.00 – 10.30', program: 'Networking Session' }, { time: '10.30 – 11.00', program: 'Tea/Coffee Break' }, { time: '11.00 – 12.30', program: 'Future Trends Workshop' }, { time: '12.30 – 13.30', program: 'Lunch' }, { time: '13.30 – 15.00', program: 'Final Remarks & Departure' } ] } } },
-                { key: 'pricing', data: { title: 'REGISTRATION PRICING', packages: [ { title: 'Speaker', price: '749', currency: 'USD', features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks'] }, { title: 'Delegate', price: '899', currency: 'USD', features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks'] }, { title: 'Virtual', price: '199', currency: 'USD', features: ['Online Access to All Sessions', 'Digital Certificate', 'E-Abstract Book', 'Q&A Participation', 'Recorded Session Access'] } ] } },
-                { key: 'registration-prices', data: { earlyBirdEndDate: '2026-02-15', standardEndDate: '2026-04-20', onspotEndDate: '2026-06-24', categories: [ { id: 'speaker', label: 'Speaker Registration', early: 749, standard: 849, onspot: 949 }, { id: 'delegate', label: 'Delegate Registration', early: 899, standard: 999, onspot: 1099 }, { id: 'poster', label: 'Poster Registration', early: 449, standard: 549, onspot: 649 }, { id: 'student', label: 'Student', early: 299, standard: 399, onspot: 499 }, { id: 'virtual', label: 'Virtual (Online)', early: 199, standard: 249, onspot: 299 } ], sponsorships: [ { id: 'platinum', label: 'Platinum Sponsor', price: 4999 }, { id: 'diamond', label: 'Diamond Sponsor', price: 3999 }, { id: 'gold', label: 'Gold Sponsor', price: 2999 }, { id: 'exhibitor', label: 'Exhibitor', price: 1999 } ], accommodation: [ { nights: 2, single: 360, double: 400, triple: 440 }, { nights: 3, single: 540, double: 600, triple: 660 }, { nights: 4, single: 720, double: 800, triple: 880 }, { nights: 5, single: 900, double: 1000, triple: 1100 } ], accompanyingPersonPrice: 249, processingFeePercent: 5 } },
-                { key: 'faq', data: { categories: [ { title: 'Conference Information', questions: [ { q: 'When and where is IQCES 2026?', a: 'June 24-26, 2026 in Bern, Switzerland.' }, { q: 'Who should attend?', a: 'Researchers, engineers, and industry professionals in quantum computing and related fields.' } ] }, { title: 'Registration', questions: [ { q: 'How do I register?', a: 'Complete the online registration form on our website.' }, { q: 'What is the early bird deadline?', a: 'February 15, 2026.' } ] } ] } },
-                { key: 'venue', data: { title: 'Conference Venue', name: 'Bern, Switzerland', address: 'Bern, Switzerland', description: 'Bern, the capital of Switzerland, is a UNESCO World Heritage city known for its medieval architecture and world-class research institutions.', images: [ 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1920&q=80', 'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80', 'https://images.unsplash.com/photo-1512470876302-972fad2aa9dd?w=1920&q=80' ] } },
+                { key: 'sessions', data: { sessions: ['Quantum Algorithms & Complexity', 'Quantum Information Processing', 'Quantum Error Correction & Fault Tolerance', 'Quantum Hardware: Superconducting, Trapped Ion, Photonic', 'Quantum Cryptography & Post-Quantum Security', 'Quantum Sensing & Precision Measurements', 'Scalability & Control of Quantum Systems', 'Hybrid Quantum-Classical Systems', 'Quantum Machine Learning', 'Topological Quantum Computing', 'Photonic Quantum Computing', 'Quantum Networking & Communication', 'Quantum Simulation', 'Post-Quantum Cryptography', 'Industrial Applications of Quantum Technologies'], schedule: { day1: [{ time: '8.30 – 9.00', program: 'Registration' }, { time: '9.00 – 9.30', program: 'Conference Inauguration' }, { time: '9.30 – 11.00', program: 'Plenary Sessions' }, { time: '11.00 – 11.20', program: 'Tea/Coffee Break' }, { time: '11:20 – 13.00', program: 'Plenary Sessions' }, { time: '13.00 – 13.10', program: 'Group Photograph' }, { time: '13.10 – 14.00', program: 'Lunch' }, { time: '14.00 – 15.40', program: 'Keynote Sessions' }, { time: '15.40 – 16.00', program: 'Tea/Coffee Break' }, { time: '16.00 – 17.30', program: 'Keynote Sessions' }, { time: '17.30 – 18.30', program: 'Workshop' }], day2: [{ time: '9.00 – 10.30', program: 'Scientific Sessions' }, { time: '10.30 – 10.50', program: 'Tea/Coffee Break' }, { time: '10.50 – 13.00', program: 'Poster Presentations' }, { time: '13.00 – 14.00', program: 'Lunch' }, { time: '14.00 – 15.30', program: 'Panel Discussions' }, { time: '15.30 – 16.00', program: 'Award Ceremony & Closing' }], day3: [{ time: '9.00 – 10.30', program: 'Networking Session' }, { time: '10.30 – 11.00', program: 'Tea/Coffee Break' }, { time: '11.00 – 12.30', program: 'Future Trends Workshop' }, { time: '12.30 – 13.30', program: 'Lunch' }, { time: '13.30 – 15.00', program: 'Final Remarks & Departure' }] } } },
+                { key: 'pricing', data: { title: 'REGISTRATION PRICING', packages: [{ title: 'Speaker', price: '749', currency: 'USD', features: ['Oral Presentation', 'Networking with Fellow Speakers', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks'] }, { title: 'Delegate', price: '899', currency: 'USD', features: ['Delegate Opportunities', 'Connect with Fellow Delegates', 'E-Abstract Book', 'Certificate of Attendance', 'Conference Schedule Handout', 'Access to All Sessions and Workshops', 'Lunch and Coffee Breaks'] }, { title: 'Virtual', price: '199', currency: 'USD', features: ['Online Access to All Sessions', 'Digital Certificate', 'E-Abstract Book', 'Q&A Participation', 'Recorded Session Access'] }] } },
+                { key: 'registration-prices', data: { earlyBirdEndDate: '2026-02-15', standardEndDate: '2026-04-20', onspotEndDate: '2026-06-24', categories: [{ id: 'speaker', label: 'Speaker Registration', early: 749, standard: 849, onspot: 949 }, { id: 'delegate', label: 'Delegate Registration', early: 899, standard: 999, onspot: 1099 }, { id: 'poster', label: 'Poster Registration', early: 449, standard: 549, onspot: 649 }, { id: 'student', label: 'Student', early: 299, standard: 399, onspot: 499 }, { id: 'virtual', label: 'Virtual (Online)', early: 199, standard: 249, onspot: 299 }], sponsorships: [{ id: 'platinum', label: 'Platinum Sponsor', price: 4999 }, { id: 'diamond', label: 'Diamond Sponsor', price: 3999 }, { id: 'gold', label: 'Gold Sponsor', price: 2999 }, { id: 'exhibitor', label: 'Exhibitor', price: 1999 }], accommodation: [{ nights: 2, single: 360, double: 400, triple: 440 }, { nights: 3, single: 540, double: 600, triple: 660 }, { nights: 4, single: 720, double: 800, triple: 880 }, { nights: 5, single: 900, double: 1000, triple: 1100 }], accompanyingPersonPrice: 249, processingFeePercent: 5 } },
+                { key: 'faq', data: { categories: [{ title: 'Conference Information', questions: [{ q: 'When and where is IQCES 2026?', a: 'June 24-26, 2026 in Bern, Switzerland.' }, { q: 'Who should attend?', a: 'Researchers, engineers, and industry professionals in quantum computing and related fields.' }] }, { title: 'Registration', questions: [{ q: 'How do I register?', a: 'Complete the online registration form on our website.' }, { q: 'What is the early bird deadline?', a: 'February 15, 2026.' }] }] } },
+                { key: 'venue', data: { title: 'Conference Venue', name: 'Bern, Switzerland', address: 'Bern, Switzerland', description: 'Bern, the capital of Switzerland, is a UNESCO World Heritage city known for its medieval architecture and world-class research institutions.', images: ['https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1920&q=80', 'https://images.unsplash.com/photo-1540575861501-7ad05823c93e?w=1920&q=80', 'https://images.unsplash.com/photo-1512470876302-972fad2aa9dd?w=1920&q=80'] } },
                 { key: 'brochure', data: { pdfUrl: '', title: 'International Conference on Quantum Computing & Engineering (IQCES-2026)', note: '* PDF will be available soon. Format: PDF' } },
                 { key: 'marquee', data: { title: 'Supporting Universities & Institutions', items: ['MIT', 'Caltech', 'ETH Zurich', 'University of Cambridge', 'Stanford University', 'IBM Quantum', 'Google Quantum AI', 'University of Waterloo', 'National University of Singapore', 'University of Science and Technology of China'] } }
             ]
@@ -2180,7 +2164,7 @@ app.get('/api/media/:id', async (req, res) => {
     try {
         const media = await Media.findById(req.params.id);
         if (!media) return res.status(404).send('Image not found');
-        
+
         const img = Buffer.from(media.data.split(',')[1] || media.data, 'base64');
         res.writeHead(200, {
             'Content-Type': media.mimetype,
@@ -2207,7 +2191,7 @@ app.post('/api/upload', (req, res, next) => {
             console.warn('No file received in upload request');
             return res.status(400).json({ error: 'No file uploaded. Ensure field name is "image".' });
         }
-        
+
         try {
             // Read file and convert to base64
             if (!fs.existsSync(req.file.path)) {
@@ -2215,7 +2199,7 @@ app.post('/api/upload', (req, res, next) => {
             }
             const b64 = fs.readFileSync(req.file.path, { encoding: 'base64' });
             const dataUrl = `data:${req.file.mimetype};base64,${b64}`;
-            
+
             // Save to MongoDB
             const media = new Media({
                 filename: req.file.filename,
@@ -2224,18 +2208,18 @@ app.post('/api/upload', (req, res, next) => {
                 conference: req.body.conference || 'liutex'
             });
             await media.save();
-            
+
             // Cleanup local file after saving to DB (ignore errors if file already deleted)
-            try { fs.unlinkSync(req.file.path); } catch(e) {}
+            try { fs.unlinkSync(req.file.path); } catch (e) { }
 
             const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http';
             const host = req.headers['x-forwarded-host'] || req.headers.host || `localhost:${PORT}`;
             const url = `${proto}://${host}/api/media/${media._id}`;
-            
+
             console.log(`✅ Upload successful: ${media._id}`);
-            res.json({ 
-                url, 
-                id: media._id, 
+            res.json({
+                url,
+                id: media._id,
                 filename: media.filename,
                 message: 'Image saved to MongoDB successfully'
             });
@@ -2748,6 +2732,32 @@ app.post('/api/payment/verify', async (req, res) => {
     } catch (err) {
         console.error('❌ Payment verification error:', err.message);
         res.status(500).json({ success: false, message: 'Payment verification failed.' });
+    }
+});
+
+// ─── Media Proxy for Old Workflow Uploads ───────────────────────
+// Old images were stored as base64 in MongoDB via the Next.js workflow dashboard
+// and saved in the DB as http://localhost:3000/api/media/<id>.
+// The frontend redirects those localhost:3000 URLs to THIS backend endpoint,
+// which fetches the base64 from Mongo, buffers it, and serves it properly.
+app.get('/api/media/:id', async (req, res) => {
+    try {
+        const media = await Media.findById(req.params.id);
+        if (!media) {
+            return res.status(404).send('Image not found in database');
+        }
+
+        // Base64 format: "data:image/png;base64,iVBORw0K..."
+        const base64Data = media.data.split(',')[1] || media.data;
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        res.set('Content-Type', media.mimetype || 'image/jpeg');
+        res.set('Content-Length', buffer.length.toString());
+        res.set('Cache-Control', 'public, max-age=31536000, immutable');
+        res.send(buffer);
+    } catch (err) {
+        console.error('Media proxy error:', err.message);
+        res.status(500).send('Server error retrieving media');
     }
 });
 
