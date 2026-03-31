@@ -26,6 +26,7 @@ import Abstract from './models/Abstract.js';
 import Discount from './models/Discount.js';
 import OTP from './models/OTP.js';
 import Media from './models/Media.js';
+import University from './models/University.js';
 import { RealEmailSender } from './emailSender.js';
 
 dotenv.config();
@@ -2343,6 +2344,80 @@ app.delete('/api/speakers/:id', async (req, res) => {
     }
 });
 
+// ── Universities ──────────────────────────────────────────────
+app.get('/api/universities', async (req, res) => {
+    try {
+        const conf = req.headers['x-conference'] || 'liutex';
+        const universities = await University.find({ conference: conf }).sort({ order: 1, createdAt: 1 });
+        res.json(universities);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/universities', async (req, res) => {
+    try {
+        const university = new University(req.body);
+        await university.save();
+        res.status(201).json(university);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.put('/api/universities/:id', async (req, res) => {
+    try {
+        const university = await University.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!university) return res.status(404).json({ error: 'University not found' });
+        res.json(university);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.delete('/api/universities/:id', async (req, res) => {
+    try {
+        await University.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+// ─── File Upload Routes ───────────────────────────────────────
+
+// POST /api/upload — accepts images (jpeg, jpg, png, gif, webp, svg)
+// Used by all dashboard components to upload speaker photos, logos, etc.
+app.post('/api/upload', (req, res) => {
+    upload.single('image')(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ error: err.message || 'Upload failed' });
+        }
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        // Build a full URL the frontend can use
+        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5050}`;
+        const url = `${baseUrl}/uploads/${req.file.filename}`;
+        res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
+    });
+});
+
+// POST /api/upload-pdf — accepts documents (PDF, DOC, DOCX, ZIP)
+// Used by the Brochure dashboard to upload the conference PDF.
+app.post('/api/upload-pdf', (req, res) => {
+    uploadFile.single('file')(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ error: err.message || 'Upload failed' });
+        }
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5050}`;
+        const url = `${baseUrl}/uploads/${req.file.filename}`;
+        res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
+    });
+});
+
 // ── Sponsors / Media Partners
 // ?conference=liutex|foodagri  (defaults to 'liutex')
 app.get('/api/sponsors', async (req, res) => {
@@ -2360,7 +2435,9 @@ app.get('/api/sponsors', async (req, res) => {
 app.get('/api/sponsors/all', async (req, res) => {
     try {
         const conf = req.query.conference || 'liutex';
-        const sponsors = await Sponsor.find({ conference: conf }).sort({ order: 1 });
+        const filter = { conference: conf };
+        if (req.query.type) filter.type = req.query.type;
+        const sponsors = await Sponsor.find(filter).sort({ order: 1 });
         res.json(sponsors);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -2809,32 +2886,6 @@ app.post('/api/payment/verify', async (req, res) => {
     } catch (err) {
         console.error('❌ Payment verification error:', err.message);
         res.status(500).json({ success: false, message: 'Payment verification failed.' });
-    }
-});
-
-// ─── Media Proxy for Old Workflow Uploads ───────────────────────
-// Old images were stored as base64 in MongoDB via the Next.js workflow dashboard
-// and saved in the DB as http://localhost:3000/api/media/<id>.
-// The frontend redirects those localhost:3000 URLs to THIS backend endpoint,
-// which fetches the base64 from Mongo, buffers it, and serves it properly.
-app.get('/api/media/:id', async (req, res) => {
-    try {
-        const media = await Media.findById(req.params.id);
-        if (!media) {
-            return res.status(404).send('Image not found in database');
-        }
-
-        // Base64 format: "data:image/png;base64,iVBORw0K..."
-        const base64Data = media.data.split(',')[1] || media.data;
-        const buffer = Buffer.from(base64Data, 'base64');
-
-        res.set('Content-Type', media.mimetype || 'image/jpeg');
-        res.set('Content-Length', buffer.length.toString());
-        res.set('Cache-Control', 'public, max-age=31536000, immutable');
-        res.send(buffer);
-    } catch (err) {
-        console.error('Media proxy error:', err.message);
-        res.status(500).send('Server error retrieving media');
     }
 });
 
