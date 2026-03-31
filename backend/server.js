@@ -2396,6 +2396,70 @@ app.delete('/api/sponsors/:id', async (req, res) => {
     }
 });
 
+// ─── Program Request ──────────────────────────────────────────
+app.post('/api/program-request', async (req, res) => {
+    try {
+        const { name, email, number, conference = 'liutex' } = req.body;
+        if (!name || !email || !number) {
+            return res.status(400).json({ success: false, message: 'Name, email, and contact number are required' });
+        }
+
+        // Send email to Admin and User
+        const adminPromise = realEmailSender.sendProgramRequestToAdmin({ name, email, number, conferenceId: conference });
+        const userPromise = realEmailSender.sendProgramRequestToUser({ name, email, conferenceId: conference });
+
+        await Promise.all([adminPromise, userPromise]);
+        res.json({ success: true, message: 'Emails sent successfully' });
+    } catch (error) {
+        console.error('Program request error:', error);
+        res.status(500).json({ success: false, message: 'Failed to process request' });
+    }
+});
+
+// ─── Newsletter Subscribe ─────────────────────────────────────
+app.post('/api/subscribe', async (req, res) => {
+    try {
+        const { name, email, phone, conference = 'liutex' } = req.body;
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'Email is required' });
+        }
+        await realEmailSender.sendSubscribeToAdmin({ name: name || 'N/A', email, phone: phone || 'N/A', conferenceId: conference });
+        res.json({ success: true, message: 'Subscription successful' });
+    } catch (error) {
+        console.error('Subscribe error:', error);
+        res.status(500).json({ success: false, message: 'Failed to process request' });
+    }
+});
+
+// ─── Brochure Request ─────────────────────────────────────────
+app.post('/api/brochure', async (req, res) => {
+    try {
+        const { name, email, number, conference = 'liutex' } = req.body;
+        if (!name || !email || !number) {
+            return res.status(400).json({ success: false, message: 'Name, email, and contact number are required' });
+        }
+        await realEmailSender.sendBrochureToAdmin({ name, email, number, conferenceId: conference });
+        res.json({ success: true, message: 'Brochure request recorded' });
+    } catch (error) {
+        console.error('Brochure request error:', error);
+        res.status(500).json({ success: false, message: 'Failed to process request' });
+    }
+});
+
+// ─── Contact Us ───────────────────────────────────────────────
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, subject, message, conference = 'liutex' } = req.body;
+        if (!name || !email || !subject || !message) {
+            return res.status(400).json({ success: false, message: 'All fields are required' });
+        }
+        await realEmailSender.sendContactToAdmin({ name, email, subject, message, conferenceId: conference });
+        res.json({ success: true, message: 'Message sent successfully' });
+    } catch (error) {
+        console.error('Contact error:', error);
+        res.status(500).json({ success: false, message: 'Failed to process request' });
+    }
+});
 
 // ─── Abstracts ────────────────────────────────────────────────
 // PUBLIC — website abstract form submits here (conference in body)
@@ -2403,6 +2467,12 @@ app.post('/api/abstracts', async (req, res) => {
     try {
         const abs = new Abstract(req.body); // conference comes from body
         await abs.save();
+
+        // Send email notification to Admin (non-blocking)
+        realEmailSender.sendAbstractToAdmin(req.body, req.body.conference || 'liutex').catch(err => {
+            console.error('Failed to send abstract notification email:', err.message);
+        });
+
         res.status(201).json(abs);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -2714,11 +2784,18 @@ app.post('/api/payment/verify', async (req, res) => {
         // If a registrationId was provided, update the registration status and txnId
         if (registrationId) {
             try {
-                await Registration.findByIdAndUpdate(registrationId, {
+                const reg = await Registration.findByIdAndUpdate(registrationId, {
                     status: 'Paid',
                     txnId: razorpay_payment_id,
-                });
+                }, { new: true });
                 console.log(`✅ Registration ${registrationId} marked as Paid (txn: ${razorpay_payment_id})`);
+
+                // Send email notification to Admin (non-blocking)
+                if (reg) {
+                    realEmailSender.sendRegistrationConfirmation(reg, { razorpay_order_id, razorpay_payment_id }).catch(err => {
+                        console.error('Failed to send registration notification email:', err.message);
+                    });
+                }
             } catch (dbErr) {
                 console.warn(`⚠️ Payment verified but failed to update registration: ${dbErr.message}`);
             }
