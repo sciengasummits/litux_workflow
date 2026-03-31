@@ -38,7 +38,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ─── Middleware ───────────────────────────────────────────────
+//. ─── Middleware ───────────────────────────────────────────────
 // app.use(cors({
 //     origin: function (origin, callback) {
 //         // Allow any localhost origin (any port) or no origin (curl/Postman)
