@@ -23,11 +23,45 @@ services:
         sync: false
       - key: LIUTEX_EMAIL
         sync: false
+      - key: LIUTEX_SMTP_USER
+        sync: false
+      - key: LIUTEX_SMTP_PASS
+        sync: false
       - key: FOODAGRI_EMAIL
+        sync: false
+      - key: FOODAGRI_SMTP_USER
+        sync: false
+      - key: FOODAGRI_SMTP_PASS
         sync: false
       - key: FLUID_EMAIL
         sync: false
+      - key: FLUID_SMTP_USER
+        sync: false
+      - key: FLUID_SMTP_PASS
+        sync: false
       - key: RENEWABLE_EMAIL
+        sync: false
+      - key: RENEWABLE_SMTP_USER
+        sync: false
+      - key: RENEWABLE_SMTP_PASS
+        sync: false
+      - key: CYBER_EMAIL
+        sync: false
+      - key: CYBER_SMTP_USER
+        sync: false
+      - key: CYBER_SMTP_PASS
+        sync: false
+      - key: POWERENG_EMAIL
+        sync: false
+      - key: POWERENG_SMTP_USER
+        sync: false
+      - key: POWERENG_SMTP_PASS
+        sync: false
+      - key: IQCES_EMAIL
+        sync: false
+      - key: IQCES_SMTP_USER
+        sync: false
+      - key: IQCES_SMTP_PASS
         sync: false
       - key: RAZORPAY_KEY_ID
         sync: false
