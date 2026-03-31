@@ -56,7 +56,7 @@ app.use(cors({
         if (!origin) return callback(null, true);
 
         // Allow all localhost origins (any port)
-        if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+        if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:') || origin.startsWith('http://10.')) {
             return callback(null, true);
         }
 
@@ -2099,6 +2099,137 @@ app.post('/api/auth/generate-otp', async (req, res) => {
     } catch (error) {
         console.error('Generate OTP error:', error);
         res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+    }
+});
+
+// ─── PUBLIC FORM SUBMISSIONS (Newsletter, Contact, Program Request) ──────
+
+// 1. Newsletter Subscription
+app.post('/api/newsletter/subscribe', async (req, res) => {
+    try {
+        const { name, email, phone, conference = 'liutex' } = req.body;
+        console.log(`📩 New Newsletter Subscription [${conference}]: ${email}`);
+        
+        // Find admin email for this conference
+        const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
+        const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
+
+        // Notify admin via email
+        await realEmailSender.sendEmail(
+            adminEmail,
+            `📩 New Newsletter Subscription - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #6366f1;">New Newsletter Subscriber</h2>
+                <p>A new user has subscribed to the newsletter for <strong>${conference.toUpperCase()}</strong>.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Name:</strong> ${name || 'N/A'}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 30px;">Received on ${new Date().toLocaleString()}</p>
+            </div>
+            `,
+            'NEWSLETTER',
+            conference
+        );
+
+        res.json({ success: true, message: 'Subscribed successfully' });
+    } catch (err) {
+        console.error('Newsletter error:', err.message);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+});
+
+// 2. Contact Message
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, subject, message, conference = 'liutex' } = req.body;
+        console.log(`📩 New Contact Message [${conference}]: from ${email}`);
+
+        const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
+        const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
+
+        await realEmailSender.sendEmail(
+            adminEmail,
+            `📩 Contact Inquiry: ${subject} - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #6366f1;">New Contact Message</h2>
+                <p>You have received a new inquiry from the <strong>${conference.toUpperCase()}</strong> website.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>From:</strong> ${name} (<a href="mailto:${email}">${email}</a>)</p>
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Message:</strong></p>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 5px; border-left: 4px solid #6366f1;">
+                    ${message.replace(/\n/g, '<br/>')}
+                </div>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 30px;">Received on ${new Date().toLocaleString()}</p>
+            </div>
+            `,
+            'CONTACT',
+            conference
+        );
+
+        res.json({ success: true, message: 'Message sent successfully' });
+    } catch (err) {
+        console.error('Contact error:', err.message);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+});
+
+// 3. Program Schedule Request
+app.post('/api/program-request', async (req, res) => {
+    try {
+        const { name, email, number, conference = 'liutex' } = req.body;
+        console.log(`📩 New Program Request [${conference}]: ${email}`);
+
+        const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
+        const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
+
+        // 1. Send confirmation to the USER
+        await realEmailSender.sendEmail(
+            email,
+            `📅 Program Schedule Request - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #6366f1; border-radius: 10px;">
+                <h2 style="color: #6366f1;">Program Schedule Request Received</h2>
+                <p>Hello <strong>${name}</strong>,</p>
+                <p>Thank you for your interest in the <strong>${conference.toUpperCase()} 2026</strong> conference.</p>
+                <p>We have received your request for the full scientific program schedule. Our team is finalizing the presentation slots and session timings.</p>
+                <p>We will send the complete schedule to this email address (<a href="mailto:${email}">${email}</a>) as soon as it is officially released.</p>
+                <br/>
+                <p>Best Regards,<br/><strong>Conference Organizing Committee</strong><br/>${conference.toUpperCase()} 2026</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">This is an automated acknowledgment of your request.</p>
+            </div>
+            `,
+            'PROGRAM',
+            conference
+        );
+
+        // 2. Send status notification to the ADMIN
+        await realEmailSender.sendEmail(
+            adminEmail,
+            `🔔 [ADMIN STATUS] New Program Request - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #6366f1;">New Program Schedule Request</h2>
+                <p>A user has requested the program schedule for <strong>${conference.toUpperCase()}</strong>.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${number || 'N/A'}</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 30px;">Received on ${new Date().toLocaleString()}</p>
+            </div>
+            `,
+            'STATUS',
+            conference
+        );
+
+        res.json({ success: true, message: 'Request received' });
+    } catch (err) {
+        console.error('Program request error:', err.message);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 });
 
