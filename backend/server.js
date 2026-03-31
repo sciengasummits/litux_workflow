@@ -317,7 +317,7 @@ async function seedDefaultData() {
                     'Instability and Transition in Fluid Flows',
                     'Boundary Layer Vortex Structures',
                     'Coherent Structures in Turbulence',
-                    'Multi-Scale Vortex Interactions',
+                    'Multi-Scale Vortex Interactions', 
                     'Particle Tracking in Vortical Flows',
                     'Wake Dynamics and Control',
                     'Biofluid Mechanics and Vortex Patterns',
@@ -2148,7 +2148,9 @@ app.post('/api/contact', async (req, res) => {
 
         const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
         const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
+        const siteUrl = process.env.FRONTEND_URL || 'https://liutexvortexsummit.com';
 
+        // 1. Notify admin
         await realEmailSender.sendEmail(
             adminEmail,
             `📩 Contact Inquiry: ${subject} - ${conference.toUpperCase()}`,
@@ -2170,6 +2172,31 @@ app.post('/api/contact', async (req, res) => {
             conference
         );
 
+        // 2. Send confirmation to the user
+        await realEmailSender.sendEmail(
+            email,
+            `✅ We received your message - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #6366f1; border-radius: 10px;">
+                <h2 style="color: #6366f1;">Message Received</h2>
+                <p>Hello <strong>${name}</strong>,</p>
+                <p>Thank you for reaching out to us. We have received your message and our team will get back to you shortly.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Your Message:</strong></p>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 5px; border-left: 4px solid #6366f1;">
+                    ${message.replace(/\n/g, '<br/>')}
+                </div>
+                <br/>
+                <p>Best Regards,<br/><strong>Conference Organizing Committee</strong><br/>${conference.toUpperCase()} 2026</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">
+                    Visit us at <a href="${siteUrl}">${siteUrl}</a>
+                </p>
+            </div>
+            `,
+            'CONTACT',
+            conference
+        );
         res.json({ success: true, message: 'Message sent successfully' });
     } catch (err) {
         console.error('Contact error:', err.message);
@@ -2611,6 +2638,57 @@ app.post('/api/abstracts', async (req, res) => {
     try {
         const abs = new Abstract(req.body); // conference comes from body
         await abs.save();
+
+        // Send emails (non-blocking — don't fail the save if email fails)
+        const { name, email, title, conference = 'liutex' } = req.body;
+        const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
+        const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
+        const siteUrl = process.env.FRONTEND_URL || 'https://liutexvortexsummit.com';
+
+        // 1. Confirmation to user
+        realEmailSender.sendEmail(
+            email,
+            `✅ Abstract Submission Received - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #6366f1; border-radius: 10px;">
+                <h2 style="color: #6366f1;">Abstract Submission Received</h2>
+                <p>Hello <strong>${name}</strong>,</p>
+                <p>Thank you for submitting your abstract to <strong>${conference.toUpperCase()} 2026</strong>. We have successfully received your submission and it is currently under review.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Abstract Title:</strong> ${title || 'N/A'}</p>
+                <p><strong>Conference:</strong> ${conference.toUpperCase()} 2026</p>
+                <br/>
+                <p>Our review committee will evaluate your abstract and notify you of the outcome. If you have any questions, please contact us.</p>
+                <br/>
+                <p>Best Regards,<br/><strong>Conference Organizing Committee</strong><br/>${conference.toUpperCase()} 2026</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">
+                    Visit us at <a href="${siteUrl}">${siteUrl}</a>
+                </p>
+            </div>
+            `,
+            'ABSTRACT',
+            conference
+        ).catch(e => console.warn('Abstract user email failed:', e.message));
+
+        // 2. Notify admin
+        realEmailSender.sendEmail(
+            adminEmail,
+            `📄 New Abstract Submission - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #6366f1;">New Abstract Submission</h2>
+                <p>A new abstract has been submitted for <strong>${conference.toUpperCase()}</strong>.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Name:</strong> ${name || 'N/A'}</p>
+                <p><strong>Email:</strong> ${email || 'N/A'}</p>
+                <p><strong>Abstract Title:</strong> ${title || 'N/A'}</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 30px;">Received on ${new Date().toLocaleString()}</p>
+            </div>
+            `,
+            'ABSTRACT',
+            conference
+        ).catch(e => console.warn('Abstract admin email failed:', e.message));
+
         res.status(201).json(abs);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -2648,6 +2726,57 @@ app.post('/api/registrations', async (req, res) => {
         const reg = new Registration(req.body);
         await reg.save();
         console.log('✅ Registration saved:', reg._id);
+
+        // Send emails (non-blocking)
+        const { name, email, category, conference = 'liutex' } = req.body;
+        const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
+        const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
+        const siteUrl = process.env.FRONTEND_URL || 'https://liutexvortexsummit.com';
+
+        // 1. Confirmation to user
+        realEmailSender.sendEmail(
+            email,
+            `✅ Registration Received - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #6366f1; border-radius: 10px;">
+                <h2 style="color: #6366f1;">Registration Received</h2>
+                <p>Hello <strong>${name}</strong>,</p>
+                <p>Thank you for registering for <strong>${conference.toUpperCase()} 2026</strong>. We have successfully received your registration and it is currently being processed.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Category:</strong> ${category || 'N/A'}</p>
+                <p><strong>Conference:</strong> ${conference.toUpperCase()} 2026</p>
+                <br/>
+                <p>Our team will review your registration and send you further details including payment confirmation and conference access information.</p>
+                <br/>
+                <p>Best Regards,<br/><strong>Conference Organizing Committee</strong><br/>${conference.toUpperCase()} 2026</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">
+                    Visit us at <a href="${siteUrl}">${siteUrl}</a>
+                </p>
+            </div>
+            `,
+            'REGISTRATION',
+            conference
+        ).catch(e => console.warn('Registration user email failed:', e.message));
+
+        // 2. Notify admin
+        realEmailSender.sendEmail(
+            adminEmail,
+            `📝 New Registration - ${conference.toUpperCase()}`,
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #6366f1;">New Registration</h2>
+                <p>A new registration has been submitted for <strong>${conference.toUpperCase()}</strong>.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Name:</strong> ${name || 'N/A'}</p>
+                <p><strong>Email:</strong> ${email || 'N/A'}</p>
+                <p><strong>Category:</strong> ${category || 'N/A'}</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 30px;">Received on ${new Date().toLocaleString()}</p>
+            </div>
+            `,
+            'REGISTRATION',
+            conference
+        ).catch(e => console.warn('Registration admin email failed:', e.message));
+
         res.status(201).json(reg);
     } catch (err) {
         console.error('❌ Registration save error:', err.message);
