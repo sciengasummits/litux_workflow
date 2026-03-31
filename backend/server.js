@@ -38,7 +38,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-//. ─── Middleware ───────────────────────────────────────────────
+// ─── Middleware ───────────────────────────────────────────────
 // app.use(cors({
 //     origin: function (origin, callback) {
 //         // Allow any localhost origin (any port) or no origin (curl/Postman)
@@ -317,7 +317,7 @@ async function seedDefaultData() {
                     'Instability and Transition in Fluid Flows',
                     'Boundary Layer Vortex Structures',
                     'Coherent Structures in Turbulence',
-                    'Multi-Scale Vortex Interactions', 
+                    'Multi-Scale Vortex Interactions',
                     'Particle Tracking in Vortical Flows',
                     'Wake Dynamics and Control',
                     'Biofluid Mechanics and Vortex Patterns',
@@ -2197,6 +2197,7 @@ app.post('/api/contact', async (req, res) => {
             'CONTACT',
             conference
         );
+
         res.json({ success: true, message: 'Message sent successfully' });
     } catch (err) {
         console.error('Contact error:', err.message);
@@ -2213,31 +2214,10 @@ app.post('/api/program-request', async (req, res) => {
         const account = CONFERENCE_ACCOUNTS.find(acc => acc.conferenceId === conference);
         const adminEmail = account ? account.email : (process.env.LIUTEX_EMAIL || 'liutex@sciengasummits.com');
 
-        // 1. Send confirmation to the USER
-        await realEmailSender.sendEmail(
-            email,
-            `📅 Program Schedule Request - ${conference.toUpperCase()}`,
-            `
-            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #6366f1; border-radius: 10px;">
-                <h2 style="color: #6366f1;">Program Schedule Request Received</h2>
-                <p>Hello <strong>${name}</strong>,</p>
-                <p>Thank you for your interest in the <strong>${conference.toUpperCase()} 2026</strong> conference.</p>
-                <p>We have received your request for the full scientific program schedule. Our team is finalizing the presentation slots and session timings.</p>
-                <p>We will send the complete schedule to this email address (<a href="mailto:${email}">${email}</a>) as soon as it is officially released.</p>
-                <br/>
-                <p>Best Regards,<br/><strong>Conference Organizing Committee</strong><br/>${conference.toUpperCase()} 2026</p>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-                <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">This is an automated acknowledgment of your request.</p>
-            </div>
-            `,
-            'PROGRAM',
-            conference
-        );
-
-        // 2. Send status notification to the ADMIN
+        // Notify admin only
         await realEmailSender.sendEmail(
             adminEmail,
-            `🔔 [ADMIN STATUS] New Program Request - ${conference.toUpperCase()}`,
+            `📅 New Program Schedule Request - ${conference.toUpperCase()}`,
             `
             <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
                 <h2 style="color: #6366f1;">New Program Schedule Request</h2>
@@ -2249,7 +2229,7 @@ app.post('/api/program-request', async (req, res) => {
                 <p style="font-size: 12px; color: #94a3b8; margin-top: 30px;">Received on ${new Date().toLocaleString()}</p>
             </div>
             `,
-            'STATUS',
+            'PROGRAM',
             conference
         );
 
